@@ -1,0 +1,29 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Nos Equipements{% endblock %}
+
+{% block body %}
+    <table class="table">
+    <thead>
+        <tr>
+        <th scope="col">id de l'equipement</th>
+        <th scope="col">Nom de l'equipement</th>
+        <th scope="col">Type </th>
+        <th scope="col">Prix</th>
+        <th scope="col">Description</th>
+        
+        </tr>
+    </thead>
+    <tbody>
+        {% for equipement in list %}
+            <tr>
+                <td>{{equipement.id}}</td>                
+                <td>{{equipement.nom}}</td>
+                <td>{{equipement.getCategory().getType()}}</td>
+                <td>{{equipement.prix}}</td>
+                <td>{{ equipement.description }}</td>
+            </tr>
+    </tbody>
+    {% endfor %}
+    </table>
+{% endblock %}

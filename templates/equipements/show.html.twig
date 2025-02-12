@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Consulter equipements {% endblock %}
+
+{% block body %}
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- customers List Table -->
+    <div class="card">
+        <div class="card-datatable table-responsive">
+            <div id="DataTables_Table_0_wrapper" class="dt-container dt-bootstrap5 dt-empty-footer">
+                <div class="row m-3 my-0 justify-content-between">
+                    
+                    <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto gap-2 mt-0 mb-md-0 mb-4">
+                        <div class="dt-buttons btn-group flex-wrap gap-4 mt-2 mb-2">
+                            <a href="{{path('add_equipement')}}"><button class="btn btn-success" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEcommerceCustomerAdd"><span><span class="d-flex align-items-center gap-2"><i class="icon-base bx bx-plus icon-sm"></i> <span class="d-none d-sm-inline-block">Ajouter equipement</span></span></span></button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="justify-content-between dt-layout-table">
+                    <div class="d-md-flex justify-content-between align-items-center dt-layout-full table-responsive">
+                        <table class="datatables-customers table border-top dataTable dtr-column" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" style="width: 100%;">
+                            <colgroup>
+                                <col data-dt-column="1" style="width: 75.0625px;">
+                                <col data-dt-column="2" style="width: 396.547px;">
+                                <col data-dt-column="3" style="width: 220.609px;">
+                                <col data-dt-column="4" style="width: 328.516px;">
+                                <col data-dt-column="5" style="width: 149.578px;">
+                                <col data-dt-column="6" style="width: 217.688px;">
+                            </colgroup>
+                            <thead class="text-dark">
+                                <tr>
+                                    <th data-dt-column="0" class="control dt-orderable-none dtr-hidden" rowspan="1" colspan="1" aria-label="" style="display: none;"><span class="dt-column-title"></span><span class="dt-column-order"></span></th>
+                                    <th data-dt-column="1" rowspan="1" colspan="1" class="dt-select dt-orderable-none" aria-label=""><span class="dt-column-title"></span><span class="dt-column-order"></span><input class="form-check-input" type="checkbox" aria-label="Select all rows"></th>
+                                    <th data-dt-column="2" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-ordering-desc" aria-sort="descending" aria-label="Customer: Activate to remove sorting" tabindex="0"><span class="dt-column-title" role="button">Nom equipement</span><span class="dt-column-order"></span></th>
+                                    <th class="text-nowrap dt-orderable-asc dt-orderable-desc" data-dt-column="3" rowspan="1" colspan="1" aria-label="Customer Id: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Type equipement</span><span class="dt-column-order"></span></th>
+                                    <th data-dt-column="4" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc" aria-label="Country: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Prix</span><span class="dt-column-order"></span></th>
+                                    <th data-dt-column="5" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-type-numeric" aria-label="Order: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Description</span><span class="dt-column-order"></span></th>
+                                    <th class="text-nowrap dt-orderable-asc dt-orderable-desc dt-type-numeric" data-dt-column="6" rowspan="1" colspan="1" aria-label="Total Spent: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Quantite</span><span class="dt-column-order"></span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for equipement in list %}
+                                <tr>
+                                    <td class="control dtr-hidden" tabindex="0" style="display: none;"></td>
+                                    <td class="sorting_1">
+                                        <div class="d-flex justify-content-start align-items-center customer-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-sm me-3">
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="app-ecommerce-customer-details-overview.html" class="text-heading"><span class="fw-medium"></span></a>
+                                                <small></small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-heading">{{equipement.nom}}</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-start align-items-center customer-country">
+                                            <div><i class="icon-base fis fi fi-ua rounded-circle me-2 icon-lg"></i></div>
+                                            <div><span>{{equipement.getCategory().getType()}}</span></div>
+                                        </div>
+                                    </td>
+                                    <td class="dt-type-numeric"><span>{{equipement.prix}}</span></td>
+                                    <td class="dt-type-numeric"><span class="fw-medium text-heading">{{equipement.description}}</span></td>
+                                    <td class="dt-type-numeric"><span>{{equipement.quantite}}</span></td>
+                                    <td class="dt-type-numeric"><a href="{{path('delete_produit', {'id': equipement.id})}}">supprimer</a></td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <table class="table">
+    <thead>
+        <tr>
+        <th scope="col">id de category</th>
+        <th scope="col">type de categorie</th>
+        <th scope="col">Supprimer</th>
+        <th scope="col">Modifier</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in list %}
+            <tr>
+                <td>{{category.id}}</td>                
+                <td>{{category.type}}</td>
+                <td><a href="{{ path('delete_categoryAgri', {'id': category.id}) }}">Supprimer</a></td>
+                <td><a href=""></a>Modifier</td>
+            </tr>
+    </tbody>
+    {% endfor %}
+    </table>
+{% endblock %}
