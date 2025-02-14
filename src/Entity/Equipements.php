@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\EquipementsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: EquipementsRepository::class)]
 class Equipements
@@ -29,7 +31,7 @@ class Equipements
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'equipements')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true,onDelete:'SET NULL')]
     private ?CategoryEquipements $category = null;
 
     public function getId(): ?int
@@ -99,7 +101,10 @@ class Equipements
 
     public function getCategory(): ?CategoryEquipements
     {
-        return $this->category;
+        if($this->category != null)
+            return $this->category;
+        else
+            return null;
     }
 
     public function setCategory(?CategoryEquipements $category): static

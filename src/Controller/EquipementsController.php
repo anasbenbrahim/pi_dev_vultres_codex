@@ -10,6 +10,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\EquipementsRepository;
 use App\Entity\Equipements;
 use App\Form\AddEquipementsType;
+use App\Form\ModifierEquipementType;
 
 final class EquipementsController extends AbstractController
 {
@@ -46,7 +47,7 @@ final class EquipementsController extends AbstractController
         return $this->render("/equipements/add.html.twig",["form"=>$form]);
     }
     
-    #[Route('/delete_produit/{id}','delete_produit')]
+    #[Route('/delete_equipement/{id}','delete_equipement')]
     public function delete(ManagerRegistry $doctrine,$id,EquipementsRepository $repo){
         $em=$doctrine->getManager();
         $prod=new Equipements();
@@ -54,5 +55,24 @@ final class EquipementsController extends AbstractController
         $em->remove($prod);
         $em->flush();
         return $this->redirectToRoute('show_equipement_dashboard');
+    }
+    #[Route('/modifier_equipement/{id}','modifier_equipement')]
+    public function modifier($id,ManagerRegistry $doctrine,EquipementsRepository $repo,Request $request){
+        $em=$doctrine->getManager();
+        $equipement=new Equipements();
+        $equipement=$repo->find($id);
+        $form=$this->createForm(ModifierEquipementType::class,$equipement);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+
+            $form->getData();
+            $em->persist($equipement);
+            $em->flush();
+            return $this->redirectToRoute('show_equipement_dashboard');
+        }
+
+        return $this->render('/equipements/modify.html.twig'
+        ,["form"=>$form]);
+
     }
 }

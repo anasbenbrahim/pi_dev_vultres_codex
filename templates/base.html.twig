@@ -34,19 +34,7 @@ lang="en"
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
 
     <!-- Page CSS -->
- {% endblock %}
-    <!-- Helpers -->
-    
-    {% block stylesheets %}
-    
-    {% endblock %}
-
-    {% block javascripts %}
-    {% block importmap %}{{ importmap('app') }}{% endblock %}
- 
-    {% endblock %}
-
-    <style>
+   <style>
     .logo{
       width: 100px;
     height: 100px;
@@ -59,6 +47,16 @@ lang="en"
     
     
     </style>
+ {% endblock %}
+    <!-- Helpers -->
+    
+   
+
+    {% block javascripts %}
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
+ 
+    {% endblock %}
+
 
 </head>
 
@@ -99,14 +97,14 @@ lang="en"
     <span class="menu-header-text">Menu</span>
 </li>
 
-{% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_FERMIER') or is_granted('ROLE_FOURNISSEUR') %}
+{#% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_FERMIER') or is_granted('ROLE_FOURNISSEUR') %#}
     <li class="menu-item">
-        <a href="{{ path('app_customers') }}" class="menu-link">
+        <a href="{{ path('show_equipement_dashboard') }}" class="menu-link">
             <i class="menu-icon bi bi-box-seam-fill"></i>
             <div data-i18n="Account Settings">Equipements</div>
         </a>
     </li>
-{% endif %}
+{#% endif %#}
 
 {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_FERMIER') or is_granted('ROLE_FOURNISSEUR') %}
     <li class="menu-item">
@@ -167,12 +165,6 @@ lang="en"
     </li>
 {% endif %}
 
-<li class="menu-header small text-uppercase">
-    <a href="{{path('add_equipement')}}"><span class="menu-header-text">Ajouter un equipement</span></a>
-</li>
-<li class="menu-header small text-uppercase">
-    <a href="{{path('show_equipement_dashboard')}}"><span class="menu-header-text">Consulter equipements</span></a>
-</li>
 <li class="menu-header small text-uppercase">
     <a href="{{path('add_category_equipement')}}"><span class="menu-header-text">Ajouter une categorie</span></a>
 </li>
