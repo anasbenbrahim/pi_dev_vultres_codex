@@ -1,126 +1,197 @@
 {% extends 'baseclient.html.twig' %}
 
-{% block title %}Register{% endblock %}
-
-
-
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
-
-<style>
-    /*------------ Login container ------------*/
-.box-area{
-  width: 1332px;
-  height: 595px;
-}
-/*------------ Right box ------------*/
-.right-box{
-  padding: 90px 50px 90px 50px;
-}
-/*------------ Custom Placeholder ------------*/
-::placeholder{
-  font-size: 16px;
-}
-.rounded-4{
-  border-radius: 20px;
-}
-.rounded-5{
-  border-radius: 30px;
-}
-/*------------ For small screens------------*/
-@media only screen and (max-width: 768px){
-   .box-area{
-      margin: 0 10px;
-   }
-   .left-box{
-      height: 100px;
-      overflow: hidden;
-   }
-   .right-box{
-      padding: 20px;
-   }
-}
-
-.input-group .btn {
-position: relative;
-z-index: 2;
-height: auto;}
-
-#left-content{
-background: #000000;
-background: url('/images/logo sans back.png');
-background-size: cover;
-background-repeat: no-repeat;
-
-}
-
-#logo{
-/*background: linear-gradient(to right, #014512,#00fe11,#014512); */
-background: #ff8a00;
-background-clip: text;
--webkit-text-fill-color: transparent;
-}
-a{
-text-decoration: none;
-}
-.btn-success{
-    background: #ff8a00;
-}
-</style>
-
+    <style>
+        #contentRegister {
+            width: 40%;
+        }
 
         
         
-        <!-- Section droite : Formulaire d'inscription -->
-        <div class="col-md-6 right-box">
-            <div class="row align-items-center">
-                
-                <!-- Titre de la page -->
-                <div class="header-text mb-4 text-center">
-                    <h1 id="logo"><b>Register</b></h1>
+       
+        
+    </style>
+
+    <div class="container mt-5 mb-5 card shadow" id="contentRegister">
+        <!-- Navigation par onglets -->
+        <div class="card-header bg-light"> 
+        <ul class="nav nav-tabs" id="myTab" role="tablist" >
+            <li class="nav-item text-warning" role="presentation" id="nav">
+                <button class="nav-link active text-dark" id="fermier-tab" data-bs-toggle="tab" data-bs-target="#fermier" type="button" role="tab" aria-controls="fermier" aria-selected="true"><b>Fermier</b></button>
+            </li>
+            <li class="nav-item text-warning" role="presentation" id="nav">
+                <button class="nav-link text-dark" id="fournisseur-tab" data-bs-toggle="tab" data-bs-target="#fournisseur" type="button" role="tab" aria-controls="fournisseur" aria-selected="false"><b>Fournisseur</b></button>
+            </li>
+            <li class="nav-item text-warning" role="presentation" id="nav">
+                <button class="nav-link text-dark" id="client-tab" data-bs-toggle="tab" data-bs-target="#client" type="button" role="tab" aria-controls="client" aria-selected="false"><b>Client</b></button>
+            </li>
+        </ul>
+        </div>
+
+        <div class="card-body"> 
+        <!-- Contenu des onglets -->
+        <div class="tab-content" id="myTabContent">
+            <!-- Onglet Fermier -->
+            <div class="tab-pane fade show active" id="fermier" role="tabpanel" aria-labelledby="fermier-tab">
+                <div class="mt-4">
+                    {{ form_start(fermierType, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                    <div class="mb-3">
+                        {{ form_label(fermierType.firstName, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(fermierType.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre prénom'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(fermierType.firstName) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(fermierType.lastName, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(fermierType.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre nom'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(fermierType.lastName) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(fermierType.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(fermierType.email, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre email'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(fermierType.email) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(fermierType.plainPassword, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(fermierType.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre mot de passe'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(fermierType.plainPassword) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(fermierType.farmName, 'Nom de la ferme', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(fermierType.farmName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom de votre ferme'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(fermierType.farmName) }}
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-warning btn-lg text-light">S'inscrire</button>
+                    </div>
+
+                    {{ form_end(fermierType) }}
                 </div>
+            </div>
 
-                <!-- Affichage des erreurs de formulaire -->
-                
+            <!-- Onglet Fournisseur -->
+            <div class="tab-pane fade" id="fournisseur" role="tabpanel" aria-labelledby="fournisseur-tab">
+                <div class="mt-4">
+                    {{ form_start(fournissuerType, {'attr': {'novalidate': 'novalidate'}}) }}
 
-    {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+                    <div class="mb-3">
+                        {{ form_label(fournissuerType.firstName, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(fournissuerType.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre prénom'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(fournissuerType.firstName) }}
+                        </div>
+                    </div>
 
-    <div class="input-group mb-3">
-        {{ form_widget(registrationForm.firstName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Prenom'} }) }}
-        {{ form_errors(registrationForm.firstName) }} 
+                    <div class="mb-3">
+                        {{ form_label(fournissuerType.lastName, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(fournissuerType.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre nom'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(fournissuerType.lastName) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(fournissuerType.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(fournissuerType.email, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre email'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(fournissuerType.email) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(fournissuerType.plainPassword, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(fournissuerType.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre mot de passe'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(fournissuerType.plainPassword) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(fournissuerType.companyName, 'Nom de la société', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(fournissuerType.companyName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom de votre société'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(fournissuerType.companyName) }}
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-warning btn-lg text-light">S'inscrire</button>
+                    </div>
+
+                    {{ form_end(fournissuerType) }}
+                </div>
+            </div>
+
+            <!-- Onglet Client -->
+            <div class="tab-pane fade" id="client" role="tabpanel" aria-labelledby="client-tab">
+                <div class="mt-4">
+                    {{ form_start(clientFormType, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                    <div class="mb-3">
+                        {{ form_label(clientFormType.firstName, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(clientFormType.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre prénom'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(clientFormType.firstName) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(clientFormType.lastName, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(clientFormType.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre nom'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(clientFormType.lastName) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(clientFormType.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(clientFormType.email, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre email'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(clientFormType.email) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(clientFormType.plainPassword, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(clientFormType.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre mot de passe'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(clientFormType.plainPassword) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(clientFormType.address, 'Address', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(clientFormType.address, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre address'}}) }}
+                        <div class="text-danger">
+                            {{ form_errors(clientFormType.address) }}
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-warning btn-lg text-light">S'inscrire</button>
+                    </div>
+
+                    {{ form_end(clientFormType) }}
+                </div>
+            </div>
+        </div>
+        </div>
     </div>
-
-    <div class="input-group mb-3">
-        {{ form_widget(registrationForm.lastName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Nom'} }) }}
-    </div>    
-
-    <div class="input-group mb-3">
-        {{ form_widget(registrationForm.email, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Email'} }) }}
-        {{ form_errors(registrationForm.email) }} 
-    </div>
-
-    <div class="input-group mb-3">
-        {{ form_widget(registrationForm.plainPassword, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Mot de passe'} }) }}
-    </div>
-
-    <div class="input-group mb-3">
-        {{ form_widget(registrationForm.roles, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Rôle'} }) }}
-    </div>
-
-    <div class="form-check mb-3">
-        {{ form_widget(registrationForm.agreeTerms, {'attr' : {'class': 'form-check-input', 'type': 'radio'}}) }}
-        <label class="form-check-label ms-2">{{ form_label(registrationForm.agreeTerms) }}</label>
-    </div>
-
-    
-  
-    <button class="btn btn-lg btn-warning w-100 fs-6 text-light" type="submit">
-        <b>Register</b>
-    </button>
-
-    {{ form_end(registrationForm) }}
-        </div> 
-    </div>
-
-
 {% endblock %}

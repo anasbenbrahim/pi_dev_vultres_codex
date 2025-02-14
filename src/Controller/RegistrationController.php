@@ -8,6 +8,7 @@ use App\Entity\Fermier;
 use App\Entity\Fournisseur;
 use App\Entity\Superadmin;
 use App\Entity\User;
+use App\Form\ClientType;
 use App\Form\RegistrationFormType;
 use App\Security\SecurityAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,173 +18,80 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Form\FermierType;
+use App\Form\FournisseurType;
 
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
-    {
-        $user = new Fermier();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
+public function register(
+    Request $request,
+    UserPasswordHasherInterface $userPasswordHasher,
+    Security $security,
+    EntityManagerInterface $entityManager
+): Response {
+    // Formulaire Fermier
+    $fermier = new Fermier();
+    $fermierForm = $this->createForm(FermierType::class, $fermier);
+    $fermierForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
+    if ($fermierForm->isSubmitted() && $fermierForm->isValid()) {
+        /** @var string $plainPassword */
+        $plainPassword = $fermierForm->get('plainPassword')->getData();
 
-            $user->setFarmName('farme1');
-            // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+        $fermier->setRoles(['ROLE_FERMIER']);
+        $fermier->setPassword($userPasswordHasher->hashPassword($fermier, $plainPassword));
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+        $entityManager->persist($fermier);
+        $entityManager->flush();
 
-            // do anything else you need here, like send an email
-
-            return $security->login($user, SecurityAuthenticator::class, 'main');
-        }
-
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
-            'firstName' => $form->get('firstName')->createView(),
-            'lastName' => $form->get('lastName')->createView(),
-            'email' => $form->get('email')->createView(),
-            'plainPassword' => $form->get('plainPassword')->createView(),
-            'agreeTerms' => $form->get('agreeTerms')->createView(),
-        ]);
+        return $security->login($fermier, SecurityAuthenticator::class, 'main');
     }
 
-    #[Route('/register', name: 'app_register')]
-    public function registerClient(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
-    {
-        $user = new Client();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
+    // Formulaire Fournisseur
+    $fournisseur = new Fournisseur();
+    $fournisseurForm = $this->createForm(FournisseurType::class, $fournisseur);
+    $fournisseurForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
+    if ($fournisseurForm->isSubmitted() && $fournisseurForm->isValid()) {
+        /** @var string $plainPassword */
+        $plainPassword = $fournisseurForm->get('plainPassword')->getData();
 
-            $user->setAddress('address');
-            // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+        $fournisseur->setRoles(['ROLE_FOURNISSEUR']);
+        $fournisseur->setPassword($userPasswordHasher->hashPassword($fournisseur, $plainPassword));
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+        $entityManager->persist($fournisseur);
+        $entityManager->flush();
 
-            // do anything else you need here, like send an email
-
-            return $security->login($user, SecurityAuthenticator::class, 'main');
-        }
-
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
-            'firstName' => $form->get('firstName')->createView(),
-            'lastName' => $form->get('lastName')->createView(),
-            'email' => $form->get('email')->createView(),
-            'plainPassword' => $form->get('plainPassword')->createView(),
-            'agreeTerms' => $form->get('agreeTerms')->createView(),
-        ]);
+        return $security->login($fournisseur, SecurityAuthenticator::class, 'main');
     }
 
-    #[Route('/register', name: 'app_register')]
-    public function registerFournisseur(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
-    {
-        $user = new Fournisseur();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
+    $client = new Client();
+    $clientForm = $this->createForm(ClientType::class, $client);
+    $clientForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
+    if ($clientForm->isSubmitted() && $clientForm->isValid()) {
+        /** @var string $plainPassword */
+        $plainPassword = $clientForm->get('plainPassword')->getData();
 
-            
-            // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+        $client->setRoles(['ROLE_CLIENT']);
+        $client->setPassword($userPasswordHasher->hashPassword($client, $plainPassword));
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+        $entityManager->persist($client);
+        $entityManager->flush();
 
-            // do anything else you need here, like send an email
-
-            return $security->login($user, SecurityAuthenticator::class, 'main');
-        }
-
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
-            'firstName' => $form->get('firstName')->createView(),
-            'lastName' => $form->get('lastName')->createView(),
-            'email' => $form->get('email')->createView(),
-            'plainPassword' => $form->get('plainPassword')->createView(),
-            'agreeTerms' => $form->get('agreeTerms')->createView(),
-        ]);
+        return $security->login($client, SecurityAuthenticator::class, 'main');
     }
 
-    #[Route('/register', name: 'app_register')]
-    public function registerEmployee(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
-    {
-        $user = new Employee();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
+    // Passer les deux formulaires à la vue Twig
+    return $this->render('registration/register.html.twig', [
+        'fermierType' => $fermierForm->createView(),
+        'fournissuerType' => $fournisseurForm->createView(),
+        'clientFormType' => $clientForm->createView(),
+    ]);
+}
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
-
-            
-            // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
-
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            // do anything else you need here, like send an email
-
-            return $security->login($user, SecurityAuthenticator::class, 'main');
-        }
-
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
-            'firstName' => $form->get('firstName')->createView(),
-            'lastName' => $form->get('lastName')->createView(),
-            'email' => $form->get('email')->createView(),
-            'plainPassword' => $form->get('plainPassword')->createView(),
-            'agreeTerms' => $form->get('agreeTerms')->createView(),
-        ]);
-    }
-
-    #[Route('/register', name: 'app_register')]
-    public function registerAdmin(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
-    {
-        $user = new Superadmin();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
-
-            
-            // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
-
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            // do anything else you need here, like send an email
-
-            return $security->login($user, SecurityAuthenticator::class, 'main');
-        }
-
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
-            'firstName' => $form->get('firstName')->createView(),
-            'lastName' => $form->get('lastName')->createView(),
-            'email' => $form->get('email')->createView(),
-            'plainPassword' => $form->get('plainPassword')->createView(),
-            'agreeTerms' => $form->get('agreeTerms')->createView(),
-        ]);
-    }
+    
 
     
 }

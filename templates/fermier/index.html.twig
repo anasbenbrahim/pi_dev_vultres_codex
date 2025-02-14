@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fermier index{% endblock %}
+
+{% block body %}
+    <h1>Fermier index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>LastName</th>
+                <th>FirstName</th>
+                <th>FarmName</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for fermier in fermiers %}
+            <tr>
+                <td>{{ fermier.id }}</td>
+                <td>{{ fermier.email }}</td>
+                <td>{{ fermier.roles ? fermier.roles|json_encode : '' }}</td>
+                <td>{{ fermier.password }}</td>
+                <td>{{ fermier.lastName }}</td>
+                <td>{{ fermier.firstName }}</td>
+                <td>{{ fermier.farmName }}</td>
+                <td>
+                    <a href="{{ path('app_fermier_show', {'id': fermier.id}) }}">show</a>
+                    <a href="{{ path('app_fermier_edit', {'id': fermier.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    
+{% endblock %}

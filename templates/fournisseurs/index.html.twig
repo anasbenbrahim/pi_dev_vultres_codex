@@ -1,20 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello FournisseursController!{% endblock %}
+{% block title %}Hello CustomersController!{% endblock %}
+{% block footer %}{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<div class="card">
+                <h5 class="card-header">Striped rows</h5>
+                <div class="table-responsive text-nowrap">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Email</th>
+                        <th>FirstName</th>
+                        <th>LastName</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/anas/Desktop/symfony_pi_dev/src/Controller/FournisseursController.php</code></li>
-        <li>Your template at <code>/home/anas/Desktop/symfony_pi_dev/templates/fournisseurs/index.html.twig</code></li>
-    </ul>
-</div>
+                    {% for user in users %}
+                      {% if 'ROLE_FOURNISSEUR' in user.roles %}
+                      <tr>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{ user.email }}</strong></td>
+                        <td>{{ user.firstName }}</td>
+                        <td>
+                          {{ user.lastName }}
+                        </td>
+                        <td><span class="badge bg-label-primary me-1">Active</span></td>
+                        <td>
+                          <button class="btn btn-primary" ><i class="bx bx-edit-alt me-1"></i> </button>
+                          <button class="btn btn-danger" ><i class="bx bx-trash me-1"></i> </button>
+                        </td>
+                      </tr>
+                      {% endif %}
+                    {% else %}
+                      <tr>
+                        <td colspan="5">Aucun utilisateur trouvé</td>
+                      </tr>
+                    {% endfor %} 
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 {% endblock %}
+
+
+
+
+
