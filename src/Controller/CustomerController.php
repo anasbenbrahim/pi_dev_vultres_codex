@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Form\ClientForm;
 use App\Form\ClientType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,70 +11,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Security\SecurityAuthenticator;
-
-
 use Symfony\Bundle\SecurityBundle\Security;
-
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
+
+
+
+use App\Service\PasswordGenerator;
+use App\Repository\UserRepository;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+
+
 
 #[Route('/customer')]
 final class CustomerController extends AbstractController
 {
-    #[Route(name: 'app_customer_index')]
-    public function index(EntityManagerInterface $entityManager, Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security): Response
-    {
-        $clients = $entityManager
-            ->getRepository(Client::class)
-            ->findAll();
-
-            $client = new Client();
-            $clientForm = $this->createForm(ClientType::class, $client);
-            $clientForm->handleRequest($request);
-
-            if ($clientForm->isSubmitted() && $clientForm->isValid()) {
-                /** @var string $plainPassword */
-                $plainPassword = $clientForm->get('plainPassword')->getData();
-        
-                $client->setRoles(['ROLE_CLIENT']);
-                $client->setPassword($userPasswordHasher->hashPassword($client, $plainPassword));
-        
-                $entityManager->persist($client);
-                $entityManager->flush();
-        
-                return $this->redirectToRoute('app_customer_index');
-            }
-
-        return $this->render('customer/index.html.twig', [
-            'clients' => $clients,
-            'clientFormType' => $clientForm->createView(),
-        ]);
-    }
-
-    #[Route('/new', name: 'app_new_customer')]
-    public function registerClient(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager ): Response
-    {
-        $client = new Client();
-        $clientForm = $this->createForm(ClientType::class, $client);
-        $clientForm->handleRequest($request);
-
-        if ($clientForm->isSubmitted() && $clientForm->isValid()) {
-            /** @var string $plainPassword */
-            $plainPassword = $clientForm->get('plainPassword')->getData();
     
-            $client->setRoles(['ROLE_CLIENT']);
-            $client->setPassword($userPasswordHasher->hashPassword($client, $plainPassword));
-    
-            $entityManager->persist($client);
-            $entityManager->flush();
-    
-            return $security->login($client, SecurityAuthenticator::class, 'main');
-        }
 
-        return $this->render('customer/index.html.twig', [
-            'clientFormType' => $clientForm->createView(),
-        ]);
-    }
-
+   
     #[Route('/{id}', name: 'app_customer_show', methods: ['GET'])]
     public function show(Client $client): Response
     {

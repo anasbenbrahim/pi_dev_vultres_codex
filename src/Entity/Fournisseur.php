@@ -12,6 +12,8 @@ class Fournisseur extends User
     #[Assert\NotBlank(message: "Company Name is required"), Assert\Length(min:3)]
     private ?string $companyName = null;
 
+   
+
     public function getCompanyName(): ?string
     {
         return $this->companyName;
@@ -23,4 +25,6 @@ class Fournisseur extends User
 
         return $this;
     }
+
+    
 }

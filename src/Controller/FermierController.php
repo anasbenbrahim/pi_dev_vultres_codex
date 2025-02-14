@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Fermier;
+use App\Form\FermierForm;
 use App\Form\FermierType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,39 +18,22 @@ use App\Security\SecurityAuthenticator;
 
 
 
+
+
+
 #[Route('/fermier')]
 final class FermierController extends AbstractController
 {
-    #[Route(name: 'app_fermier_index')]
-    public function index(EntityManagerInterface $entityManager, Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security): Response
+
+    #[Route(name: 'app_fermier')]
+    public function index(): Response
     {
-        $fermiers = $entityManager
-            ->getRepository(Fermier::class)
-            ->findAll();
-
-            $fermier = new Fermier();
-            $fermierForm = $this->createForm(FermierType::class, $fermier);
-            $fermierForm->handleRequest($request);
-
-            if ($fermierForm->isSubmitted() && $fermierForm->isValid()) {
-                /** @var string $plainPassword */
-                $plainPassword = $fermierForm->get('plainPassword')->getData();
         
-                $fermier->setRoles(['ROLE_CLIENT']);
-                $fermier->setPassword($userPasswordHasher->hashPassword($fermier, $plainPassword));
-        
-                $entityManager->persist($fermier);
-                $entityManager->flush();
-        
-                return $this->redirectToRoute('app_fermier_index');
-            }
-
-        return $this->render('fermier/index.html.twig', [
-            'fermiers' => $fermiers,
-            'fermierFormType' => $fermierForm->createView(),
+        return $this->render('fermier/home.html.twig', [
+            'controller_name' => 'FermierController',
         ]);
     }
-
+    
     #[Route('/new', name: 'app_new_fermier')]
     public function registerClient(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager ): Response
     {

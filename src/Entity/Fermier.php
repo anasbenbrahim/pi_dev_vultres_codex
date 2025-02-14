@@ -12,6 +12,8 @@ class Fermier extends User
     #[Assert\NotBlank(message: "Farm Name is required"), Assert\Length(min:3)]
     private ?string $farmName = null;
 
+   
+
     public function getFarmName(): ?string
     {
         return $this->farmName;
@@ -23,4 +25,6 @@ class Fermier extends User
 
         return $this;
     }
+
+    
 }

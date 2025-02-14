@@ -27,17 +27,14 @@
                             {{ form_widget(fermierFormType.lastName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Nom'} }) }}
                         </div>
                         <div class="input-group mb-3">
-                            {{ form_widget(fermierFormType.farmName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Address'} }) }}
+                            {{ form_widget(fermierFormType.farmName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'FarmName'} }) }}
                         </div>
                         <div class="input-group mb-3">
                             {{ form_widget(fermierFormType.email, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Email'} }) }}
                             {{ form_errors(fermierFormType.email) }}
                         </div>
-                        <div class="input-group mb-3">
-                            {{ form_widget(fermierFormType.plainPassword, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Mot de passe'} }) }}
-                        </div>
                         <button class="btn btn-lg btn-success w-100 fs-6 " type="submit">
-                            <b>Register</b>
+                            <b>Ajouter</b>
                         </button>
                         {{ form_end(fermierFormType) }}
                     </div>

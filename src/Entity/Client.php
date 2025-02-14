@@ -12,6 +12,10 @@ class Client extends User
     #[Assert\NotBlank(message: "Address is required"), Assert\Length(min:3)]
     private ?string $address = null;
 
+   
+
+    
+
     public function getAddress(): ?string
     {
         return $this->address;
@@ -23,4 +27,11 @@ class Client extends User
 
         return $this;
     }
+
+    
+
+    // Getter et Setter pour l'image
+
+    
+    
 }
