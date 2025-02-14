@@ -1,45 +1,102 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Fournisseur index{% endblock %}
+{% block title %}fournisseur index{% endblock %}
 
 {% block body %}
-    <h1>Fournisseur index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Roles</th>
-                <th>Password</th>
-                <th>LastName</th>
-                <th>FirstName</th>
-                <th>CompanyName</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for fournisseur in fournisseurs %}
-            <tr>
-                <td>{{ fournisseur.id }}</td>
-                <td>{{ fournisseur.email }}</td>
-                <td>{{ fournisseur.roles ? fournisseur.roles|json_encode : '' }}</td>
-                <td>{{ fournisseur.password }}</td>
-                <td>{{ fournisseur.lastName }}</td>
-                <td>{{ fournisseur.firstName }}</td>
-                <td>{{ fournisseur.companyName }}</td>
-                <td>
-                    <a href="{{ path('app_fournisseur_show', {'id': fournisseur.id}) }}">show</a>
-                    <a href="{{ path('app_fournisseur_edit', {'id': fournisseur.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="card">
+        <h5 class="card-header">List fournisseurs</h5>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addfournisseurModal"><b> <i class="bx bx-add-to-queue me-1"></i> Add fournisseur </b></button>
 
-    <a href="{{ path('app_fournisseur_new') }}">Create new</a>
+        <!-- Modal pour ajouter un fournisseur -->
+        <div class="modal fade" id="addfournisseurModal" tabindex="-1" aria-labelledby="addfournisseurModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addfournisseurModalLabel">Add Fournisseur</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ form_start(fournisseurFormType, {'attr': {'novalidate': 'novalidate'}}) }}
+                        <div class="input-group mb-3">
+                            {{ form_widget(fournisseurFormType.firstName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Prenom'} }) }}
+                            {{ form_errors(fournisseurFormType.firstName) }}
+                        </div>
+                        <div class="input-group mb-3">
+                            {{ form_widget(fournisseurFormType.lastName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Nom'} }) }}
+                        </div>
+                        <div class="input-group mb-3">
+                            {{ form_widget(fournisseurFormType.companyName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Entreprise'} }) }}
+                        </div>
+                        <div class="input-group mb-3">
+                            {{ form_widget(fournisseurFormType.email, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Email'} }) }}
+                            {{ form_errors(fournisseurFormType.email) }}
+                        </div>
+                        <div class="input-group mb-3">
+                            {{ form_widget(fournisseurFormType.plainPassword, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Mot de passe'} }) }}
+                        </div>
+                        <button class="btn btn-lg btn-success w-100 fs-6 " type="submit">
+                            <b>Register</b>
+                        </button>
+                        {{ form_end(fournisseurFormType) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tableau des fournisseurs -->
+        <div class="table-responsive text-nowrap">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>FirstName</th>
+                        <th>LastName</th>
+                        <th>Company</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    {% for fournisseur in fournisseurs %}
+                        <tr>
+                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{ fournisseur.email }}</strong></td>
+                            <td>{{ fournisseur.firstName }}</td>
+                            <td>{{ fournisseur.lastName }}</td>
+                            <td>{{ fournisseur.companyName }}</td>
+                            <td>
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ fournisseur.id }}"><i class="bx bx-trash me-1"></i></button>
+                            </td>
+                        </tr>
+
+                        <!-- Modal de confirmation de suppression pour chaque fournisseur -->
+                        <div class="modal fade" id="deleteModal{{ fournisseur.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ fournisseur.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel{{ fournisseur.id }}">Confirmation de suppression</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Êtes-vous sûr de vouloir supprimer ce fournisseur ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                        <form method="post" action="{{ path('app_fournisseur_delete', {'id': fournisseur.id}) }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ fournisseur.id) }}">
+                                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">Aucun fournisseur trouvé</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 {% endblock %}

@@ -14,51 +14,64 @@ use Symfony\Bundle\SecurityBundle\Security;
 use App\Security\SecurityAuthenticator;
 
 
+
+
+
 #[Route('/fermier')]
 final class FermierController extends AbstractController
 {
-    #[Route(name: 'app_fermier_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    #[Route(name: 'app_fermier_index')]
+    public function index(EntityManagerInterface $entityManager, Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security): Response
     {
         $fermiers = $entityManager
             ->getRepository(Fermier::class)
             ->findAll();
 
+            $fermier = new Fermier();
+            $fermierForm = $this->createForm(FermierType::class, $fermier);
+            $fermierForm->handleRequest($request);
+
+            if ($fermierForm->isSubmitted() && $fermierForm->isValid()) {
+                /** @var string $plainPassword */
+                $plainPassword = $fermierForm->get('plainPassword')->getData();
+        
+                $fermier->setRoles(['ROLE_CLIENT']);
+                $fermier->setPassword($userPasswordHasher->hashPassword($fermier, $plainPassword));
+        
+                $entityManager->persist($fermier);
+                $entityManager->flush();
+        
+                return $this->redirectToRoute('app_fermier_index');
+            }
+
         return $this->render('fermier/index.html.twig', [
             'fermiers' => $fermiers,
+            'fermierFormType' => $fermierForm->createView(),
         ]);
     }
 
-    #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    #[Route('/new', name: 'app_new_fermier')]
+    public function registerClient(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager ): Response
     {
-        $fermier = new Fermier();
-        $form = $this->createForm(FermierType::class, $fermier);
-        $form->handleRequest($request);
+        $client = new Fermier();
+        $clientForm = $this->createForm(FermierType::class, $client);
+        $clientForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($clientForm->isSubmitted() && $clientForm->isValid()) {
             /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
-
-            $fermier->setRoles('ROLE_FERMIER');
-            // encode the plain password
-            $fermier->setPassword($userPasswordHasher->hashPassword($fermier, $plainPassword));
-
-            $entityManager->persist($fermier);
+            $plainPassword = $clientForm->get('plainPassword')->getData();
+    
+            $client->setRoles(['ROLE_FERMIER']);
+            $client->setPassword($userPasswordHasher->hashPassword($client, $plainPassword));
+    
+            $entityManager->persist($client);
             $entityManager->flush();
-
-            // do anything else you need here, like send an email
-
-            return $security->login($fermier, SecurityAuthenticator::class, 'main');
+    
+            return $security->login($client, SecurityAuthenticator::class, 'main');
         }
 
-        return $this->render('registration/register.html.twig', [
-            'fermierType' => $form,
-            'firstName' => $form->get('firstName')->createView(),
-            'lastName' => $form->get('lastName')->createView(),
-            'email' => $form->get('email')->createView(),
-            'plainPassword' => $form->get('plainPassword')->createView(),
-            'farmName' => $form->get('farmName')->createView(),
+        return $this->render('fermier/index.html.twig', [
+            'clientFormType' => $clientForm->createView(),
         ]);
     }
 

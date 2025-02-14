@@ -139,7 +139,7 @@ lang="en"
     <span class="menu-header-text">Utilisateurs</span>
 </li>
     <li class="menu-item">
-        <a href="{{ path('app_customers') }}" class="menu-link">
+        <a href="{{ path('app_customer_index') }}" class="menu-link">
             <i class="menu-icon bi bi-person-fill"></i>
             <div data-i18n="Account Settings">Clients</div>
         </a>
@@ -148,7 +148,7 @@ lang="en"
 
 {% if is_granted('ROLE_SUPER_ADMIN') %}
     <li class="menu-item">
-        <a href="{{ path('app_fermiers') }}" class="menu-link">
+        <a href="{{ path('app_fermier_index') }}" class="menu-link">
             <i class="menu-icon bi bi-person-check-fill"></i>
             <div data-i18n="Account Settings">Fermiers</div>
         </a>
@@ -157,7 +157,7 @@ lang="en"
 
 {% if is_granted('ROLE_SUPER_ADMIN') %}
     <li class="menu-item">
-        <a href="{{ path('app_fournisseurs') }}" class="menu-link">
+        <a href="{{ path('app_fournisseur_index') }}" class="menu-link">
             <i class="menu-icon bi bi-person-check-fill"></i>
             <div data-i18n="Account Settings">Fournisseurs</div>
         </a>

@@ -10,18 +10,40 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+use Symfony\Bundle\SecurityBundle\Security;
+
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
 #[Route('/fournisseur')]
 final class FournisseurController extends AbstractController
 {
-    #[Route(name: 'app_fournisseur_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    #[Route(name: 'app_fournisseur_index')]
+    public function index(EntityManagerInterface $entityManager, Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security): Response
     {
         $fournisseurs = $entityManager
             ->getRepository(Fournisseur::class)
             ->findAll();
 
+            $fournisseur = new Fournisseur();
+            $fournisseurForm = $this->createForm(FournisseurType::class, $fournisseur);
+            $fournisseurForm->handleRequest($request);
+
+            if ($fournisseurForm->isSubmitted() && $fournisseurForm->isValid()) {
+                /** @var string $plainPassword */
+                $plainPassword = $fournisseurForm->get('plainPassword')->getData();
+        
+                $fournisseur->setRoles(['ROLE_Fournisseur']);
+                $fournisseur->setPassword($userPasswordHasher->hashPassword($fournisseur, $plainPassword));
+        
+                $entityManager->persist($fournisseur);
+                $entityManager->flush();
+        
+                return $this->redirectToRoute('app_fournisseur_index');
+            }
+
         return $this->render('fournisseur/index.html.twig', [
             'fournisseurs' => $fournisseurs,
+            'fournisseurFormType' => $fournisseurForm->createView(),
         ]);
     }
 
