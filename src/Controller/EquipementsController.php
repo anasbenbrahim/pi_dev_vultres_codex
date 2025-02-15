@@ -11,6 +11,7 @@ use App\Repository\EquipementsRepository;
 use App\Entity\Equipements;
 use App\Form\AddEquipementsType;
 use App\Form\ModifierEquipementType;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final class EquipementsController extends AbstractController
 {
@@ -34,15 +35,21 @@ final class EquipementsController extends AbstractController
     }
     
     #[Route('/add_equipement','add_equipement')]
-    public function add(ManagerRegistry $doctrine,EquipementsRepository $repo,Request $request){
+    public function add(ManagerRegistry $doctrine,EquipementsRepository $repo,Request $request,#[Autowire('%photo_dir%')] string $photoDir ){
         $equipement=new Equipements();
         $em=$doctrine->getManager();
         $form=$this->createForm(AddEquipementsType::class,$equipement);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            $form->getData();
+            $equipement=$form->getData();
+            if($photo=$form['image']->getData()){
+                $filename=uniqid().'.'.$photo->guessExtension();
+                $photo->move($photoDir,$filename); 
+            }
+            $equipement->setImage($filename);
             $em->persist($equipement);
             $em->flush();
+            return $this->redirectToRoute('show_equipement_dashboard');
         }
         return $this->render("/equipements/add.html.twig",["form"=>$form]);
     }

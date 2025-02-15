@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Repository\EquipementsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Mime\Message;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: EquipementsRepository::class)]
 class Equipements
@@ -14,20 +16,29 @@ class Equipements
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    
+    #[Assert\Length(min:4,minMessage:"Veuillez saisir un nom valide"),NotBlank(),]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
-
+    
+    #[Assert\PositiveOrZero(message:"veuillez inserer un nombre positif")]
+    #[Assert\NotBlank(message:"champs vide veuillez inserer une valeur")]
     #[ORM\Column]
     private ?int $quantite = null;
 
+    #[Assert\NotBlank(message:"champs vide veuillez inserer une valeur")]
     #[ORM\Column]
     private ?float $prix = null;
 
+    #[Assert\NotBlank(),Length(max:255,maxMessage:"veillez reduire la taille description ")]
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
+    #[Assert\Image(
+        maxSize: "3M",
+        mimeTypes: ["image/jpeg", "image/png", "image/jpg"],
+        mimeTypesMessage: "Veuillez insérer une image valide"
+    )]    #[ORM\Column(length: 255)]
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'equipements')]
