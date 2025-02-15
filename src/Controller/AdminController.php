@@ -221,6 +221,63 @@ final class AdminController extends AbstractController
     }
 
 
+    #[Route('/fermier/{id}/edit', name: 'fermier_edit')]
+    public function edit(Request $request, Fermier $fermier, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(FermierForm::class, $fermier);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_fermier_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('fermier/edit.html.twig', [
+            'fermier' => $fermier,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/client/{id}/edit', name: 'customer_edit')]
+    public function editClient(Request $request, Client $client, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(ClientForm::class, $client);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_customer_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('customer/edit.html.twig', [
+            'client' => $client,
+            'form' => $form,
+        ]);
+    }
+
+
+    #[Route('/fournisseur/{id}/edit', name: 'fournisseur_edit')]
+    public function editFournisseur(Request $request, Fournisseur $fournisseur, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(FournisseurForm::class, $fournisseur);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_fournisseur_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('fournisseur/edit.html.twig', [
+            'fournisseur' => $fournisseur,
+            'form' => $form,
+        ]);
+    }
+
+
+
 
 
     #[Route('/admin/employee', name: 'app_emp')]

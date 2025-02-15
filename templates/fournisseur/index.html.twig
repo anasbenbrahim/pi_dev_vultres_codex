@@ -63,6 +63,7 @@
                             <td>{{ fournisseur.companyName }}</td>
                             <td>
                                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ fournisseur.id }}"><i class="bx bx-trash me-1"></i></button>
+                                <a class="btn btn-success" href="{{ path('fournisseur_edit', {'id': fournisseur.id}) }}"><i class="bx bx-edit me-1"></i></a>
                             </td>
                         </tr>
 

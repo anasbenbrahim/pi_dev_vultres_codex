@@ -62,8 +62,8 @@
                             <td>{{ fermier.lastName }}</td>
                             <td>{{ fermier.farmName }}</td>
                             <td>
-                                
                                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ fermier.id }}"><i class="bx bx-trash me-1"></i></button>
+                                <a class="btn btn-success" href="{{ path('fermier_edit', {'id': fermier.id}) }}"><i class="bx bx-edit me-1"></i></a>
                             </td>
                         </tr>
 
