@@ -5,10 +5,14 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\Fermier;
 use App\Entity\Fournisseur;
+use App\Entity\Publication;
+use App\Entity\Reclamation;
 use App\Entity\Superadmin;
+use App\Enum\Status;
 use App\Form\ClientForm;
 use App\Form\FermierForm;
 use App\Form\FournisseurForm;
+use App\Form\PublicationType;
 use App\Form\SuperadminType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -280,10 +284,15 @@ final class AdminController extends AbstractController
 
 
     #[Route('/{id}/edit', name: 'superadmin_edit')]
-    public function editSuperadmin(Request $request, Superadmin $superadmin, EntityManagerInterface $entityManager): Response
+    public function editSuperadmin(Request $request, UserPasswordHasherInterface $userPasswordHasher, Superadmin $superadmin, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(SuperadminType::class, $superadmin);
         $form->handleRequest($request);
+
+        $plainPassword = $form->get('password')->getData();
+
+        
+        $superadmin->setPassword($userPasswordHasher->hashPassword($superadmin, $plainPassword));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
@@ -291,7 +300,7 @@ final class AdminController extends AbstractController
             return $this->redirectToRoute('app_profile', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('profile/index.html.twig', [
+        return $this->render('superadmin/edit.html.twig', [
             'superadmin' => $superadmin,
             'form' => $form,
         ]);
@@ -308,4 +317,66 @@ final class AdminController extends AbstractController
             'controller_name' => 'AdminController',
         ]);
     }
+
+    #[Route('/publication', name: 'publication_index')]
+    public function indexPublication(EntityManagerInterface $entityManager): Response
+    {
+        $publications = $entityManager->getRepository(Publication::class)->findAll();
+
+        return $this->render('publication/indexadmin.html.twig', [
+            'publications' => $publications,
+        ]);
+    }
+
+    
+
+    #[Route('/{id}/delete', name: 'publication_delete')]
+    public function delete(Publication $publication, EntityManagerInterface $entityManager): Response
+    {
+        foreach ($publication->getCommentaires() as $commentaire) {
+            $entityManager->remove($commentaire);
+        }
+
+        $entityManager->remove($publication);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('publication_index');
+    }
+
+
+
+    #[Route('/reclamations', name: 'admin_reclamation_index')]
+    public function adminIndex(EntityManagerInterface $entityManager): Response
+    {
+        $reclamations = $entityManager->getRepository(Reclamation::class)->findAll();
+        $publications = $entityManager->getRepository(Publication::class)->findAll();
+        return $this->render('reclamation/indexadmin.html.twig', [
+            'reclamations' => $reclamations,
+            'publications' => $publications,
+        ]);
+    }
+
+    #[Route('/reclamation/{id}/delete', name: 'admin_reclamation_delete')]
+    public function adminDelete(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $reclamation = $entityManager->getRepository(Reclamation::class)->find($id);
+
+        if (!$reclamation) {
+            throw $this->createNotFoundException('Reclamation not found');
+        }
+        $entityManager->remove($reclamation);
+        $entityManager->flush();
+        $this->addFlash('success', 'Reclamation deleted successfully');
+        return $this->redirectToRoute('admin_reclamation_index');
+    }
+
+    #[Route('/reclamation/{id}/approve', name: 'admin_reclamation_approve')]
+    public function adminApprove(Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    {
+        $reclamation->setStatus(Status::TERMINE);  
+        $entityManager->flush();
+        $this->addFlash('success', 'Reclamation approved successfully');
+        return $this->redirectToRoute('admin_reclamation_index');
+    }
+
 }

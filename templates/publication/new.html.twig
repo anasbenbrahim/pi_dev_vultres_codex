@@ -1,0 +1,41 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Créer une nouvelle publication{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Créer une nouvelle publication</h1>
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        
+        <div class="form-group">
+            {{ form_label(form.titre) }}
+            {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+            <div class="error">{{ form_errors(form.titre) }}</div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+            <div class="error">{{ form_errors(form.description) }}</div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.date) }}
+            {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
+            <div class="error">{{ form_errors(form.date) }}</div>
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.image) }}
+            {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+            <div class="error">{{ form_errors(form.image) }}</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Créer la publication</button>
+        
+        {{ form_end(form) }}
+
+        <a href="{{ path('publication_index') }}" class="btn btn-secondary mt-3">Retour aux publications</a>
+    </div>
+{% endblock %}
