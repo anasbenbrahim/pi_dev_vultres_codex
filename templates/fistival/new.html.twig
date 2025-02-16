@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Fistival{% endblock %}
+
+{% block body %}
+    <h1>Create new Fistival</h1>
+
+    {{ include('fistival/_form.html.twig') }}
+
+    <a href="{{ path('app_fistival_index') }}">back to list</a>
+{% endblock %}

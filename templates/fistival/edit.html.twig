@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Fistival{% endblock %}
+
+{% block body %}
+    <h1>Edit Fistival</h1>
+
+    {{ include('fistival/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_fistival_index') }}">back to list</a>
+
+    {{ include('fistival/_delete_form.html.twig') }}
+{% endblock %}

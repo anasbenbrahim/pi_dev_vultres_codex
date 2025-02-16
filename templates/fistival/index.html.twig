@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fistival index{% endblock %}
+
+{% block body %}
+    <h1>Fistival index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Discription</th>
+                <th>Date</th>
+                <th>Photo</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for fistival in fistivals %}
+            <tr>
+                <td>{{ fistival.id }}</td>
+                <td>{{ fistival.nom }}</td>
+                <td>{{ fistival.discription }}</td>
+                <td>{{ fistival.date  }}</td>
+                 <td>{% if fistival.photo %}
+                <img src="{{ asset(fistival.photo) }}" alt="Product Image" width="100">
+
+            {% endif %}</td>
+                
+                <td>
+                    <a href="{{ path('app_fistival_show', {'id': fistival.id}) }}">show</a>
+                    <a href="{{ path('app_fistival_edit', {'id': fistival.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_fistival_new') }}">Create new</a>
+{% endblock %}
