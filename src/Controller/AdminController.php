@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\Fermier;
 use App\Entity\Fournisseur;
+use App\Entity\Superadmin;
 use App\Form\ClientForm;
 use App\Form\FermierForm;
 use App\Form\FournisseurForm;
+use App\Form\SuperadminType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -272,6 +274,25 @@ final class AdminController extends AbstractController
 
         return $this->render('fournisseur/edit.html.twig', [
             'fournisseur' => $fournisseur,
+            'form' => $form,
+        ]);
+    }
+
+
+    #[Route('/{id}/edit', name: 'superadmin_edit')]
+    public function editSuperadmin(Request $request, Superadmin $superadmin, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(SuperadminType::class, $superadmin);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_profile', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('profile/index.html.twig', [
+            'superadmin' => $superadmin,
             'form' => $form,
         ]);
     }

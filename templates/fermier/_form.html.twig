@@ -43,22 +43,34 @@
         <h2 class="text-center"><i class="bx bx-edit"></i> Edit Fermier</h2>
 </div>        
 <div class="card-body">
-        {{ form_start(form) }}
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
             <div class="form-group">
                 {{ form_label(form.email) }}
                 {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">
+                    {{ form_errors(form.email, {'attr': {'class': 'text-danger'}}) }}
+                </div>
             </div>
             <div class="form-group">
                 {{ form_label(form.firstName) }}
                 {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">
+                    {{ form_errors(form.firstName, {'attr': {'class': 'text-danger'}}) }}
+                </div>
             </div>
             <div class="form-group">
                 {{ form_label(form.lastName) }}
                 {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">
+                    {{ form_errors(form.lastName, {'attr': {'class': 'text-danger'}}) }}
+                </div>   
             </div>
             <div class="form-group">
                 {{ form_label(form.farmName) }}
                 {{ form_widget(form.farmName, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">
+                    {{ form_errors(form.farmName, {'attr': {'class': 'text-danger'}}) }}
+                </div>
             </div>
             <button type="submit" class="btn btn-success form-control"><i class="bx bx-save"></i> {{ button_label|default('Update') }}</button>
             
