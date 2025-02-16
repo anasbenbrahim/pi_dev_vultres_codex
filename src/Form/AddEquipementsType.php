@@ -22,7 +22,7 @@ class AddEquipementsType extends AbstractType
             ->add('quantite')
             ->add('prix')
             ->add('description',TextareaType::class)
-            ->add('image',FileType::class)
+            ->add('image',FileType::class,['data_class'=>null])
             ->add('category', EntityType::class, [
                 'class' => CategoryEquipements::class,
                 'choice_label' => 'type',

@@ -33,6 +33,13 @@ final class EquipementsController extends AbstractController
             "list" =>$list
         ]);
     }
+    #[Route('/show_detail/{id}','show_detail')]
+    public function show_detail($id,EquipementsRepository $doctrine){
+        $equipement=new equipements();
+        $equipement=$doctrine->find($id);
+        return $this->render('/equipements/show_detail.html.twig',
+        ["equipement"=>$equipement]);
+    }
     
     #[Route('/add_equipement','add_equipement')]
     public function add(ManagerRegistry $doctrine,EquipementsRepository $repo,Request $request,#[Autowire('%photo_dir%')] string $photoDir ){
@@ -64,22 +71,41 @@ final class EquipementsController extends AbstractController
         return $this->redirectToRoute('show_equipement_dashboard');
     }
     #[Route('/modifier_equipement/{id}','modifier_equipement')]
-    public function modifier($id,ManagerRegistry $doctrine,EquipementsRepository $repo,Request $request){
-        $em=$doctrine->getManager();
-        $equipement=new Equipements();
-        $equipement=$repo->find($id);
-        $form=$this->createForm(ModifierEquipementType::class,$equipement);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+    public function modifier($id,ManagerRegistry $doctrine,EquipementsRepository $repo,Request $request,#[Autowire('%photo_dir%')] string $photoDir){
 
-            $form->getData();
-            $em->persist($equipement);
-            $em->flush();
-            return $this->redirectToRoute('show_equipement_dashboard');
+    $em = $doctrine->getManager();
+    $equipement = $repo->find($id);
+
+    if (!$equipement) {
+        throw $this->createNotFoundException("Équipement non trouvé.");
+    }
+
+    $ancienneImage = $equipement->getImage(); // Sauvegarde l'ancienne image avant modification
+
+    $form = $this->createForm(ModifierEquipementType::class, $equipement);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $photo = $form->get('image')->getData();
+
+        if ($photo) { // Si une nouvelle image est envoyée
+            $filename = uniqid() . '.' . $photo->guessExtension();
+            $photo->move($photoDir, $filename);
+            $equipement->setImage($filename);
+        } else { // Sinon, garder l'ancienne image
+            $equipement->setImage($ancienneImage);
         }
 
-        return $this->render('/equipements/modify.html.twig'
-        ,["form"=>$form]);
+        $em->persist($equipement);
+        $em->flush();
+
+        return $this->redirectToRoute('show_equipement_dashboard');
+    }
+
+    return $this->render('/equipements/modify.html.twig', [
+        'form' => $form->createView()
+    ]);
+
 
     }
 }
