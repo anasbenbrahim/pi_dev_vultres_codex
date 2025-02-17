@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Commentaire;
+use App\Entity\Event;
 use App\Entity\Publication;
 use App\Entity\Reclamation;
 use App\Form\CommentaireType;
@@ -266,6 +267,20 @@ final class ClientController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('reclamation_index');
+    }
+
+    #[Route('/event/test',name: 'app_event_indexclient',methods: ['GET'])]
+    public function test(EntityManagerInterface $entityManager): Response
+    {
+        $events = $entityManager->getRepository(Event::class)->findAll();
+        return $this->render('event/showevent.html.twig',['events' => $events]);
+    }
+    #[Route('/event/detail/{id}','event_detail_client',methods: ['GET'])]
+    public function detail(EntityManagerInterface $entityManager,$id): Response
+    {
+        //$events=new events();
+        $events = $entityManager->getRepository(Event::class)->find($id);
+        return $this->render('event/detaille.html.twig',['event' => $events]);
     }
 
 

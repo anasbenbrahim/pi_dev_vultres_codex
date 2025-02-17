@@ -51,7 +51,7 @@ class SecurityAuthenticator extends AbstractLoginFormAuthenticator
 
         $user = $token->getUser();
 
-        $adminRoles = ['ROLE_SUPER_ADMIN', 'ROLE_FOURNISSEUR', 'ROLE_EMPLOYEE'];
+        $adminRoles = ['ROLE_SUPER_ADMIN', 'ROLE_EMPLOYEE'];
 
         foreach ($adminRoles as $role) {
             if (in_array($role, $user->getRoles(), true)) {

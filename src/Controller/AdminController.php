@@ -3,12 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Event;
 use App\Entity\Fermier;
 use App\Entity\Fournisseur;
 use App\Entity\Publication;
 use App\Entity\Reclamation;
 use App\Entity\Superadmin;
+use App\Enum\EventType;
 use App\Enum\Status;
+use App\Form\EventFormType;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Form\ClientForm;
 use App\Form\FermierForm;
 use App\Form\FournisseurForm;
@@ -378,5 +383,139 @@ final class AdminController extends AbstractController
         $this->addFlash('success', 'Reclamation approved successfully');
         return $this->redirectToRoute('admin_reclamation_index');
     }
+
+
+
+
+
+
+
+
+    #[Route('/', name: 'app_event_index', methods: ['GET'])]
+    public function indexevent(EntityManagerInterface $entityManager): Response
+    {
+        $events = $entityManager->getRepository(Event::class)->findAll();
+
+        return $this->render('event/index.html.twig', [
+            'events' => $events,
+        ]);
+    }
+    
+
+
+
+    // 🔹 Ajouter un événement avec gestion d'image
+    #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
+    public function newevent(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+        $event = new Event();
+        $form = $this->createForm(EventFormType::class, $event);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Gestion de l'upload d'image
+            $imageFile = $form->get('photo')->getData();
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+                
+                try {
+                    // Définir le dossier d'upload
+                    $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads';
+                    
+                    // Déplacer l'image vers le dossier d'upload
+                    $imageFile->move($uploadDir, $newFilename);
+                    
+                    // Enregistrer le chemin de l'image dans la base de données
+                    $event->setPhoto('uploads/' . $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors du téléchargement de l\'image.');
+                }
+            }
+
+            $entityManager->persist($event);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Événement ajouté avec succès !');
+
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        return $this->render('event/new.html.twig', [
+            'event' => $event,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    // 🔹 Afficher un seul événement
+    #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
+    public function show(Event $event): Response
+    {
+        return $this->render('event/show.html.twig', [
+            'event' => $event,
+        ]);
+    }
+
+    // 🔹 Modifier un événement (avec gestion d'image)
+    #[Route('/event/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
+    public function editevent(Request $request, Event $event, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+        $form = $this->createForm(EventFormType::class, $event);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('photo')->getData();
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+                try {
+                    $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads';
+                    $imageFile->move($uploadDir, $newFilename);
+                    $event->setPhoto('uploads/' . $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors du téléchargement de l\'image.');
+                }
+            }
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Événement modifié avec succès !');
+
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        return $this->render('event/edit.html.twig', [
+            'event' => $event,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    // 🔹 Supprimer un événement
+    #[Route('/{id}/delete', name: 'app_event_delete', methods: ['POST'])]
+    public function deleteevent(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $event->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($event);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Événement supprimé avec succès !');
+        }
+
+        return $this->redirectToRoute('app_event_index');
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 }

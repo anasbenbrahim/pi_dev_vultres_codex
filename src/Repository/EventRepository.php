@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\Offer;
+use App\Entity\Event;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Offer>
+ * @extends ServiceEntityRepository<Event>
  */
-class OfferRepository extends ServiceEntityRepository
+class EventRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Offer::class);
+        parent::__construct($registry, Event::class);
     }
 
     //    /**
-    //     * @return Offer[] Returns an array of Offer objects
+    //     * @return Event[] Returns an array of Event objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('o')
-    //            ->andWhere('o.exampleField = :val')
+    //        return $this->createQueryBuilder('e')
+    //            ->andWhere('e.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('o.id', 'ASC')
+    //            ->orderBy('e.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Offer
+    //    public function findOneBySomeField($value): ?Event
     //    {
-    //        return $this->createQueryBuilder('o')
-    //            ->andWhere('o.exampleField = :val')
+    //        return $this->createQueryBuilder('e')
+    //            ->andWhere('e.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()

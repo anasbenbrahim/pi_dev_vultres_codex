@@ -95,4 +95,5 @@ final class FermierController extends AbstractController
 
         return $this->redirectToRoute('app_fermier_index', [], Response::HTTP_SEE_OTHER);
     }
+    
 }
