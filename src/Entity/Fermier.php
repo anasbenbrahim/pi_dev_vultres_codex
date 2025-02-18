@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Fermier extends User
 {
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank(message: "Farm Name is required"), Assert\Length(min:3)]
+    
     private ?string $farmName = null;
 
    

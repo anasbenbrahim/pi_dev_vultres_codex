@@ -1,0 +1,12 @@
+{% extends 'baseback.html.twig' %}
+
+{% block title %}New Marche
+{% endblock %}
+
+{% block body %}
+	<h1>Create new Marche</h1>
+
+	{{ include('marche/_form.html.twig') }}
+
+	<a href="{{ path('app_marcheback_index') }}" class="btn btn-secondary">Retourner au list</a>
+{% endblock %}

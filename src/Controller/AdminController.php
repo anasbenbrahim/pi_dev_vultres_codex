@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Equipements;
 use App\Entity\Event;
 use App\Entity\Fermier;
 use App\Entity\Fournisseur;
@@ -19,6 +20,7 @@ use App\Form\FermierForm;
 use App\Form\FournisseurForm;
 use App\Form\PublicationType;
 use App\Form\SuperadminType;
+use App\Repository\EquipementsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -31,6 +33,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use App\Service\PasswordGenerator;
 use App\Repository\UserRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
@@ -323,7 +326,7 @@ final class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/publication', name: 'publication_index')]
+    #[Route('/publication', name: 'publication_index_admin')]
     public function indexPublication(EntityManagerInterface $entityManager): Response
     {
         $publications = $entityManager->getRepository(Publication::class)->findAll();
@@ -335,7 +338,7 @@ final class AdminController extends AbstractController
 
     
 
-    #[Route('/{id}/delete', name: 'publication_delete')]
+    #[Route('/publication/{id}/delete', name: 'publication_delete')]
     public function delete(Publication $publication, EntityManagerInterface $entityManager): Response
     {
         foreach ($publication->getCommentaires() as $commentaire) {
@@ -345,7 +348,7 @@ final class AdminController extends AbstractController
         $entityManager->remove($publication);
         $entityManager->flush();
 
-        return $this->redirectToRoute('publication_index');
+        return $this->redirectToRoute('publication_index_admin');
     }
 
 
@@ -391,13 +394,14 @@ final class AdminController extends AbstractController
 
 
 
-    #[Route('/', name: 'app_event_index', methods: ['GET'])]
+    #[Route('/events', name: 'app_event_index', methods: ['GET'])]
     public function indexevent(EntityManagerInterface $entityManager): Response
     {
         $events = $entityManager->getRepository(Event::class)->findAll();
 
         return $this->render('event/index.html.twig', [
             'events' => $events,
+            
         ]);
     }
     
@@ -507,6 +511,45 @@ final class AdminController extends AbstractController
         return $this->redirectToRoute('app_event_index');
     }
 
+
+
+    #[Route('/equipement/show_equipement_dashboard_admin' , 'show_equipement_dashboard_admin')]
+    public function showequip(ManagerRegistry $doctrine,EquipementsRepository $repo){
+        
+        $repo=$doctrine->getRepository(Equipements::class);
+        $list=$repo->findAll();
+        return $this->render( '/equipements/show.html.twig', [
+            "list" =>$list
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_fournisseur_delete', methods: ['POST'])]
+    public function deletefournisseur(Request $request, Fournisseur $fournisseur, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$fournisseur->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($fournisseur);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_fournisseur_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+    #[Route('/fermier/{id}', name: 'app_fermier_delete', methods: ['POST'])]
+    public function deletefermier(Request $request, Fermier $fermier, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$fermier->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($fermier);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_fermier_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+
+    
+   
 
 
 

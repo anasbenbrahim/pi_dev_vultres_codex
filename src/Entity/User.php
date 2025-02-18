@@ -8,6 +8,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -44,6 +47,7 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    
     private ?string $password = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -53,6 +57,74 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank(message: "FirstName is required"), Assert\Length(min:3)]
     private ?string $firstName = null;
+
+    #[ORM\OneToMany(targetEntity: Equipements::class, mappedBy: 'user')]
+    private Collection $equipements;
+
+    #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'user')]
+    private Collection $produits;
+
+    public function __construct()
+    {
+        $this->equipements = new ArrayCollection();
+        $this->produits = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, Equipements>
+     */
+    public function getEquipements(): Collection
+    {
+        return $this->equipements;
+    }
+
+    public function addEquipement(Equipements $equipement): static
+    {
+        if (!$this->equipements->contains($equipement)) {
+            $this->equipements->add($equipement);
+            $equipement->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeEquipement(Equipements $equipement): static
+    {
+        if ($this->equipements->removeElement($equipement)) {
+            // set the owning side to null (unless already changed)
+            if ($equipement->getUser() === $this) {
+                $equipement->setUser(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Produit>
+     */
+    public function getProduits(): Collection
+    {
+        return $this->produits;
+    }
+
+    public function addProduit(Produit $produit): static
+    {
+        if (!$this->produits->contains($produit)) {
+            $this->produits->add($produit);
+            $produit->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeProduit(Produit $produit): static
+    {
+        if ($this->produits->removeElement($produit)) {
+            // set the owning side to null (unless already changed)
+            if ($produit->getUser() === $this) {
+                $produit->setUser(null);
+            }
+        }
+        return $this;
+    }
 
     public function getId(): ?int
     {

@@ -76,10 +76,7 @@
               {% endif %}
               </li>
             </ul>
-            <div class="d-flex justify-content-center">
-            {% if is_granted('ROLE_SUPER_ADMIN') %}
-              <a href="{{ path('superadmin_edit', {'id': user.id}) }}" class="btn btn-success me-4">Edit</a>
-            {% endif %}  
+            <div class="d-flex justify-content-center"> 
             {% if is_granted('ROLE_FERMIER') %}
               <a href="{{ path('superadmin_edit', {'id': user.id}) }}" class="btn btn-success me-4">Edit</a>
             {% endif %}  

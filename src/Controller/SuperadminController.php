@@ -45,13 +45,7 @@ final class SuperadminController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_superadmin_show', methods: ['GET'])]
-    public function show(Superadmin $superadmin): Response
-    {
-        return $this->render('superadmin/show.html.twig', [
-            'superadmin' => $superadmin,
-        ]);
-    }
+    
 
     #[Route('/{id}/edit', name: 'app_superadmin_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Superadmin $superadmin, EntityManagerInterface $entityManager): Response

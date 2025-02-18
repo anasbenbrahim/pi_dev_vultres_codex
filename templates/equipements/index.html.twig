@@ -1,239 +1,65 @@
-{% extends 'base.html.twig' %}
+{% extends 'baseclient.html.twig' %}
 
-{% block title %}Hello EquipementsController!{% endblock %}
+{% block title %}Hello ProductsController!{% endblock %}
+{% block footer %}{% endblock %}
 
 {% block body %}
-<div class="col"> 
+
+<style>
 
 
-<div class="row">
-                <div class="col-md">
-                  <div class="card mb-3">
-                    <div class="row g-0">
-                      <div class="col-md-4">
-                        <img class="card-img card-img-left" src="../assets/img/elements/12.jpg" alt="Card image">
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to additional content.
-                            This content is a little bit longer.
-                          </p>
-                          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+</style>
+
+          
+<div class="container mx-auto mt-4">
+    <div class="row">
+     {% if list is not empty %}
+    {% for equipement in list %}
+        <div class="col-md-4">
+            <div class="card shadow" style="width: 18rem;">
+            <div class="">
+                <img src="{{asset('uploads/images/' ~ equipement.image)}}" class="card-img-top" alt="...">
+                <hr>
                 </div>
-
-                <div class="col-md">
-                  <div class="card mb-3">
-                    <div class="row g-0">
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to additional content.
-                            This content is a little bit longer.
-                          </p>
-                          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <img class="card-img card-img-right" src="../assets/img/elements/17.jpg" alt="Card image">
-                      </div>
-                    </div>
-                  </div>
-            </div>           
-</div>
-
-
-<div class="row">
-                <div class="col-md">
-                  <div class="card mb-3">
-                    <div class="row g-0">
-                      <div class="col-md-4">
-                        <img class="card-img card-img-left" src="../assets/img/elements/12.jpg" alt="Card image">
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to additional content.
-                            This content is a little bit longer.
-                          </p>
-                          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="card-body">
+                    <h4 class="card-title text-center">{{equipement.nom}} <span class="ms-5">{{equipement.prix}} DT</span></h4>
+                   
+                    <p class="card-text mb-3">{{equipement.description}}</p>
+                    <a href="{{path('show_detail',{'id':equipement.id})}}"  class="btn btn-warning"><i class="fas fa-link"></i> Buy Now</a>
+                    
                 </div>
+            </div>
+        </div>
+        
+                  {% endfor %}
+{% endif %}
+       
 
-                <div class="col-md">
-                  <div class="card mb-3">
-                    <div class="row g-0">
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to additional content.
-                            This content is a little bit longer.
-                          </p>
-                          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <img class="card-img card-img-right" src="../assets/img/elements/17.jpg" alt="Card image">
-                      </div>
-                    </div>
-                  </div>
-            </div>         
+        
+        
+        
+        
+    </div>
 </div>
-
-
-
-
-<div class="row">
-                <div class="col-md">
-                  <div class="card mb-3">
-                    <div class="row g-0">
-                      <div class="col-md-4">
-                        <img class="card-img card-img-left" src="../assets/img/elements/12.jpg" alt="Card image">
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to additional content.
-                            This content is a little bit longer.
-                          </p>
-                          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md">
-                  <div class="card mb-3">
-                    <div class="row g-0">
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to additional content.
-                            This content is a little bit longer.
-                          </p>
-                          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <img class="card-img card-img-right" src="../assets/img/elements/17.jpg" alt="Card image">
-                      </div>
-                    </div>
-                  </div>
-            </div>         
-</div>
-
-
-
-
-
-
-<div class="row">
-                <div class="col-md">
-                  <div class="card mb-3">
-                    <div class="row g-0">
-                      <div class="col-md-4">
-                        <img class="card-img card-img-left" src="../assets/img/elements/12.jpg" alt="Card image">
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to additional content.
-                            This content is a little bit longer.
-                          </p>
-                          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md">
-                  <div class="card mb-3">
-                    <div class="row g-0">
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to additional content.
-                            This content is a little bit longer.
-                          </p>
-                          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <img class="card-img card-img-right" src="../assets/img/elements/17.jpg" alt="Card image">
-                      </div>
-                    </div>
-                  </div>
-            </div>         
-</div>
-
-
-
-
-
-<div class="row">
-                <div class="col-md">
-                  <div class="card mb-3">
-                    <div class="row g-0">
-                      <div class="col-md-4">
-                        <img class="card-img card-img-left" src="../assets/img/elements/12.jpg" alt="Card image">
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to additional content.
-                            This content is a little bit longer.
-                          </p>
-                          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md">
-                  <div class="card mb-3">
-                    <div class="row g-0">
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">
-                            This is a wider card with supporting text below as a natural lead-in to additional content.
-                            This content is a little bit longer.
-                          </p>
-                          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <img class="card-img card-img-right" src="../assets/img/elements/17.jpg" alt="Card image">
-                      </div>
-                    </div>
-                  </div>
-            </div>         
-</div>
-
-
-
-
-</div>
-
 
 
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

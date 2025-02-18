@@ -58,8 +58,10 @@
             border-radius: 10px;
             padding: 10px 20px;
             font-size: 1rem;
-            color: #fff;
+            
             transition: background-color 0.3s ease;
+            cursor: pointer;
+            
         }
 
         .btn-primary:hover {
@@ -93,6 +95,6 @@
             If you don't receive an email, please check your spam folder or 
             <a href="{{ path('app_forgot_password_request') }}">try again</a>.
         </p>
-        <a href="{{ path('app_login') }}" class="btn btn-primary">Return to Login</a>
+        <a href="{{ path('app_login') }}" class="btn btn-primary text-light">Return to Login</a>
     </div>
 {% endblock %}

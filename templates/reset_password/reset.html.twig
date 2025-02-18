@@ -1,5 +1,3 @@
-
-
 {% extends 'baseclient.html.twig' %}
 
 {% block title %}Reset your password{% endblock %}
@@ -77,6 +75,7 @@
 
         .btn-success {
             background: #ff8a00;
+            color: #fff;
         }
 
         .card {
@@ -118,10 +117,18 @@
                     <div class="card-body">
                         {{ form_start(resetForm) }}
                             <div class="mb-3">
-                                {{ form_row(resetForm.plainPassword, {
+                                {{ form_row(resetForm.plainPassword.first, {
                                     'attr': {
                                         'class': 'form-control form-control-lg bg-light fs-6',
                                         'placeholder': 'New Password'
+                                    }
+                                }) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_row(resetForm.plainPassword.second, {
+                                    'attr': {
+                                        'class': 'form-control form-control-lg bg-light fs-6',
+                                        'placeholder': 'Repeat Password'
                                     }
                                 }) }}
                             </div>

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Marche {% endblock %}
+
+{% block body %}
+    <h1>Edit Marche </h1>
+
+    {{ include('marche/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_marche_index') }}">back to list</a>
+
+    {{ include('marche/_delete_form.html.twig') }}
+{% endblock %}

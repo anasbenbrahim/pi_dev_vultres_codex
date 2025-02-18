@@ -66,8 +66,17 @@ public function register(
         return $security->login($fournisseur, SecurityAuthenticator::class, 'main');
     }
 
+
+
     $client = new Client();
-    $clientForm = $this->createForm(ClientType::class, $client);
+    
+
+    $clientForm = $this->createForm(ClientType::class, $client, [
+        'is_edit' => false, // L'utilisateur n'est pas connecté, donc on affiche le champ de mot de passe
+    ]);
+
+
+
     $clientForm->handleRequest($request);
 
     if ($clientForm->isSubmitted() && $clientForm->isValid()) {

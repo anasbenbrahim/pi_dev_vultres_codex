@@ -2,11 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\Commentaire;
 use App\Entity\Event;
 use App\Entity\Publication;
 use App\Entity\Reclamation;
+use App\Form\ClientForm;
+use App\Form\ClientType;
 use App\Form\CommentaireType;
+use App\Form\PasswordForm;
 use App\Form\PublicationType;
 use App\Form\ReclamationType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/')]
 final class ClientController extends AbstractController
@@ -27,7 +32,47 @@ final class ClientController extends AbstractController
         ]);
     }
 
-    #[Route('/publication', name: 'publication_client')]
+
+    #[Route('/{id}/edit', name: 'app_profile_edit', methods: ['GET', 'POST'])]
+    public function editClient(Request $request, Client $patient, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $form = $this->createForm(ClientType::class, $patient, [
+            'is_edit' => true, // L'utilisateur connecté, donc on n'affiche pas le champ de mot de passe
+        ]);
+        $form->handleRequest($request);
+
+        $formPassword = $this->createForm(PasswordForm::class);
+        $formPassword->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+
+           
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_client', [], Response::HTTP_SEE_OTHER);
+        }
+
+        if ($formPassword->isSubmitted() && $formPassword->isValid()) {
+            $newPassword = $formPassword->get('plainPassword')->getData();
+            $hashedPassword = $passwordHasher->hashPassword($patient, $newPassword);
+            $patient->setPassword($hashedPassword);
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_client', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('customer/client_edit.html.twig', [
+            'patient' => $patient,
+            'form' => $form->createView(),
+            'formP' => $formPassword->createView(),
+        ]);
+    }
+
+
+
+    #[Route('/publicationclient', name: 'publication_client')]
     public function indexPublication(EntityManagerInterface $entityManager): Response
     {
         $publications = $entityManager->getRepository(Publication::class)->findAll();
@@ -37,7 +82,7 @@ final class ClientController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'publication_new')]
+    #[Route('/publication/new', name: 'publication_new')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $publication = new Publication();
@@ -72,7 +117,7 @@ final class ClientController extends AbstractController
     }
 
 
-    #[Route('/{id}/edit', name: 'publication_edit')]
+    #[Route('/publication/{id}/edit', name: 'publication_edit')]
     public function editPublication(Request $request, Publication $publication, EntityManagerInterface $entityManager): Response
     {
         if (!$publication->getDate()) {
@@ -282,6 +327,30 @@ final class ClientController extends AbstractController
         $events = $entityManager->getRepository(Event::class)->find($id);
         return $this->render('event/detaille.html.twig',['event' => $events]);
     }
+
+
+
+    #[Route('/clientProfile', name: 'app_profile_client')]
+    public function indexprofileclient(): Response
+    {
+
+        $user = $this->getUser();
+
+        // Vérifier si l'utilisateur est connecté
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
+        }
+
+        return $this->render('customer/show.html.twig', [
+            'controller_name' => 'ProfileController',
+            'client' => $user,
+        ]);
+    }
+
+    
+
+    
+
 
 
 }

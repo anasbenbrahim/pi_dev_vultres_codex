@@ -20,17 +20,27 @@
                         {{ form_start(fournisseurFormType, {'attr': {'novalidate': 'novalidate'}}) }}
                         <div class="input-group mb-3">
                             {{ form_widget(fournisseurFormType.firstName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Prenom'} }) }}
+                            <div class="mt-1 text-danger">
                             {{ form_errors(fournisseurFormType.firstName) }}
+                            </div>
                         </div>
                         <div class="input-group mb-3">
                             {{ form_widget(fournisseurFormType.lastName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Nom'} }) }}
+                            <div class="mt-1 text-danger">
+                            {{ form_errors(fournisseurFormType.lastName) }}
+                            </div>
                         </div>
                         <div class="input-group mb-3">
                             {{ form_widget(fournisseurFormType.companyName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Entreprise'} }) }}
+                            <div class="mt-1 text-danger">
+                            {{ form_errors(fournisseurFormType.companyName) }}
+                            </div>
                         </div>
                         <div class="input-group mb-3">
                             {{ form_widget(fournisseurFormType.email, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Email'} }) }}
+                            <div class="mt-1 text-danger">
                             {{ form_errors(fournisseurFormType.email) }}
+                            </div>
                         </div>
                        
                         <button class="btn btn-lg btn-success w-100 fs-6 " type="submit">

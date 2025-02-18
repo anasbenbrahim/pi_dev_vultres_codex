@@ -25,9 +25,11 @@
                         </div>
                         <div class="input-group mb-3">
                             {{ form_widget(fermierFormType.lastName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Nom'} }) }}
+                            {{ form_errors(fermierFormType.lastName) }}
                         </div>
                         <div class="input-group mb-3">
                             {{ form_widget(fermierFormType.farmName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'FarmName'} }) }}
+                            {{ form_errors(fermierFormType.farmName) }}
                         </div>
                         <div class="input-group mb-3">
                             {{ form_widget(fermierFormType.email, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Email'} }) }}

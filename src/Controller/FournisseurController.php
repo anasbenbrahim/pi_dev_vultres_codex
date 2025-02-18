@@ -10,9 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
-
-
+use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\EquipementsRepository;
+use App\Entity\Equipements;
+use App\Form\AddEquipementsType;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 #[Route('/fournisseur')]
 final class FournisseurController extends AbstractController
@@ -72,14 +74,7 @@ final class FournisseurController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_fournisseur_delete', methods: ['POST'])]
-    public function delete(Request $request, Fournisseur $fournisseur, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$fournisseur->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($fournisseur);
-            $entityManager->flush();
-        }
+    
 
-        return $this->redirectToRoute('app_fournisseur_index', [], Response::HTTP_SEE_OTHER);
-    }
+    
 }
