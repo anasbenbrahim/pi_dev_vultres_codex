@@ -144,28 +144,32 @@ final class ClientController extends AbstractController
     }
 
     #[Route('/publication/{id}', name: 'publication_show')]
-    public function show(Publication $publication, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $client = $publication->getClient();
-        $commentaire = new Commentaire();
-        $commentaire->setPublication($publication);
+public function show(Publication $publication, Request $request, EntityManagerInterface $entityManager): Response
+{
+    $client = $publication->getClient();
+    $commentaire = new Commentaire();
+    $commentaire->setPublication($publication);
 
-        $commentaireForm = $this->createForm(CommentaireType::class, $commentaire);
-        $commentaireForm->handleRequest($request);
+    // ✅ Associer l'utilisateur connecté au commentaire
+    $commentaire->setClient($this->getUser());
 
-        if ($commentaireForm->isSubmitted() && $commentaireForm->isValid()) {
-            $entityManager->persist($commentaire);
-            $entityManager->flush();
+    $commentaireForm = $this->createForm(CommentaireType::class, $commentaire);
+    $commentaireForm->handleRequest($request);
 
-            return $this->redirectToRoute('publication_show', ['id' => $publication->getId()]);
-        }
-        return $this->render('publication/show.html.twig', [
-            'publication' => $publication,
-            'client' => $client,
-            'commentaires' => $publication->getCommentaires(),
-            'commentaire_form' => $commentaireForm->createView(),
-        ]);
+    if ($commentaireForm->isSubmitted() && $commentaireForm->isValid()) {
+        $entityManager->persist($commentaire);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('publication_show', ['id' => $publication->getId()]);
     }
+    return $this->render('publication/show.html.twig', [
+        'publication' => $publication,
+        'client' => $client,
+        'commentaires' => $publication->getCommentaires(),
+        'commentaire_form' => $commentaireForm->createView(),
+    ]);
+}
+
 
     #[Route('/commentaire/', name: 'commentaire_index')]
     public function indexcommentaire(EntityManagerInterface $entityManager): Response
