@@ -1,0 +1,43 @@
+{{ form_start(form, {'attr': {'class': class, 'enctype': 'multipart/form-data'}}) }}
+    <div class="col-md-6">
+        {{ form_label(form.nomprod, 'Nom du produit', {'class': 'form-label'}) }}
+        {{ form_widget(form.nomprod, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.nomprod) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_label(form.prix, 'Prix (TND)', {'class': 'form-label'}) }}
+        {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.prix) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_label(form.quantite, 'Quantité (Kg)', {'class': 'form-label'}) }}
+        {{ form_widget(form.quantite, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.quantite) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_label(form.image, 'Image du produit', {'class': 'form-label'}) }}
+        {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(form.image) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_label(form.category, 'Catégorie', {'class': 'form-label'}) }}
+        {{ form_widget(form.category, {'attr': {'class': 'form-select'}}) }}
+        {{ form_errors(form.category) }}
+    </div>
+    <div class="col-12">
+        {{ form_label(form.descr, 'Description', {'class': 'form-label'}) }}
+        {{ form_widget(form.descr, {'attr': {'class': 'form-control', 'rows': '3'}}) }}
+        {{ form_errors(form.descr) }}
+    </div>
+    <div class="col-12">
+        <div class="form-check">
+            {{ form_widget(form.status, {'attr': {'class': 'form-check-input'}}) }}
+            {{ form_label(form.status, 'Produit disponible', {'class': 'form-check-label'}) }}
+        </div>
+    </div>
+    <div class="col-12 text-center">
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-save"></i> {{ button_label }}
+        </button>
+    </div>
+{{ form_end(form) }}

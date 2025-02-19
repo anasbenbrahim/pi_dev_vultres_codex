@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Superadmin{% endblock %}
+
+{% block body %}
+    <h1>Create new Superadmin</h1>
+
+    {{ include('superadmin/_form.html.twig') }}
+
+    <a href="{{ path('app_superadmin_index') }}">back to list</a>
+{% endblock %}

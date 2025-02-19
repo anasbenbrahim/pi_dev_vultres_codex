@@ -1,0 +1,33 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Modifier la Réclamation{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="page-title">Modifier la Réclamation</h1>
+
+        {{ form_start(form) }}
+            <div class="form-group">
+                {{ form_label(form.titre, 'Titre de la réclamation', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le titre'}}) }}
+                <div class="text-danger">
+                    {{ form_errors(form.titre) }}
+                </div>
+            </div>
+
+            <div class="form-group mt-3">
+                {{ form_label(form.description, 'Description de la réclamation', {'label_attr': {'class': 'font-weight-bold'}}) }}
+                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez votre réclamation'}}) }}
+                <div class="text-danger">
+                    {{ form_errors(form.description) }}
+                </div>
+            </div>
+
+            <div class="form-group mt-4">
+                <button class="btn btn-success btn-lg">Enregistrer les modifications</button>
+            </div>
+        {{ form_end(form) }}
+
+        <a href="{{ path('reclamation_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+    </div>
+{% endblock %}

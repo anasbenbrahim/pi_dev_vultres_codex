@@ -1,0 +1,92 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Détails de la publication{% endblock %}
+
+{% block body %}
+    <div class="container card mt-3 mb-5 shadow">
+        <h1>Publication : {{ publication.titre }}</h1>
+        <p><strong>Description :</strong> {{ publication.description }}</p>
+        <p><strong>Date :</strong> {{ publication.date|date('d/m/Y H:i') }}</p>
+
+        {% if publication.image %}
+            <p><strong>Image :</strong></p>
+            <img src="{{ publication.image }}" alt="{{ publication.titre }}" class="img-fluid mb-3" style="border-radius: 10px; width: 500px;">
+        {% else %}
+            <p><strong>Image :</strong> Pas d'image</p>
+        {% endif %}
+
+        <p><strong>Client :</strong>
+            {% if publication.client %}
+                {{ publication.client.lastName }}
+            {% else %}
+                <span style="color: red;">Client non défini</span>
+            {% endif %}
+        </p>
+
+        {% if app.user == publication.client %}
+            <a href="{{ path('publication_edit', {'id': publication.id}) }}" class="btn btn-warning" title="Modifier la publication">
+                <i class="fa fa-edit text-light"></i>
+            </a>
+        {% endif %}
+
+        {% if app.user == publication.client %}
+            <form method="post" action="{{ path('publication_delete', {'id': publication.id}) }}" 
+                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette publication ?');" 
+                  class="d-inline">
+                <button type="submit" class="btn btn-danger" title="Supprimer la publication">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </form>
+        {% endif %}
+
+        <div class="commentaire-section mt-4">
+            <h1>Créer un commentaire</h1>
+
+            {{ form_start(commentaire_form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="form-group">
+                {{ form_label(commentaire_form.description) }}
+                {{ form_widget(commentaire_form.description, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(commentaire_form.description) }}</div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(commentaire_form.image) }}
+                {{ form_widget(commentaire_form.image, {'attr': {'class': 'form-control'}}) }}
+                <div class="error">{{ form_errors(commentaire_form.image) }}</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Créer</button>
+           
+            {{ form_end(commentaire_form) }}
+
+            <h3>Commentaires :</h3>
+            {% for commentaire in commentaires %}
+                <div class="commentaire mb-3 p-3" style="border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
+                    <p><strong>Description :</strong> {{ commentaire.description }}</p>
+                    {% if commentaire.image %}
+                        <img src="{{ commentaire.image }}" alt="Image du commentaire" class="img-fluid mb-2" style="max-width: 100px; border-radius: 10px;">
+                    {% endif %}
+                    <div class="commentaire-actions mt-2">
+                        {% if app.user == commentaire.client %}
+                            <a href="{{ path('commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-warning" title="Modifier le commentaire">
+                                <i class="fa fa-edit text-light"></i>
+                            </a>
+                        {% endif %}
+                        {% if app.user == commentaire.client %}
+                            <form method="post" action="{{ path('commentaire_delete', {'id': commentaire.id}) }}" 
+                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');" 
+                                  class="d-inline">
+                                <button type="submit" class="btn btn-danger" title="Supprimer le commentaire">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <p>Aucun commentaire pour cette publication.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

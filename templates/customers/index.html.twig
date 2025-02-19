@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CustomersController!{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+
+<div class="card">
+                
+                <h5 class="card-header">Striped rows</h5>
+                <button id="signInButton" class="btn btn-warning " data-bs-toggle="modal" data-bs-target="#exampleModal" >Add client</button>
+
+
+
+                
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Login</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+
+
+                      {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    <div class="input-group mb-3">
+        {{ form_widget(registrationForm.firstName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Prenom'} }) }}
+        {{ form_errors(registrationForm.firstName) }} 
+    </div>
+
+    <div class="input-group mb-3">
+        {{ form_widget(registrationForm.lastName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Nom'} }) }}
+    </div>    
+
+    <div class="input-group mb-3">
+        {{ form_widget(registrationForm.email, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Email'} }) }}
+        {{ form_errors(registrationForm.email) }} 
+    </div>
+
+    <div class="input-group mb-3">
+        {{ form_widget(registrationForm.plainPassword, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Mot de passe'} }) }}
+    </div>
+
+    <div class="input-group mb-3">
+        {{ form_widget(registrationForm.roles, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Rôle'} }) }}
+    </div>
+
+    <div class="form-check mb-3">
+        {{ form_widget(registrationForm.agreeTerms, {'attr' : {'class': 'form-check-input', 'type': 'radio'}}) }}
+        <label class="form-check-label ms-2">{{ form_label(registrationForm.agreeTerms) }}</label>
+    </div>
+
+    
+  
+    <button class="btn btn-lg btn-warning w-100 fs-6 text-light" type="submit">
+        <b>Register</b>
+    </button>
+
+    {{ form_end(registrationForm) }}
+
+
+                  </div>
+              </div>
+          </div>
+      </div>
+
+
+                
+                <div class="table-responsive text-nowrap">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Email</th>
+                        <th>FirstName</th>
+                        <th>LastName</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+
+                    {% for user in users %}
+                      {% if 'ROLE_CLIENT' in user.roles %}
+                      <tr>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{ user.email }}</strong></td>
+                        <td>{{ user.firstName }}</td>
+                        <td>
+                          {{ user.lastName }}
+                        </td>
+                        <td><span class="badge bg-label-primary me-1">Active</span></td>
+                        <td>
+                          <button class="btn btn-primary" ><i class="bx bx-edit-alt me-1"></i> </button>
+                          <button class="btn btn-danger" ><i class="bx bx-trash me-1"></i> </button>
+                        </td>
+                      </tr>
+                      {% endif %}
+                    {% else %}
+                      <tr>
+                        <td colspan="5">Aucun utilisateur trouvé</td>
+                      </tr>
+                    {% endfor %} 
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+{% endblock %}
+
+
+
+

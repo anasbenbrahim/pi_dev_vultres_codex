@@ -1,0 +1,14 @@
+{% extends 'baseback.html.twig' %}
+
+{% block title %}Edit Marche
+{% endblock %}
+
+{% block body %}
+	<h1>Edit Marche</h1>
+
+	{{ include('marche/_form.html.twig', {'button_label': 'Update'}) }}
+
+	<a href="{{ path('app_marcheback_index') }}" class="btn btn-secondary">retourner au  list</a>
+
+	{{ include('marche/_delete_form.html.twig') }}
+{% endblock %}

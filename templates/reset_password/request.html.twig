@@ -1,0 +1,146 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block body %}
+    <style>
+        /*------------ Login container ------------*/
+        .box-area {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /*------------ Right box ------------*/
+        .right-box {
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /*------------ Custom Placeholder ------------*/
+        ::placeholder {
+            font-size: 16px;
+        }
+
+        .rounded-4 {
+            border-radius: 20px;
+        }
+
+        .rounded-5 {
+            border-radius: 30px;
+        }
+
+        /*------------ For small screens------------*/
+        @media only screen and (max-width: 768px) {
+            .box-area {
+                margin: 0 10px;
+            }
+
+            .left-box {
+                height: 100px;
+                overflow: hidden;
+            }
+
+            .right-box {
+                padding: 20px;
+            }
+        }
+
+        .input-group .btn {
+            position: relative;
+            z-index: 2;
+            height: auto;
+        }
+
+        #left-content {
+            background: #000000;
+            background: url('/images/logo sans back.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        #logo {
+            background: #ff8a00;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .btn-success {
+            background: #ff8a00;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .btn-warning {
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .text-danger {
+            color: #dc3545;
+            font-size: 0.9rem;
+        }
+    </style>
+
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-light text-center">
+                        <h1 id="logo"><b>Reset Password</b></h1>
+                    </div>
+                    <div class="card-body">
+                        {% for flash_error in app.flashes('reset_password_error') %}
+                            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                        {% endfor %}
+
+                        <form method="post">
+                            {{ form_start(requestForm) }}
+                            <div class="mb-3">
+                                <label for="inputEmail" class="form-label">Email</label>
+                                {{ form_widget(requestForm.email, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Email'} }) }}
+                            </div>
+                            <div class="mb-3">
+                                <small>
+                                    Enter your email address, and we will send you a
+                                    link to reset your password.
+                                </small>
+                            </div>
+
+                            <div class="d-grid">
+                                <button class="btn btn-warning btn-lg text-light" type="submit">
+                                    <b>Send password reset email</b>
+                                </button>
+                            </div>
+                            {{ form_end(requestForm) }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
