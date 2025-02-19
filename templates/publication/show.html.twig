@@ -39,6 +39,16 @@
             </form>
         {% endif %}
 
+        <!-- Rating System -->
+        <h3>Note :</h3>
+        <div class="rating" data-id="{{ publication.id }}">
+            {% for i in 1..5 %}
+                <i class="fa-star fa {% if publication.rating is not null and i <= publication.rating %}fas{% else %}far{% endif %}" data-value="{{ i }}"></i>
+            {% endfor %}
+        </div>
+        <p id="rating-result">Note actuelle : {{ publication.rating is not null ? publication.rating : 'Pas encore notée' }}</p>
+
+        <!-- Comment Section -->
         <div class="commentaire-section mt-4">
             <h1>Créer un commentaire</h1>
 
@@ -89,4 +99,31 @@
             {% endfor %}
         </div>
     </div>
+
+    <!-- Rating Script -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".rating i").click(function() {
+                let publicationId = $(".rating").data("id");
+                let rating = $(this).data("value");
+
+                $.ajax({
+                    url: "/publication/rate/" + publicationId,
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ rating: rating }),
+                    success: function(response) {
+                        $("#rating-result").text("Note actuelle : " + response.rating);
+                        $(".rating i").removeClass("fas").addClass("far");
+                        $(".rating i").each(function() {
+                            if ($(this).data("value") <= response.rating) {
+                                $(this).removeClass("far").addClass("fas");
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

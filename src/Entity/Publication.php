@@ -40,8 +40,8 @@ class Publication
     #[Assert\Url(message: "L'URL de l'image doit être valide.")]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
-
-
+    #[ORM\Column(type: 'integer', nullable: true)]
+private ?int $rating = null;
 
     #[ORM\ManyToOne(inversedBy: 'publications')]
     private ?Client $client = null;
@@ -72,6 +72,17 @@ class Publication
     {
         return $this->id;
     }
+
+    public function getRating(): ?int
+{
+    return $this->rating;
+}
+
+public function setRating(?int $rating): self
+{
+    $this->rating = $rating;
+    return $this;
+}
 
     public function getTitre()
     {
