@@ -75,6 +75,7 @@ final class ClientController extends AbstractController
     #[Route('/publicationclient', name: 'publication_client')]
     public function indexPublication(EntityManagerInterface $entityManager): Response
     {
+        
         $publications = $entityManager->getRepository(Publication::class)->findAll();
 
         return $this->render('publication/index.html.twig', [
@@ -143,25 +144,31 @@ final class ClientController extends AbstractController
         ]);
     }
 
+    
+
     #[Route('/publication/{id}', name: 'publication_show')]
 public function show(Publication $publication, Request $request, EntityManagerInterface $entityManager): Response
 {
     $client = $publication->getClient();
     $commentaire = new Commentaire();
     $commentaire->setPublication($publication);
-
-    // ✅ Associer l'utilisateur connecté au commentaire
     $commentaire->setClient($this->getUser());
 
     $commentaireForm = $this->createForm(CommentaireType::class, $commentaire);
     $commentaireForm->handleRequest($request);
 
     if ($commentaireForm->isSubmitted() && $commentaireForm->isValid()) {
+        // ✅ Filtrage des mots interdits
+        $badWords = ['test', 'test2', 'test3'];
+        $cleanedComment = str_ireplace($badWords, '***', $commentaire->getDescription());
+        $commentaire->setDescription($cleanedComment);
+
         $entityManager->persist($commentaire);
         $entityManager->flush();
 
         return $this->redirectToRoute('publication_show', ['id' => $publication->getId()]);
     }
+
     return $this->render('publication/show.html.twig', [
         'publication' => $publication,
         'client' => $client,
@@ -169,6 +176,7 @@ public function show(Publication $publication, Request $request, EntityManagerIn
         'commentaire_form' => $commentaireForm->createView(),
     ]);
 }
+
 
 
     #[Route('/commentaire/', name: 'commentaire_index')]

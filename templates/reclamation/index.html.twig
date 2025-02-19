@@ -27,10 +27,10 @@
                             <td>{{ reclamation.status.label() }}</td> <!-- Fix applied here -->
                             <td>{{ reclamation.date ? reclamation.date|date('d/m/Y') : 'N/A' }}</td>
                             <td>
-                                <a href="{{ path('reclamation_show', {'id': reclamation.id}) }}" class="btn btn-info">Voir</a>
-                                <a href="{{ path('reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-warning">Modifier</a>
+                                <a href="{{ path('reclamation_show', {'id': reclamation.id}) }}" class="btn btn-info"></a>
+                                <a href="{{ path('reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-warning"></a>
                                 <a href="{{ path('reclamation_delete', {'id': reclamation.id}) }}" class="btn btn-danger"
-                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réclamation ?');">Supprimer</a>
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réclamation ?');"></a>
                             </td>
                         </tr>
                     {% endfor %}
