@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {% extends 'base.html.twig' %}
 
 {% block title %} Ajouter equipement {% endblock %}
@@ -43,50 +42,4 @@
 </div>
 {{form_end(form)}}
 
-=======
-{% extends 'base.html.twig' %}
-
-{% block title %} Ajouter equipement {% endblock %}
-
-{% block body %}
-
-{{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
-<div class="row">
-    {{ form_label(form.nom,"Nom") }}  
-    {{ form_widget(form.nom,{'attr':{'placeholder': 'Veuillez entrer le nom','class':'form-control'}}) }}
-    {{ form_errors(form.nom) }}
-</div>
-<div class="row">
-    {{ form_label(form.quantite,"Quantite") }}  
-    {{ form_widget(form.quantite,{'attr':{'placeholder': 'Veuillez entrer votre adresse email','class':'form-control'}}) }}
-    {{ form_errors(form.quantite) }}
-</div>
-<div class="row">
-    {{ form_label(form.prix,"prix") }}  
-    {{ form_widget(form.prix,{'attr':{'placeholder': 'veuillez entrez le prix','class':'form-control'}}) }}
-    {{ form_errors(form.prix) }}
-</div>
-<div class="row">
-    {{ form_label(form.description,"Description") }}  
-    {{ form_widget(form.description,{'attr':{'placeholder': 'Veuillez saisir la description','class':'form-control'}}) }}
-    {{ form_errors(form.description) }}
-</div>
-<div class="row">
-    {{ form_label(form.category,"Category") }}  
-    {{ form_widget(form.category,{'attr':{'class':'form-control'}}) }}
-    {{ form_errors(form.category) }}
-</div>
-<div class="row">
-
-    {{ form_label(form.image,"image") }}  
-    {{ form_widget(form.image,{'attr':{'placeholder': 'Veuillez inserer une image','class': 'form-control'}}) }}
-    {{ form_errors(form.image) }}
-
-</div>
-<div class="d-grid gap-2 mt-4">
-    {{ form_widget(form.save, {'attr': {'class': 'btn btn-success me-md-2'}}) }}
-</div>
-{{form_end(form)}}
-
->>>>>>> integration
 {% endblock %}

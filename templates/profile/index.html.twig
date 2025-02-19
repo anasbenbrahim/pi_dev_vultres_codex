@@ -3,8 +3,6 @@
 {% block title %}Hello ProfileController!{% endblock %}
 {% block footer%} {% endblock %}
 {% block body %}
-<<<<<<< HEAD
-=======
 
 <style>
 .offcanvas.offcanvas-end {
@@ -17,7 +15,6 @@
 
 
 
->>>>>>> integration
 <div class="container-xxl flex-grow-1 container-p-y">
           
   <div class="row">
@@ -28,11 +25,6 @@
         <div class="card-body pt-12">
           <div class="user-avatar-section">
             <div class=" d-flex align-items-center flex-column">
-<<<<<<< HEAD
-              <img class="img-fluid rounded mb-4" src="../../assets/img/avatars/1.png" height="120" width="120" alt="User avatar">
-              <div class="user-info text-center">
-                <h5>Violet Mendoza</h5>
-=======
 
             {% if is_granted('ROLE_FERMIER') %}
               <img class="img-fluid rounded mb-4" src="../../assets/img/avatars/fermier.png" height="120" width="120" alt="User avatar">
@@ -53,80 +45,15 @@
 
               <div class="user-info text-center">
                 <h5><span class="mx-1">{{ user.firstName }}</span><span>{{ user.lastName }}</span></h5>
->>>>>>> integration
                 <span class="badge bg-label-secondary">Author</span>
               </div>
             </div>
           </div>
-<<<<<<< HEAD
-          <div class="d-flex justify-content-around flex-wrap my-6 gap-0 gap-md-3 gap-lg-4">
-            <div class="d-flex align-items-center me-5 gap-4">
-              <div class="avatar">
-                <div class="avatar-initial bg-label-primary rounded w-px-40 h-px-40">
-                  <i class="icon-base bx bx-check icon-lg"></i>
-                </div>
-              </div>
-              <div>
-                <h5 class="mb-0">1.23k</h5>
-                <span>Task Done</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center gap-4">
-              <div class="avatar">
-                <div class="avatar-initial bg-label-primary rounded w-px-40 h-px-40">
-                  <i class="icon-base bx bx-customize icon-lg"></i>
-                </div>
-              </div>
-              <div>
-                <h5 class="mb-0">568</h5>
-                <span>Project Done</span>
-              </div>
-            </div>
-          </div>
-=======
          
->>>>>>> integration
           <h5 class="pb-4 border-bottom mb-4">Details</h5>
           <div class="info-container">
             <ul class="list-unstyled mb-6">
               <li class="mb-2">
-<<<<<<< HEAD
-                <span class="h6">Username:</span>
-                <span>@violet.dev</span>
-              </li>
-              <li class="mb-2">
-                <span class="h6">Email:</span>
-                <span>vafgot@vultukir.org</span>
-              </li>
-              <li class="mb-2">
-                <span class="h6">Status:</span>
-                <span>Active</span>
-              </li>
-              <li class="mb-2">
-                <span class="h6">Role:</span>
-                <span>Author</span>
-              </li>
-              <li class="mb-2">
-                <span class="h6">Tax id:</span>
-                <span>Tax-8965</span>
-              </li>
-              <li class="mb-2">
-                <span class="h6">Contact:</span>
-                <span>(123) 456-7890</span>
-              </li>
-              <li class="mb-2">
-                <span class="h6">Languages:</span>
-                <span>French</span>
-              </li>
-              <li class="mb-2">
-                <span class="h6">Country:</span>
-                <span>England</span>
-              </li>
-            </ul>
-            <div class="d-flex justify-content-center">
-              <a href="javascript:;" class="btn btn-primary me-4" data-bs-target="#editUser" data-bs-toggle="modal">Edit</a>
-              <a href="javascript:;" class="btn btn-label-danger suspend-user">Suspend</a>
-=======
                 <span class="h6">FirstName:</span>
                 <span>{{ user.firstName }}</span>
               </li>
@@ -156,368 +83,18 @@
             {% if is_granted('ROLE_Fournisseur')  %}
               <a href="{{ path('superadmin_edit', {'id': user.id}) }}" class="btn btn-success me-4">Edit</a>
             {% endif %}  
->>>>>>> integration
             </div>
           </div>
         </div>
       </div>
       <!-- /User Card -->
-<<<<<<< HEAD
-      <!-- Plan Card -->
-      <div class="card mb-6 border border-2 border-primary rounded primary-shadow">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start">
-            <span class="badge bg-label-primary">Standard</span>
-            <div class="d-flex justify-content-center">
-              <sub class="h5 pricing-currency mb-auto mt-1 text-primary">$</sub>
-              <h1 class="mb-0 text-primary">99</h1>
-              <sub class="h6 pricing-duration mt-auto mb-3 fw-normal">month</sub>
-            </div>
-          </div>
-          <ul class="list-unstyled g-2 my-6">
-            <li class="mb-2 d-flex align-items-center"><i class="icon-base bx bxs-circle icon-6px text-secondary me-2"></i><span>10 Users</span></li>
-            <li class="mb-2 d-flex align-items-center"><i class="icon-base bx bxs-circle icon-6px text-secondary me-2"></i><span>Up to 10 GB storage</span></li>
-            <li class="mb-2 d-flex align-items-center"><i class="icon-base bx bxs-circle icon-6px text-secondary me-2"></i><span>Basic Support</span></li>
-          </ul>
-          <div class="d-flex justify-content-between align-items-center mb-1">
-            <span class="h6 mb-0">Days</span>
-            <span class="h6 mb-0">26 of 30 Days</span>
-          </div>
-          <div class="progress mb-1">
-            <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-          <small>4 days remaining</small>
-          <div class="d-grid w-100 mt-6">
-            <button class="btn btn-primary" data-bs-target="#upgradePlanModal" data-bs-toggle="modal">Upgrade Plan</button>
-          </div>
-        </div>
-      </div>
-      <!-- /Plan Card -->
-=======
     
->>>>>>> integration
     </div>
     <!--/ User Sidebar -->
 
     <!-- User Content -->
     <div class="col-xl-8 col-lg-7 order-0 order-md-1">
       <!-- User Pills -->
-<<<<<<< HEAD
-      <div class="nav-align-top">
-        <ul class="nav nav-pills flex-column flex-md-row mb-6 flex-wrap row-gap-2">
-          <li class="nav-item">
-            <a class="nav-link active" href="javascript:void(0);"><i class="icon-base bx bx-user icon-sm me-1_5"></i>Account</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="app-user-view-security.html"><i class="icon-base bx bx-lock-alt icon-sm me-1_5"></i>Security</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="app-user-view-billing.html"><i class="icon-base bx bx-detail icon-sm me-1_5"></i>Billing &amp; Plans</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="app-user-view-notifications.html"><i class="icon-base bx bx-bell icon-sm me-1_5"></i>Notifications</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="app-user-view-connections.html"><i class="icon-base bx bx-link icon-sm me-1_5"></i>Connections</a>
-          </li>
-        </ul>
-      </div>
-      <!--/ User Pills -->
-
-      <!-- Project table -->
-      <div class="card mb-6">
-        <h5 class="card-header pb-0 text-md-start text-center">Projects List</h5>
-        <div class="table-responsive mb-4">
-          <div id="DataTables_Table_0_wrapper" class="dt-container dt-bootstrap5 dt-empty-footer"><div class="row mx-md-2 justify-content-between"><div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto px-4 mt-0"><div class="dt-length mb-md-6 mb-0"><select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="form-select ms-0" id="dt-length-0"><option value="7">7</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="75">75</option><option value="100">100</option></select><label for="dt-length-0"></label></div></div><div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto px-4 mt-0 gap-2"><div class="dt-search"><input type="search" class="form-control" id="dt-search-0" placeholder="Search Project" aria-controls="DataTables_Table_0"><label for="dt-search-0"></label></div></div></div><div class="justify-content-between dt-layout-table"><div class="d-md-flex justify-content-between align-items-center dt-layout-full table-responsive"><table class="table datatable-project dataTable dtr-column" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" style="width: 100%;"><colgroup><col data-dt-column="1" style="width: 61.2969px;"><col data-dt-column="2" style="width: 274.031px;"><col data-dt-column="3" style="width: 137.594px;"><col data-dt-column="4" style="width: 133.875px;"><col data-dt-column="5" style="width: 200px;"><col data-dt-column="6" style="width: 109.859px;"></colgroup>
-            <thead class="border-top">
-              <tr><th data-dt-column="0" class="control dt-orderable-none dtr-hidden" rowspan="1" colspan="1" aria-label="" style="display: none;"><span class="dt-column-title"></span><span class="dt-column-order"></span></th><th data-dt-column="1" rowspan="1" colspan="1" class="dt-select dt-orderable-none" aria-label=""><span class="dt-column-title"></span><span class="dt-column-order"></span><input class="form-check-input" type="checkbox" aria-label="Select all rows"></th><th data-dt-column="2" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-ordering-desc" aria-sort="descending" aria-label="Project: Activate to remove sorting" tabindex="0"><span class="dt-column-title" role="button">Project</span><span class="dt-column-order"></span></th><th data-dt-column="3" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc" aria-label="Leader: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Leader</span><span class="dt-column-order"></span></th><th data-dt-column="4" rowspan="1" colspan="1" class="dt-orderable-none" aria-label="Team"><span class="dt-column-title">Team</span><span class="dt-column-order"></span></th><th class="w-px-200 dt-orderable-asc dt-orderable-desc dt-type-numeric" data-dt-column="5" rowspan="1" colspan="1" aria-label="Progress: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Progress</span><span class="dt-column-order"></span></th><th data-dt-column="6" rowspan="1" colspan="1" class="dt-orderable-none" aria-label="Action"><span class="dt-column-title">Action</span><span class="dt-column-order"></span></th></tr>
-            </thead><tbody><tr><td class="control dtr-hidden" tabindex="0" style="display: none;"></td><td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td><td class="sorting_1"><div class="d-flex justify-content-left align-items-center"><div class="avatar-wrapper"><div class="avatar avatar-sm me-3"><span class="avatar-initial rounded-circle bg-label-primary">WS</span></div></div><div class="d-flex flex-column gap-50"><span class="text-truncate fw-medium text-heading">Website SEO</span><small class="text-truncate">10 May 2021</small></div></div></td><td><span class="text-heading">Eileen</span></td><td>
-              <div class="d-flex align-items-center">
-                <ul class="list-unstyled d-flex align-items-center avatar-group mb-0 z-2">
-                  
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/10.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/3.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/2.png" alt="Avatar">
-                </li>
-              
-                  <li class="avatar avatar-xs">
-                    <span class="avatar-initial rounded-circle pull-up" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="4 more">+4</span>
-                  </li>
-                
-                </ul>
-              </div>
-            </td><td class="dt-type-numeric">
-              <div class="d-flex align-items-center">
-                <div class="progress w-100 me-3" style="height: 6px;">
-                  <div class="progress-bar" style="width: 38%" aria-valuenow="38%" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <span class="text-heading">38%</span>
-              </div>
-            </td><td><div class="d-inline-block"><a href="javascript:;" class="btn btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="icon-base bx bx-dots-vertical-rounded icon-md"></i></a><div class="dropdown-menu dropdown-menu-end m-0"><a href="javascript:;" class="dropdown-item">Details</a><a href="javascript:;" class="dropdown-item">Archive</a><div class="dropdown-divider"></div><a href="javascript:;" class="dropdown-item text-danger delete-record">Delete</a></div></div></td></tr><tr><td class="control dtr-hidden" tabindex="0" style="display: none;"></td><td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td><td class="sorting_1"><div class="d-flex justify-content-left align-items-center"><div class="avatar-wrapper"><div class="avatar avatar-sm me-3"><img src="../../assets/img/icons/brands/social-label.png" alt="Avatar" class="rounded-circle"></div></div><div class="d-flex flex-column gap-50"><span class="text-truncate fw-medium text-heading">Social Banners</span><small class="text-truncate">03 Jan 2021</small></div></div></td><td><span class="text-heading">Owen</span></td><td>
-              <div class="d-flex align-items-center">
-                <ul class="list-unstyled d-flex align-items-center avatar-group mb-0 z-2">
-                  
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/11.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/10.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/7.png" alt="Avatar">
-                </li>
-              
-                  <li class="avatar avatar-xs">
-                    <span class="avatar-initial rounded-circle pull-up" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="2 more">+2</span>
-                  </li>
-                
-                </ul>
-              </div>
-            </td><td class="dt-type-numeric">
-              <div class="d-flex align-items-center">
-                <div class="progress w-100 me-3" style="height: 6px;">
-                  <div class="progress-bar" style="width: 45%" aria-valuenow="45%" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <span class="text-heading">45%</span>
-              </div>
-            </td><td><div class="d-inline-block"><a href="javascript:;" class="btn btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="icon-base bx bx-dots-vertical-rounded icon-md"></i></a><div class="dropdown-menu dropdown-menu-end m-0"><a href="javascript:;" class="dropdown-item">Details</a><a href="javascript:;" class="dropdown-item">Archive</a><div class="dropdown-divider"></div><a href="javascript:;" class="dropdown-item text-danger delete-record">Delete</a></div></div></td></tr><tr><td class="control dtr-hidden" tabindex="0" style="display: none;"></td><td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td><td class="sorting_1"><div class="d-flex justify-content-left align-items-center"><div class="avatar-wrapper"><div class="avatar avatar-sm me-3"><img src="../../assets/img/icons/brands/sketch-label.png" alt="Avatar" class="rounded-circle"></div></div><div class="d-flex flex-column gap-50"><span class="text-truncate fw-medium text-heading">Logo Designs</span><small class="text-truncate">12 Aug 2021</small></div></div></td><td><span class="text-heading">Keith</span></td><td>
-              <div class="d-flex align-items-center">
-                <ul class="list-unstyled d-flex align-items-center avatar-group mb-0 z-2">
-                  
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/5.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/7.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/12.png" alt="Avatar">
-                </li>
-              
-                  <li class="avatar avatar-xs">
-                    <span class="avatar-initial rounded-circle pull-up" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="1 more">+1</span>
-                  </li>
-                
-                </ul>
-              </div>
-            </td><td class="dt-type-numeric">
-              <div class="d-flex align-items-center">
-                <div class="progress w-100 me-3" style="height: 6px;">
-                  <div class="progress-bar" style="width: 92%" aria-valuenow="92%" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <span class="text-heading">92%</span>
-              </div>
-            </td><td><div class="d-inline-block"><a href="javascript:;" class="btn btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="icon-base bx bx-dots-vertical-rounded icon-md"></i></a><div class="dropdown-menu dropdown-menu-end m-0"><a href="javascript:;" class="dropdown-item">Details</a><a href="javascript:;" class="dropdown-item">Archive</a><div class="dropdown-divider"></div><a href="javascript:;" class="dropdown-item text-danger delete-record">Delete</a></div></div></td></tr><tr><td class="control dtr-hidden" tabindex="0" style="display: none;"></td><td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td><td class="sorting_1"><div class="d-flex justify-content-left align-items-center"><div class="avatar-wrapper"><div class="avatar avatar-sm me-3"><img src="../../assets/img/icons/brands/sketch-label.png" alt="Avatar" class="rounded-circle"></div></div><div class="d-flex flex-column gap-50"><span class="text-truncate fw-medium text-heading">IOS App Design</span><small class="text-truncate">19 Apr 2021</small></div></div></td><td><span class="text-heading">Merline</span></td><td>
-              <div class="d-flex align-items-center">
-                <ul class="list-unstyled d-flex align-items-center avatar-group mb-0 z-2">
-                  
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/2.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/8.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/5.png" alt="Avatar">
-                </li>
-              
-                  <li class="avatar avatar-xs">
-                    <span class="avatar-initial rounded-circle pull-up" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="1 more">+1</span>
-                  </li>
-                
-                </ul>
-              </div>
-            </td><td class="dt-type-numeric">
-              <div class="d-flex align-items-center">
-                <div class="progress w-100 me-3" style="height: 6px;">
-                  <div class="progress-bar" style="width: 56%" aria-valuenow="56%" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <span class="text-heading">56%</span>
-              </div>
-            </td><td><div class="d-inline-block"><a href="javascript:;" class="btn btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="icon-base bx bx-dots-vertical-rounded icon-md"></i></a><div class="dropdown-menu dropdown-menu-end m-0"><a href="javascript:;" class="dropdown-item">Details</a><a href="javascript:;" class="dropdown-item">Archive</a><div class="dropdown-divider"></div><a href="javascript:;" class="dropdown-item text-danger delete-record">Delete</a></div></div></td></tr><tr><td class="control dtr-hidden" tabindex="0" style="display: none;"></td><td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td><td class="sorting_1"><div class="d-flex justify-content-left align-items-center"><div class="avatar-wrapper"><div class="avatar avatar-sm me-3"><img src="../../assets/img/icons/brands/figma-label.png" alt="Avatar" class="rounded-circle"></div></div><div class="d-flex flex-column gap-50"><span class="text-truncate fw-medium text-heading">Figma Dashboards</span><small class="text-truncate">08 Apr 2021</small></div></div></td><td><span class="text-heading">Harmonia</span></td><td>
-              <div class="d-flex align-items-center">
-                <ul class="list-unstyled d-flex align-items-center avatar-group mb-0 z-2">
-                  
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/9.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/2.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/4.png" alt="Avatar">
-                </li>
-              
-                </ul>
-              </div>
-            </td><td class="dt-type-numeric">
-              <div class="d-flex align-items-center">
-                <div class="progress w-100 me-3" style="height: 6px;">
-                  <div class="progress-bar" style="width: 25%" aria-valuenow="25%" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <span class="text-heading">25%</span>
-              </div>
-            </td><td><div class="d-inline-block"><a href="javascript:;" class="btn btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="icon-base bx bx-dots-vertical-rounded icon-md"></i></a><div class="dropdown-menu dropdown-menu-end m-0"><a href="javascript:;" class="dropdown-item">Details</a><a href="javascript:;" class="dropdown-item">Archive</a><div class="dropdown-divider"></div><a href="javascript:;" class="dropdown-item text-danger delete-record">Delete</a></div></div></td></tr><tr><td class="control dtr-hidden" tabindex="0" style="display: none;"></td><td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td><td class="sorting_1"><div class="d-flex justify-content-left align-items-center"><div class="avatar-wrapper"><div class="avatar avatar-sm me-3"><img src="../../assets/img/icons/brands/html-label.png" alt="Avatar" class="rounded-circle"></div></div><div class="d-flex flex-column gap-50"><span class="text-truncate fw-medium text-heading">Crypto Admin</span><small class="text-truncate">29 Sept 2021</small></div></div></td><td><span class="text-heading">Allyson</span></td><td>
-              <div class="d-flex align-items-center">
-                <ul class="list-unstyled d-flex align-items-center avatar-group mb-0 z-2">
-                  
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/7.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/3.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/7.png" alt="Avatar">
-                </li>
-              
-                  <li class="avatar avatar-xs">
-                    <span class="avatar-initial rounded-circle pull-up" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="1 more">+1</span>
-                  </li>
-                
-                </ul>
-              </div>
-            </td><td class="dt-type-numeric">
-              <div class="d-flex align-items-center">
-                <div class="progress w-100 me-3" style="height: 6px;">
-                  <div class="progress-bar" style="width: 36%" aria-valuenow="36%" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <span class="text-heading">36%</span>
-              </div>
-            </td><td><div class="d-inline-block"><a href="javascript:;" class="btn btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="icon-base bx bx-dots-vertical-rounded icon-md"></i></a><div class="dropdown-menu dropdown-menu-end m-0"><a href="javascript:;" class="dropdown-item">Details</a><a href="javascript:;" class="dropdown-item">Archive</a><div class="dropdown-divider"></div><a href="javascript:;" class="dropdown-item text-danger delete-record">Delete</a></div></div></td></tr><tr><td class="control dtr-hidden" tabindex="0" style="display: none;"></td><td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td><td class="sorting_1"><div class="d-flex justify-content-left align-items-center"><div class="avatar-wrapper"><div class="avatar avatar-sm me-3"><img src="../../assets/img/icons/brands/react-label.png" alt="Avatar" class="rounded-circle"></div></div><div class="d-flex flex-column gap-50"><span class="text-truncate fw-medium text-heading">Create Website</span><small class="text-truncate">20 Mar 2021</small></div></div></td><td><span class="text-heading">Georgie</span></td><td>
-              <div class="d-flex align-items-center">
-                <ul class="list-unstyled d-flex align-items-center avatar-group mb-0 z-2">
-                  
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/2.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/6.png" alt="Avatar">
-                </li>
-              
-                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar avatar-xs pull-up" aria-label="Kim Karlos" data-bs-original-title="Kim Karlos">
-                  <img class="rounded-circle" src="../../assets/img/avatars/5.png" alt="Avatar">
-                </li>
-              
-                  <li class="avatar avatar-xs">
-                    <span class="avatar-initial rounded-circle pull-up" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="3 more">+3</span>
-                  </li>
-                
-                </ul>
-              </div>
-            </td><td class="dt-type-numeric">
-              <div class="d-flex align-items-center">
-                <div class="progress w-100 me-3" style="height: 6px;">
-                  <div class="progress-bar" style="width: 72%" aria-valuenow="72%" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <span class="text-heading">72%</span>
-              </div>
-            </td><td><div class="d-inline-block"><a href="javascript:;" class="btn btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="icon-base bx bx-dots-vertical-rounded icon-md"></i></a><div class="dropdown-menu dropdown-menu-end m-0"><a href="javascript:;" class="dropdown-item">Details</a><a href="javascript:;" class="dropdown-item">Archive</a><div class="dropdown-divider"></div><a href="javascript:;" class="dropdown-item text-danger delete-record">Delete</a></div></div></td></tr></tbody>
-          <tfoot></tfoot></table></div></div><div class="row mx-2 justify-content-between"><div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto px-4 mt-0"><div class="dt-info" aria-live="polite" id="DataTables_Table_0_info" role="status">Showing 1 to 7 of 10 entries</div></div><div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto px-4 mt-0 gap-2"><div class="dt-paging"><nav aria-label="pagination"><ul class="pagination"><li class="dt-paging-button page-item disabled"><button class="page-link previous" role="link" type="button" aria-controls="DataTables_Table_0" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1"><i class="icon-base bx bx-chevron-left scaleX-n1-rtl icon-18px"></i></button></li><li class="dt-paging-button page-item active"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" aria-current="page" data-dt-idx="0">1</button></li><li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="1">2</button></li><li class="dt-paging-button page-item"><button class="page-link next" role="link" type="button" aria-controls="DataTables_Table_0" aria-label="Next" data-dt-idx="next"><i class="icon-base bx bx-chevron-right scaleX-n1-rtl icon-18px"></i></button></li></ul></nav></div></div></div></div>
-        </div>
-      </div>
-      <!-- /Project table -->
-
-      <!-- Activity Timeline -->
-      <div class="card mb-6">
-        <h5 class="card-header">User Activity Timeline</h5>
-        <div class="card-body pt-1">
-          <ul class="timeline mb-0">
-            <li class="timeline-item timeline-item-transparent">
-              <span class="timeline-point timeline-point-primary"></span>
-              <div class="timeline-event">
-                <div class="timeline-header mb-3">
-                  <h6 class="mb-0">12 Invoices have been paid</h6>
-                  <small class="text-body-secondary">12 min ago</small>
-                </div>
-                <p class="mb-2">Invoices have been paid to the company</p>
-                <div class="d-flex align-items-center mb-2">
-                  <div class="badge bg-lighter rounded d-flex align-items-center">
-                    <img src="../../assets//img/icons/misc/pdf.png" alt="img" width="15" class="me-2">
-                    <span class="h6 mb-0 text-body">invoices.pdf</span>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="timeline-item timeline-item-transparent">
-              <span class="timeline-point timeline-point-success"></span>
-              <div class="timeline-event">
-                <div class="timeline-header mb-3">
-                  <h6 class="mb-0">Client Meeting</h6>
-                  <small class="text-body-secondary">45 min ago</small>
-                </div>
-                <p class="mb-2">Project meeting with john @10:15am</p>
-                <div class="d-flex justify-content-between flex-wrap gap-2 mb-2">
-                  <div class="d-flex flex-wrap align-items-center mb-50">
-                    <div class="avatar avatar-sm me-2">
-                      <img src="../../assets/img/avatars/1.png" alt="Avatar" class="rounded-circle">
-                    </div>
-                    <div>
-                      <p class="mb-0 small fw-medium">Lester McCarthy (Client)</p>
-                      <small>CEO of ThemeSelection</small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="timeline-item timeline-item-transparent">
-              <span class="timeline-point timeline-point-info"></span>
-              <div class="timeline-event">
-                <div class="timeline-header mb-3">
-                  <h6 class="mb-0">Create a new project for client</h6>
-                  <small class="text-body-secondary">2 Day Ago</small>
-                </div>
-                <p class="mb-2">6 team members in a project</p>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap border-top-0 p-0">
-                    <div class="d-flex flex-wrap align-items-center">
-                      <ul class="list-unstyled users-list d-flex align-items-center avatar-group m-0 me-2">
-                        <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="Vinnie Mostowy" data-bs-original-title="Vinnie Mostowy">
-                          <img class="rounded-circle" src="../../assets/img/avatars/5.png" alt="Avatar">
-                        </li>
-                        <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="Allen Rieske" data-bs-original-title="Allen Rieske">
-                          <img class="rounded-circle" src="../../assets/img/avatars/12.png" alt="Avatar">
-                        </li>
-                        <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar pull-up" aria-label="Julee Rossignol" data-bs-original-title="Julee Rossignol">
-                          <img class="rounded-circle" src="../../assets/img/avatars/6.png" alt="Avatar">
-                        </li>
-                        <li class="avatar">
-                          <span class="avatar-initial rounded-circle pull-up text-heading" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="3 more">+3</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- /Activity Timeline -->
-
-      <!-- Invoice table -->
-      <div class="card mb-4">
-        <div class="card-datatable table-responsive">
-          <div id="DataTables_Table_1_wrapper" class="dt-container dt-bootstrap5 dt-empty-footer"><div class="row border-bottom mx-0 px-3"><div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto px-4 mt-0"><h5 class="card-title mb-0 text-md-start text-center pt-6 pt-md-0">Invoice List</h5></div><div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto px-4 mt-0 gap-2"><div class="dt-length mb-md-6 mb-0"><select name="DataTables_Table_1_length" aria-controls="DataTables_Table_1" class="form-select ms-0" id="dt-length-1"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select><label for="dt-length-1"></label></div><div class="dt-buttons btn-group flex-wrap justify-content-center"><div class="btn-group"><button class="btn btn-secondary buttons-collection btn-label-secondary dropdown-toggle float-sm-end mb-3 mb-md-0 mt-md-0 mt-5" tabindex="0" aria-controls="DataTables_Table_1" type="button" aria-haspopup="dialog" aria-expanded="false"><span><i class="icon-base bx bx-export icon-sm me-2"></i>Export</span></button></div> </div></div></div><div class="justify-content-between dt-layout-table"><div class="d-md-flex justify-content-between align-items-center dt-layout-full table-responsive"><table class="table datatable-invoice dataTable dtr-column" id="DataTables_Table_1" aria-describedby="DataTables_Table_1_info" style="width: 100%;"><colgroup><col data-dt-column="1" style="width: 150.453px;"><col data-dt-column="2" style="width: 159.484px;"><col data-dt-column="3" style="width: 146.016px;"><col data-dt-column="4" style="width: 216.047px;"><col data-dt-column="5" style="width: 244.656px;"></colgroup>
-=======
      
       <!--/ User Pills -->
 
@@ -528,7 +105,6 @@
       <div class="card mb-4 ">
         <div class="card-datatable table-responsive">
           <div id="DataTables_Table_1_wrapper" class="dt-container dt-bootstrap5 dt-empty-footer"><div class="row border-bottom mx-0 px-3"><div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto px-4 mt-0"><h5 class="card-title mb-0 text-md-start text-center pt-6 pt-md-0 mt-3 mb-3">Invoice List</h5></div><div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto px-4 mt-0 gap-2"><div class="dt-buttons btn-group flex-wrap justify-content-center"> </div></div></div><div class="justify-content-between dt-layout-table"><div class="d-md-flex justify-content-between align-items-center dt-layout-full table-responsive"><table class="table datatable-invoice dataTable dtr-column" id="DataTables_Table_1" aria-describedby="DataTables_Table_1_info" style="width: 100%;"><colgroup><col data-dt-column="1" style="width: 150.453px;"><col data-dt-column="2" style="width: 159.484px;"><col data-dt-column="3" style="width: 146.016px;"><col data-dt-column="4" style="width: 216.047px;"><col data-dt-column="5" style="width: 244.656px;"></colgroup>
->>>>>>> integration
             <thead>
               <tr><th data-dt-column="0" class="control dt-orderable-none dtr-hidden" rowspan="1" colspan="1" aria-label="" style="display: none;"><span class="dt-column-title"></span><span class="dt-column-order"></span></th><th data-dt-column="1" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-ordering-desc" aria-sort="descending" aria-label="#: Activate to remove sorting" tabindex="0"><span class="dt-column-title" role="button">#</span><span class="dt-column-order"></span></th><th data-dt-column="2" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc" aria-label="Status: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Status</span><span class="dt-column-order"></span></th><th data-dt-column="3" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-type-numeric" aria-label="Total: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Total</span><span class="dt-column-order"></span></th><th data-dt-column="4" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc" aria-label="Issued Date: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Issued Date</span><span class="dt-column-order"></span></th><th data-dt-column="5" rowspan="1" colspan="1" class="dt-orderable-none" aria-label="Actions"><span class="dt-column-title">Actions</span><span class="dt-column-order"></span></th></tr>
             </thead><tbody><tr><td class="control dtr-hidden" tabindex="0" style="display: none;"></td><td class="sorting_1"><a href="app-invoice-preview.html"><span>#5089</span></a></td><td>
@@ -782,12 +358,8 @@
                 </div>
               </div>
             </td></tr></tbody>
-<<<<<<< HEAD
-          <tfoot></tfoot></table></div></div><div class="row mx-3 justify-content-between"><div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto px-4 mt-0"><div class="dt-info" aria-live="polite" id="DataTables_Table_1_info" role="status">Showing 1 to 10 of 50 entries</div></div><div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto px-4 mt-0 gap-2"><div class="dt-paging"><nav aria-label="pagination"><ul class="pagination"><li class="dt-paging-button page-item disabled"><button class="page-link previous" role="link" type="button" aria-controls="DataTables_Table_1" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1"><i class="icon-base bx bx-chevron-left scaleX-n1-rtl icon-18px"></i></button></li><li class="dt-paging-button page-item active"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_1" aria-current="page" data-dt-idx="0">1</button></li><li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_1" data-dt-idx="1">2</button></li><li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_1" data-dt-idx="2">3</button></li><li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_1" data-dt-idx="3">4</button></li><li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_1" data-dt-idx="4">5</button></li><li class="dt-paging-button page-item"><button class="page-link next" role="link" type="button" aria-controls="DataTables_Table_1" aria-label="Next" data-dt-idx="next"><i class="icon-base bx bx-chevron-right scaleX-n1-rtl icon-18px"></i></button></li></ul></nav></div></div></div></div>
-=======
           </table></div></div><div class="row mx-3 justify-content-between"><div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto px-4 mt-0"></div>
           </div></div></div></div>
->>>>>>> integration
         </div>
       </div>
       <!-- /Invoice table -->
@@ -816,91 +388,13 @@
             <input type="text" id="modalEditUserLastName" name="modalEditUserLastName" class="form-control" placeholder="Doe" value="Doe">
           </div>
           <div class="col-12">
-<<<<<<< HEAD
-            <label class="form-label" for="modalEditUserName">Username</label>
-=======
             <label class="form-label" for="modalEditUserName">Email</label>
->>>>>>> integration
             <input type="text" id="modalEditUserName" name="modalEditUserName" class="form-control" placeholder="johndoe007" value="johndoe007">
           </div>
           <div class="col-12 col-md-6">
             <label class="form-label" for="modalEditUserEmail">Email</label>
             <input type="text" id="modalEditUserEmail" name="modalEditUserEmail" class="form-control" placeholder="example@domain.com" value="example@domain.com">
           </div>
-<<<<<<< HEAD
-          <div class="col-12 col-md-6">
-            <label class="form-label" for="modalEditUserStatus">Status</label>
-            <div class="position-relative"><select id="modalEditUserStatus" name="modalEditUserStatus" class="select2 form-select select2-hidden-accessible" aria-label="Default select example" data-select2-id="modalEditUserStatus" tabindex="-1" aria-hidden="true">
-              <option selected="" data-select2-id="2">Status</option>
-              <option value="1">Active</option>
-              <option value="2">Inactive</option>
-              <option value="3">Suspended</option>
-            </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-modalEditUserStatus-container"><span class="select2-selection__rendered" id="select2-modalEditUserStatus-container" role="textbox" aria-readonly="true" title="Status">Status</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span></div>
-          </div>
-          <div class="col-12 col-md-6">
-            <label class="form-label" for="modalEditTaxID">Tax ID</label>
-            <input type="text" id="modalEditTaxID" name="modalEditTaxID" class="form-control modal-edit-tax-id" placeholder="123 456 7890" value="123 456 7890">
-          </div>
-          <div class="col-12 col-md-6">
-            <label class="form-label" for="modalEditUserPhone">Phone Number</label>
-            <div class="input-group">
-              <span class="input-group-text">US (+1)</span>
-              <input type="text" id="modalEditUserPhone" name="modalEditUserPhone" class="form-control phone-number-mask" placeholder="202 555 0111" value="202 555 0111">
-            </div>
-          </div>
-          <div class="col-12 col-md-6">
-            <label class="form-label" for="modalEditUserLanguage">Language</label>
-            <div class="position-relative"><select id="modalEditUserLanguage" name="modalEditUserLanguage" class="select2 form-select select2-hidden-accessible" multiple="" data-select2-id="modalEditUserLanguage" tabindex="-1" aria-hidden="true">
-              <option value="">Select</option>
-              <option value="english" selected="" data-select2-id="4">English</option>
-              <option value="spanish">Spanish</option>
-              <option value="french">French</option>
-              <option value="german">German</option>
-              <option value="dutch">Dutch</option>
-              <option value="hebrew">Hebrew</option>
-              <option value="sanskrit">Sanskrit</option>
-              <option value="hindi">Hindi</option>
-            </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="3" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1" aria-disabled="false"><ul class="select2-selection__rendered"><li class="select2-selection__choice" title="English" data-select2-id="5"><span class="select2-selection__choice__remove" role="presentation">×</span>English</li><li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" role="searchbox" aria-autocomplete="list" placeholder="" style="width: 0.75em;"></li></ul></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span></div>
-          </div>
-          <div class="col-12 col-md-6">
-            <label class="form-label" for="modalEditUserCountry">Country</label>
-            <div class="position-relative"><select id="modalEditUserCountry" name="modalEditUserCountry" class="select2 form-select select2-hidden-accessible" data-allow-clear="true" data-select2-id="modalEditUserCountry" tabindex="-1" aria-hidden="true">
-              <option value="">Select</option>
-              <option value="Australia">Australia</option>
-              <option value="Bangladesh">Bangladesh</option>
-              <option value="Belarus">Belarus</option>
-              <option value="Brazil">Brazil</option>
-              <option value="Canada">Canada</option>
-              <option value="China">China</option>
-              <option value="France">France</option>
-              <option value="Germany">Germany</option>
-              <option value="India" selected="" data-select2-id="7">India</option>
-              <option value="Indonesia">Indonesia</option>
-              <option value="Israel">Israel</option>
-              <option value="Italy">Italy</option>
-              <option value="Japan">Japan</option>
-              <option value="Korea">Korea, Republic of</option>
-              <option value="Mexico">Mexico</option>
-              <option value="Philippines">Philippines</option>
-              <option value="Russia">Russian Federation</option>
-              <option value="South Africa">South Africa</option>
-              <option value="Thailand">Thailand</option>
-              <option value="Turkey">Turkey</option>
-              <option value="Ukraine">Ukraine</option>
-              <option value="United Arab Emirates">United Arab Emirates</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="United States">United States</option>
-            </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="6" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-modalEditUserCountry-container"><span class="select2-selection__rendered" id="select2-modalEditUserCountry-container" role="textbox" aria-readonly="true" title="India"><span class="select2-selection__clear" title="Remove all items" data-select2-id="8">×</span>India</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span></div>
-          </div>
-          <div class="col-12">
-            <div class="form-check form-switch my-2 ms-2">
-              <input type="checkbox" class="form-check-input" id="editBillingAddress" checked="">
-              <label for="editBillingAddress" class="switch-label">Use as a billing address?</label>
-            </div>
-          </div>
-          <div class="col-12 text-center">
-            <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
-=======
           
           <div class="col-12 col-md-6">
             <label class="form-label" for="modalEditUserEmail">Email</label>
@@ -910,7 +404,6 @@
           </div>
           <div class="col-12 text-center mb-3">
             <button type="submit" class="btn btn-success me-sm-3 me-1">Submit</button>
->>>>>>> integration
             <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
           </div>
         </form>

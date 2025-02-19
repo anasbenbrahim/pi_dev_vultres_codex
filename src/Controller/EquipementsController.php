@@ -53,6 +53,7 @@ final class EquipementsController extends AbstractController
     #[Route('/add_equipement','add_equipement')]
     public function add(ManagerRegistry $doctrine,EquipementsRepository $repo,Request $request,#[Autowire('%photo_dir%')] string $photoDir ){
         $equipement=new Equipements();
+        $user=$this->getUser();
         $em=$doctrine->getManager();
         $form=$this->createForm(AddEquipementsType::class,$equipement);
         $form->handleRequest($request);
@@ -63,6 +64,7 @@ final class EquipementsController extends AbstractController
                 $photo->move($photoDir,$filename); 
             }
             $equipement->setImage($filename);
+            $equipement->setUser($user);
             $em->persist($equipement);
             $em->flush();
             return $this->redirectToRoute('show_equipement_dashboard');

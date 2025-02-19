@@ -19,11 +19,6 @@ lang="en"
       href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
       rel="stylesheet"
     />
-<<<<<<< HEAD
-  {% block css %}
-=======
-
->>>>>>> integration
     <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/boxicons.css') }}" />
 
@@ -38,9 +33,6 @@ lang="en"
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
 
     <!-- Page CSS -->
-<<<<<<< HEAD
-   <style>
-=======
 
     <!-- Helpers -->
     <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
@@ -60,7 +52,6 @@ lang="en"
     {% endblock %}
 
     <style>
->>>>>>> integration
     .logo{
       width: 100px;
     height: 100px;
@@ -73,19 +64,6 @@ lang="en"
     
     
     </style>
-<<<<<<< HEAD
- {% endblock %}
-    <!-- Helpers -->
-    
-   
-
-    {% block javascripts %}
-    {% block importmap %}{{ importmap('app') }}{% endblock %}
- 
-    {% endblock %}
-
-=======
->>>>>>> integration
 
 </head>
 
@@ -97,19 +75,10 @@ lang="en"
 
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           <div class="app-brand demo">
-<<<<<<< HEAD
-            <a href="{{ path('app_admin') }}" class="app-brand-link mt-3 mb-3">
-            
-              <span class="app-brand-logo demo">
-              <img src="{{ asset('assets/img/logo sans back.png') }}" alt="Logo" class="logo" />
-              </span>  
-                  
-=======
             <a href="{{ path('app_admin') }}" class="app-brand-link mt-3 mb-2">
               <span class="app-brand-logo demo">
               <img src="{{ asset('assets/img/logo sans back.png') }}" alt="Logo" class="logo" />
               </span>  
->>>>>>> integration
             </a>
 
             <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -117,25 +86,6 @@ lang="en"
             </a>
           </div>
 
-<<<<<<< HEAD
-          <div class="menu-inner-shadow"></div>
-
-          <ul class="menu-inner py-1">
-            <li class="menu-item">
-    <a href="{{ path('app_dashboard') }}" class="menu-link text-success">
-        <b>
-            <i class="menu-icon tf-icons bx bx-home-circle"></i>
-        </b>
-        <div data-i18n="Analytics"><b>Dashboard</b></div>
-    </a>
-</li>
-
-<li class="menu-header small text-uppercase">
-    <span class="menu-header-text">Menu</span>
-</li>
-
-{#% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_FERMIER') or is_granted('ROLE_FOURNISSEUR') %#}
-=======
           <div class="menu-inner-shadow "></div>
 
           <ul class="menu-inner py-1 mt-3">
@@ -179,20 +129,12 @@ lang="en"
 
 
 {% if is_granted('ROLE_FOURNISSEUR') %}
->>>>>>> integration
     <li class="menu-item">
         <a href="{{ path('show_equipement_dashboard') }}" class="menu-link">
             <i class="menu-icon bi bi-box-seam-fill"></i>
             <div data-i18n="Account Settings">Equipements</div>
         </a>
     </li>
-<<<<<<< HEAD
-{#% endif %#}
-
-{% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_FERMIER') or is_granted('ROLE_FOURNISSEUR') %}
-    <li class="menu-item">
-        <a href="{{ path('app_products') }}" class="menu-link">
-=======
 {% endif %}
 
 
@@ -200,35 +142,24 @@ lang="en"
 {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_FERMIER') %}
     <li class="menu-item">
         <a href="{{ path('app_product_index') }}" class="menu-link">
->>>>>>> integration
             <i class="menu-icon bi bi-cart-check-fill"></i>
             <div data-i18n="Account Settings">Produits</div>
         </a>
     </li>
 {% endif %}
 
-<<<<<<< HEAD
-{% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_FERMIER') %}
-    <li class="menu-item">
-        <a href="{{ path('app_events') }}" class="menu-link">
-            <i class="bi bi-calendar-check-fill menu-icon"></i>
-            <div data-i18n="Account Settings">Evennements</div>
-=======
 
 {% if is_granted('ROLE_FOURNISSEUR') or is_granted('ROLE_SUPER_ADMIN') %}
     <li class="menu-item">
         <a href="{{ path('show_category_equipement') }}" class="menu-link">
             <i class="menu-icon bi bi-box-seam-fill"></i>
             <div data-i18n="Account Settings">Category</div>
->>>>>>> integration
         </a>
     </li>
 {% endif %}
 
 
 
-<<<<<<< HEAD
-=======
 
 {% if is_granted('ROLE_SUPER_ADMIN')  %}
     <li class="menu-item">
@@ -281,17 +212,12 @@ lang="en"
 
 
 
->>>>>>> integration
 {% if is_granted('ROLE_SUPER_ADMIN') %}
 <li class="menu-header small text-uppercase">
     <span class="menu-header-text">Utilisateurs</span>
 </li>
     <li class="menu-item">
-<<<<<<< HEAD
-        <a href="{{ path('app_customers') }}" class="menu-link">
-=======
         <a href="{{ path('app_customer_index') }}" class="menu-link">
->>>>>>> integration
             <i class="menu-icon bi bi-person-fill"></i>
             <div data-i18n="Account Settings">Clients</div>
         </a>
@@ -300,11 +226,7 @@ lang="en"
 
 {% if is_granted('ROLE_SUPER_ADMIN') %}
     <li class="menu-item">
-<<<<<<< HEAD
-        <a href="{{ path('app_fermiers') }}" class="menu-link">
-=======
         <a href="{{ path('app_fermier_index') }}" class="menu-link">
->>>>>>> integration
             <i class="menu-icon bi bi-person-check-fill"></i>
             <div data-i18n="Account Settings">Fermiers</div>
         </a>
@@ -313,47 +235,23 @@ lang="en"
 
 {% if is_granted('ROLE_SUPER_ADMIN') %}
     <li class="menu-item">
-<<<<<<< HEAD
-        <a href="{{ path('app_fournisseurs') }}" class="menu-link">
-=======
         <a href="{{ path('app_fournisseur_index') }}" class="menu-link">
->>>>>>> integration
             <i class="menu-icon bi bi-person-check-fill"></i>
             <div data-i18n="Account Settings">Fournisseurs</div>
         </a>
     </li>
 {% endif %}
 
-<<<<<<< HEAD
-{% if is_granted('ROLE_SUPER_ADMIN') %}
-    <li class="menu-item">
-        <a href="{{ path('app_emp') }}" class="menu-link">
-            <i class="menu-icon bi bi-person-fill-gear"></i>
-            <div data-i18n="Account Settings">Employees</div>
-        </a>
-    </li>
-{% endif %}
-
-<li class="menu-header small text-uppercase">
-    <a href="{{path('add_category_equipement')}}"><span class="menu-header-text">Ajouter une categorie</span></a>
-</li>
-<li class="menu-header small text-uppercase">
-    <a href="{{path('show_category_equipement')}}"><span class="menu-header-text">Consulter Categorie</span></a>
-=======
 
 
 <li class="menu-header small text-uppercase">
     <span class="menu-header-text">Account Settings</span>
->>>>>>> integration
 </li>
 
 {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_FERMIER') or is_granted('ROLE_FOURNISSEUR') or is_granted('ROLE_EMPLOYEE') %}
     <li class="menu-item">
         <a href="{{ path('app_profile') }}" class="menu-link">
             <i class="menu-icon bi bi-person-fill-gear"></i>
-<<<<<<< HEAD
-            <div data-i18n="Account Settings">Profile</div>
-=======
             <div data-i18n="Account Settings">My Profile</div>
         </a>
     </li>
@@ -361,7 +259,6 @@ lang="en"
         <a href="{{ path('app_logout') }}" class="menu-link">
             <i class="menu-icon bi bi-box-arrow-right"></i>
             <div data-i18n="Account Settings">Logout</div>
->>>>>>> integration
         </a>
     </li>
 {% endif %}
@@ -395,11 +292,7 @@ lang="en"
                 <!-- Place this tag where you want the button to render. -->
                 <!-- User -->
                 <li class="nav-item">
-<<<<<<< HEAD
-                  <a  href="{{ path('app_logout') }}" class="btn btn-outline-danger">
-=======
                   <a  href="{{ path('app_logout') }}" class="btn btn-outline-warning">
->>>>>>> integration
                   <i class="bi bi-box-arrow-left mx-2"></i> 
                   Logout</a>
                 </li>
@@ -413,78 +306,11 @@ lang="en"
           {%  block body %}
           {% endblock %}
            </div> 
-<<<<<<< HEAD
-           {%  block footer %}
-           <footer class="content-footer footer bg-footer-theme">
-              <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-                <div class="mb-2 mb-md-0">
-                  ©
-                  <script>
-                    document.write(new Date().getFullYear());
-                  </script>
-                  , made with ❤️ by
-                  <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
-                </div>
-                <div>
-                  <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
-                  <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
-
-                  <a
-                    href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                    target="_blank"
-                    class="footer-link me-4"
-                    >Documentation</a
-                  >
-
-                  <a
-                    href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
-                    target="_blank"
-                    class="footer-link me-4"
-                    >Support</a
-                  >
-                </div>
-              </div>
-            </footer>
-          {% endblock %}
-=======
            
->>>>>>> integration
           <div class="content-backdrop fade"></div>
  </div>  
  </div>     
 
-<<<<<<< HEAD
-
-  {% block js %}
-      <!-- Core JS -->
-      <!-- build:js assets/vendor/js/core.js -->
-      <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
-      <script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
-      <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
-      <script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
-
-      <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
-      <!-- endbuild -->
-
-      <!-- Vendors JS -->
-      <script src="{{ asset('assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
-
-      <!-- Main JS -->
-      <script src="{{ asset('assets/js/main.js') }}"></script>
-
-      <!-- Page JS -->
-      <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
-
-      <!-- Place this tag in your head or just before your close body tag. -->
-      <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
-
-      <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-      <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-      <script src="{{ asset('assets/js/config.js') }}"></script>  
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  {% endblock %}
-=======
       
 </div>
 </div>
@@ -519,7 +345,6 @@ lang="en"
   
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
->>>>>>> integration
 </body>
 
 
@@ -531,8 +356,4 @@ lang="en"
 
 
 
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> integration
