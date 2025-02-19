@@ -8,6 +8,7 @@ use Symfony\Component\Mime\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use App\Entity\User;
 
 #[ORM\Entity(repositoryClass: EquipementsRepository::class)]
 class Equipements
@@ -17,7 +18,7 @@ class Equipements
     #[ORM\Column]
     private ?int $id = null;
     
-    #[Assert\Length(min:4,minMessage:"Veuillez saisir un nom valide"),NotBlank(),]
+    #[Assert\Length(min:4,minMessage:"Veuillez saisir un nom valide"),NotBlank()]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
     
@@ -27,6 +28,8 @@ class Equipements
     private ?int $quantite = null;
 
     #[Assert\NotBlank(message:"champs vide veuillez inserer une valeur")]
+    #[Assert\Type(type:"numeric", message:"Le prix doit être un nombre.")]
+    #[Assert\Positive(message:"Le prix doit être supérieur à 0.")]
     #[ORM\Column]
     private ?float $prix = null;
 
@@ -44,6 +47,13 @@ class Equipements
     #[ORM\ManyToOne(inversedBy: 'equipements')]
     #[ORM\JoinColumn(nullable: true,onDelete:'SET NULL')]
     private ?CategoryEquipements $category = null;
+
+
+    #[ORM\ManyToOne(targetEntity:User::class,inversedBy: 'equipements')]
+    #[ORM\JoinColumn(nullable:false)]
+    private ?User $user = null;
+
+   
 
     public function getId(): ?int
     {
@@ -124,4 +134,18 @@ class Equipements
 
         return $this;
     }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+   
 }

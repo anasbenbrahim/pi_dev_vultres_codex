@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product List{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Product List</h1>
+
+    <div class="row">
+        {% for produit in produits %}
+            <div class="col-lg-4 col-12 text-center mt-4">
+                <div class="box-column">
+                    <div class="box-header box-header-facebook">
+                         {% if produit.image %}
+                          <img src="{{ asset(produit.image) }}" alt="Product Image" width="100">
+                         {% endif %}
+                    </div>
+                    <div class="box-bottom">
+                        <div class="box-title facebook-title">
+                            {{ produit.nomprod }}
+                        </div>
+                        <div class="box-text">
+                            {{ produit.descr }}
+                        </div>
+                        <div>
+                            Price: {{ produit.prix|number_format(2, '.', ',') }} TND
+                        </div>
+                        <div>
+                            Quantity: {{ produit.quantite }} Kg
+                        </div>
+                        <div>
+                            {% if produit.status %}
+                                <span class="text-success">Available</span>
+                            {% else %}
+                                <span class="text-danger">Not Available</span>
+                            {% endif %}
+                        </div>
+                       <a href="{{ path('app_product_show', {'id': produit.id}) }}" class="btn btn-info btn-sm mt-2">View</a> 
+                         <a href="{{ path('app_product_edit', {'id': produit.id}) }}" class="btn btn-warning btn-sm mt-2">Edit</a>
+                         <a href="{{ path('app_product_delete', {'id': produit.id}) }}" class="btn btn-danger btn-sm mt-2" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12 text-center">
+                <p>No products found.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <a href="{{ path('app_product_new') }}" class="btn btn-success mt-4">Add New Product</a>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

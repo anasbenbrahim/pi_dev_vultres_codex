@@ -1,0 +1,52 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %} Détails {% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-warning text-white">
+            <h2 class="text-center mb-0">Détails de l'Événement</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Détails de l'événement -->
+                <div class="col-md-6">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Nom:</th>
+                                <td>{{ event.nom }}</td>
+                            </tr>
+                            <tr>
+                                <th>Date:</th>
+                                <td>{{ event.date|date('d/m/Y') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Description:</th>
+                                <td>{{ event.descr }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Image de l'événement -->
+                <div class="col-md-6 text-center">
+                    {% if event.photo %}
+                        <img src="{{ asset(event.photo) }}" alt="Photo de l'événement" width="300" class="img-fluid rounded">
+                    {% else %}
+                        <p>Aucune image disponible</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Bouton Réserver -->
+            <div class="text-center mt-4">
+                <a href="" class="btn btn-warning btn-lg">
+                    Réserver
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Fermier{% endblock %}
+
+{% block body %}
+    {{ include('fermier/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a class="btn btn-warning" href="{{ path('app_fermier_index') }}"> <i class="bx bx-arrow-back"></i> back to list</a>
+
+    
+{% endblock %}

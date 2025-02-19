@@ -3,6 +3,21 @@
 {% block title %}Hello ProfileController!{% endblock %}
 {% block footer%} {% endblock %}
 {% block body %}
+<<<<<<< HEAD
+=======
+
+<style>
+.offcanvas.offcanvas-end {
+      top: 80px;
+  
+}
+</style>
+
+
+
+
+
+>>>>>>> integration
 <div class="container-xxl flex-grow-1 container-p-y">
           
   <div class="row">
@@ -13,13 +28,37 @@
         <div class="card-body pt-12">
           <div class="user-avatar-section">
             <div class=" d-flex align-items-center flex-column">
+<<<<<<< HEAD
               <img class="img-fluid rounded mb-4" src="../../assets/img/avatars/1.png" height="120" width="120" alt="User avatar">
               <div class="user-info text-center">
                 <h5>Violet Mendoza</h5>
+=======
+
+            {% if is_granted('ROLE_FERMIER') %}
+              <img class="img-fluid rounded mb-4" src="../../assets/img/avatars/fermier.png" height="120" width="120" alt="User avatar">
+            {% endif %}
+
+            {% if is_granted('ROLE_Fournisseur') %}
+              <img class="img-fluid rounded mb-4" src="../../assets/img/avatars/fournisseur.png" height="120" width="120" alt="User avatar">
+            {% endif %}
+
+            {% if is_granted('ROLE_CLIENTR') %}
+              <img class="img-fluid rounded mb-4" src="../../assets/img/avatars/client.png" height="120" width="120" alt="User avatar">
+            {% endif %}
+
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+              <img class="img-fluid rounded mb-4" src="../../assets/img/avatars/admin.png" height="120" width="120" alt="User avatar">
+            {% endif %}
+
+
+              <div class="user-info text-center">
+                <h5><span class="mx-1">{{ user.firstName }}</span><span>{{ user.lastName }}</span></h5>
+>>>>>>> integration
                 <span class="badge bg-label-secondary">Author</span>
               </div>
             </div>
           </div>
+<<<<<<< HEAD
           <div class="d-flex justify-content-around flex-wrap my-6 gap-0 gap-md-3 gap-lg-4">
             <div class="d-flex align-items-center me-5 gap-4">
               <div class="avatar">
@@ -44,10 +83,14 @@
               </div>
             </div>
           </div>
+=======
+         
+>>>>>>> integration
           <h5 class="pb-4 border-bottom mb-4">Details</h5>
           <div class="info-container">
             <ul class="list-unstyled mb-6">
               <li class="mb-2">
+<<<<<<< HEAD
                 <span class="h6">Username:</span>
                 <span>@violet.dev</span>
               </li>
@@ -83,11 +126,43 @@
             <div class="d-flex justify-content-center">
               <a href="javascript:;" class="btn btn-primary me-4" data-bs-target="#editUser" data-bs-toggle="modal">Edit</a>
               <a href="javascript:;" class="btn btn-label-danger suspend-user">Suspend</a>
+=======
+                <span class="h6">FirstName:</span>
+                <span>{{ user.firstName }}</span>
+              </li>
+              <li class="mb-2">
+                <span class="h6">LastName:</span>
+                <span>{{ user.lastName }}</span>
+              </li>
+              <li class="mb-2">
+                <span class="h6">Email:</span>
+                <span>{{ user.email }}</span>
+              </li>
+              <li class="mb-2">
+              {% if is_granted('ROLE_FERMIER')%}
+                <span class="h6">FarmName:</span>
+                <span>{{ user.farmName }}</span>
+              {% endif %}  
+              {% if is_granted('ROLE_FOURNISSEUR') %}  
+                <span class="h6">ConmanyName:</span>
+                <span>{{ user.companyName }}</span>  
+              {% endif %}
+              </li>
+            </ul>
+            <div class="d-flex justify-content-center"> 
+            {% if is_granted('ROLE_FERMIER') %}
+              <a href="{{ path('superadmin_edit', {'id': user.id}) }}" class="btn btn-success me-4">Edit</a>
+            {% endif %}  
+            {% if is_granted('ROLE_Fournisseur')  %}
+              <a href="{{ path('superadmin_edit', {'id': user.id}) }}" class="btn btn-success me-4">Edit</a>
+            {% endif %}  
+>>>>>>> integration
             </div>
           </div>
         </div>
       </div>
       <!-- /User Card -->
+<<<<<<< HEAD
       <!-- Plan Card -->
       <div class="card mb-6 border border-2 border-primary rounded primary-shadow">
         <div class="card-body">
@@ -118,12 +193,16 @@
         </div>
       </div>
       <!-- /Plan Card -->
+=======
+    
+>>>>>>> integration
     </div>
     <!--/ User Sidebar -->
 
     <!-- User Content -->
     <div class="col-xl-8 col-lg-7 order-0 order-md-1">
       <!-- User Pills -->
+<<<<<<< HEAD
       <div class="nav-align-top">
         <ul class="nav nav-pills flex-column flex-md-row mb-6 flex-wrap row-gap-2">
           <li class="nav-item">
@@ -438,6 +517,18 @@
       <div class="card mb-4">
         <div class="card-datatable table-responsive">
           <div id="DataTables_Table_1_wrapper" class="dt-container dt-bootstrap5 dt-empty-footer"><div class="row border-bottom mx-0 px-3"><div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto px-4 mt-0"><h5 class="card-title mb-0 text-md-start text-center pt-6 pt-md-0">Invoice List</h5></div><div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto px-4 mt-0 gap-2"><div class="dt-length mb-md-6 mb-0"><select name="DataTables_Table_1_length" aria-controls="DataTables_Table_1" class="form-select ms-0" id="dt-length-1"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select><label for="dt-length-1"></label></div><div class="dt-buttons btn-group flex-wrap justify-content-center"><div class="btn-group"><button class="btn btn-secondary buttons-collection btn-label-secondary dropdown-toggle float-sm-end mb-3 mb-md-0 mt-md-0 mt-5" tabindex="0" aria-controls="DataTables_Table_1" type="button" aria-haspopup="dialog" aria-expanded="false"><span><i class="icon-base bx bx-export icon-sm me-2"></i>Export</span></button></div> </div></div></div><div class="justify-content-between dt-layout-table"><div class="d-md-flex justify-content-between align-items-center dt-layout-full table-responsive"><table class="table datatable-invoice dataTable dtr-column" id="DataTables_Table_1" aria-describedby="DataTables_Table_1_info" style="width: 100%;"><colgroup><col data-dt-column="1" style="width: 150.453px;"><col data-dt-column="2" style="width: 159.484px;"><col data-dt-column="3" style="width: 146.016px;"><col data-dt-column="4" style="width: 216.047px;"><col data-dt-column="5" style="width: 244.656px;"></colgroup>
+=======
+     
+      <!--/ User Pills -->
+
+     
+
+     
+      <!-- Invoice table -->
+      <div class="card mb-4 ">
+        <div class="card-datatable table-responsive">
+          <div id="DataTables_Table_1_wrapper" class="dt-container dt-bootstrap5 dt-empty-footer"><div class="row border-bottom mx-0 px-3"><div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto px-4 mt-0"><h5 class="card-title mb-0 text-md-start text-center pt-6 pt-md-0 mt-3 mb-3">Invoice List</h5></div><div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto px-4 mt-0 gap-2"><div class="dt-buttons btn-group flex-wrap justify-content-center"> </div></div></div><div class="justify-content-between dt-layout-table"><div class="d-md-flex justify-content-between align-items-center dt-layout-full table-responsive"><table class="table datatable-invoice dataTable dtr-column" id="DataTables_Table_1" aria-describedby="DataTables_Table_1_info" style="width: 100%;"><colgroup><col data-dt-column="1" style="width: 150.453px;"><col data-dt-column="2" style="width: 159.484px;"><col data-dt-column="3" style="width: 146.016px;"><col data-dt-column="4" style="width: 216.047px;"><col data-dt-column="5" style="width: 244.656px;"></colgroup>
+>>>>>>> integration
             <thead>
               <tr><th data-dt-column="0" class="control dt-orderable-none dtr-hidden" rowspan="1" colspan="1" aria-label="" style="display: none;"><span class="dt-column-title"></span><span class="dt-column-order"></span></th><th data-dt-column="1" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-ordering-desc" aria-sort="descending" aria-label="#: Activate to remove sorting" tabindex="0"><span class="dt-column-title" role="button">#</span><span class="dt-column-order"></span></th><th data-dt-column="2" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc" aria-label="Status: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Status</span><span class="dt-column-order"></span></th><th data-dt-column="3" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-type-numeric" aria-label="Total: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Total</span><span class="dt-column-order"></span></th><th data-dt-column="4" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc" aria-label="Issued Date: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Issued Date</span><span class="dt-column-order"></span></th><th data-dt-column="5" rowspan="1" colspan="1" class="dt-orderable-none" aria-label="Actions"><span class="dt-column-title">Actions</span><span class="dt-column-order"></span></th></tr>
             </thead><tbody><tr><td class="control dtr-hidden" tabindex="0" style="display: none;"></td><td class="sorting_1"><a href="app-invoice-preview.html"><span>#5089</span></a></td><td>
@@ -691,7 +782,12 @@
                 </div>
               </div>
             </td></tr></tbody>
+<<<<<<< HEAD
           <tfoot></tfoot></table></div></div><div class="row mx-3 justify-content-between"><div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto px-4 mt-0"><div class="dt-info" aria-live="polite" id="DataTables_Table_1_info" role="status">Showing 1 to 10 of 50 entries</div></div><div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto px-4 mt-0 gap-2"><div class="dt-paging"><nav aria-label="pagination"><ul class="pagination"><li class="dt-paging-button page-item disabled"><button class="page-link previous" role="link" type="button" aria-controls="DataTables_Table_1" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1"><i class="icon-base bx bx-chevron-left scaleX-n1-rtl icon-18px"></i></button></li><li class="dt-paging-button page-item active"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_1" aria-current="page" data-dt-idx="0">1</button></li><li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_1" data-dt-idx="1">2</button></li><li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_1" data-dt-idx="2">3</button></li><li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_1" data-dt-idx="3">4</button></li><li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_1" data-dt-idx="4">5</button></li><li class="dt-paging-button page-item"><button class="page-link next" role="link" type="button" aria-controls="DataTables_Table_1" aria-label="Next" data-dt-idx="next"><i class="icon-base bx bx-chevron-right scaleX-n1-rtl icon-18px"></i></button></li></ul></nav></div></div></div></div>
+=======
+          </table></div></div><div class="row mx-3 justify-content-between"><div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto px-4 mt-0"></div>
+          </div></div></div></div>
+>>>>>>> integration
         </div>
       </div>
       <!-- /Invoice table -->
@@ -720,13 +816,18 @@
             <input type="text" id="modalEditUserLastName" name="modalEditUserLastName" class="form-control" placeholder="Doe" value="Doe">
           </div>
           <div class="col-12">
+<<<<<<< HEAD
             <label class="form-label" for="modalEditUserName">Username</label>
+=======
+            <label class="form-label" for="modalEditUserName">Email</label>
+>>>>>>> integration
             <input type="text" id="modalEditUserName" name="modalEditUserName" class="form-control" placeholder="johndoe007" value="johndoe007">
           </div>
           <div class="col-12 col-md-6">
             <label class="form-label" for="modalEditUserEmail">Email</label>
             <input type="text" id="modalEditUserEmail" name="modalEditUserEmail" class="form-control" placeholder="example@domain.com" value="example@domain.com">
           </div>
+<<<<<<< HEAD
           <div class="col-12 col-md-6">
             <label class="form-label" for="modalEditUserStatus">Status</label>
             <div class="position-relative"><select id="modalEditUserStatus" name="modalEditUserStatus" class="select2 form-select select2-hidden-accessible" aria-label="Default select example" data-select2-id="modalEditUserStatus" tabindex="-1" aria-hidden="true">
@@ -799,6 +900,17 @@
           </div>
           <div class="col-12 text-center">
             <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+=======
+          
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="modalEditUserEmail">Email</label>
+            <input type="text" id="modalEditUserEmail" name="modalEditUserEmail" class="form-control" placeholder="example@domain.com" value="example@domain.com">
+          </div>
+          
+          </div>
+          <div class="col-12 text-center mb-3">
+            <button type="submit" class="btn btn-success me-sm-3 me-1">Submit</button>
+>>>>>>> integration
             <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
           </div>
         </form>

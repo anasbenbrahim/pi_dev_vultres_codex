@@ -45,6 +45,7 @@ final class CategoryEquipementsController extends AbstractController
             $form->getData();
             $em->persist($cat);
             $em->flush();
+            return $this->redirectToRoute('show_category_equipement');
         }
         return $this->render("/category_equipements/add.html.twig",["form"=>$form->createView()]);
     

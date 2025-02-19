@@ -7,13 +7,26 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[ORM\InheritanceType('JOINED')] // Stratégie d'héritage "JOINED"
+#[ORM\DiscriminatorColumn(name: 'discr', type: 'string')] // Colonne discriminatrice
+#[ORM\DiscriminatorMap([
+    'user' => User::class,
+    'fermier' => Fermier::class,
+    'fournisseur' => Fournisseur::class,
+    'employee' => Employee::class,
+    'client' => Client::class,
+    'superadmin' => Superadmin::class,
+])]
+abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,25 +34,97 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: "Email is required"), Assert\Email(message: "The email '{ @ }' is not a valid email")]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
-    #[ORM\Column(type:"json")]
+    #[ORM\Column(type: "json")]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    
     private ?string $password = null;
 
-    #[ORM\Column(length: 255, nullable:true)]
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "LastName is required"), Assert\Length(min:3)]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 255, nullable:true)]
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "FirstName is required"), Assert\Length(min:3)]
     private ?string $firstName = null;
+
+    #[ORM\OneToMany(targetEntity: Equipements::class, mappedBy: 'user')]
+    private Collection $equipements;
+
+    #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'user')]
+    private Collection $produits;
+
+    public function __construct()
+    {
+        $this->equipements = new ArrayCollection();
+        $this->produits = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, Equipements>
+     */
+    public function getEquipements(): Collection
+    {
+        return $this->equipements;
+    }
+
+    public function addEquipement(Equipements $equipement): static
+    {
+        if (!$this->equipements->contains($equipement)) {
+            $this->equipements->add($equipement);
+            $equipement->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeEquipement(Equipements $equipement): static
+    {
+        if ($this->equipements->removeElement($equipement)) {
+            // set the owning side to null (unless already changed)
+            if ($equipement->getUser() === $this) {
+                $equipement->setUser(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Produit>
+     */
+    public function getProduits(): Collection
+    {
+        return $this->produits;
+    }
+
+    public function addProduit(Produit $produit): static
+    {
+        if (!$this->produits->contains($produit)) {
+            $this->produits->add($produit);
+            $produit->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeProduit(Produit $produit): static
+    {
+        if ($this->produits->removeElement($produit)) {
+            // set the owning side to null (unless already changed)
+            if ($produit->getUser() === $this) {
+                $produit->setUser(null);
+            }
+        }
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -58,52 +143,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     *
-     * @return list<string>
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
+        $roles[] = 'ROLE_USER'; // Garantir que chaque utilisateur a au moins ROLE_USER
         return array_unique($roles);
     }
 
     public function setRoles(array|string $roles): self
     {
-    // Convertir une chaîne JSON en tableau ou encapsuler une valeur unique dans un tableau
-    if (is_string($roles)) {
-        $roles = json_decode($roles, true) ?? [$roles];
-    }
-
-    // Valider les rôles par rapport à une liste autorisée
-    $validRoles = ['ROLE_SUPER_ADMIN', 'ROLE_CLIENT', 'ROLE_FERMIER', 'ROLE_FOURNISSEUR', 'ROLE_EMPLOYEE'];
-    foreach ($roles as $role) {
-        if (!in_array($role, $validRoles, true)) {
-            throw new \InvalidArgumentException("Rôle invalide : $role");
+        if (is_string($roles)) {
+            $roles = json_decode($roles, true) ?? [$roles];
         }
+
+        $validRoles = ['ROLE_SUPER_ADMIN', 'ROLE_CLIENT', 'ROLE_FERMIER', 'ROLE_FOURNISSEUR', 'ROLE_EMPLOYEE'];
+        foreach ($roles as $role) {
+            if (!in_array($role, $validRoles, true)) {
+                throw new \InvalidArgumentException("Rôle invalide : $role");
+            }
+        }
+
+        $this->roles = $roles;
+        return $this;
     }
 
-    $this->roles = $roles;
-    return $this;
-    }
-
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -116,13 +184,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        // Effacer les données sensibles temporaires
     }
 
     public function getLastName(): ?string
@@ -130,7 +194,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): static
+    public function setLastName(?string $lastName): static
     {
         $this->lastName = $lastName;
 
@@ -142,12 +206,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): static
+    public function setFirstName(?string $firstName): static
     {
         $this->firstName = $firstName;
 
         return $this;
     }
-
-
 }

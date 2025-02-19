@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
+<<<<<<< HEAD
 {% block title %}Hello FournisseursController!{% endblock %}
 
 {% block body %}
@@ -18,3 +19,56 @@
     </ul>
 </div>
 {% endblock %}
+=======
+{% block title %}Hello CustomersController!{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+
+<div class="card">
+                <h5 class="card-header">Striped rows</h5>
+                <div class="table-responsive text-nowrap">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Email</th>
+                        <th>FirstName</th>
+                        <th>LastName</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+
+                    {% for user in users %}
+                      {% if 'ROLE_FOURNISSEUR' in user.roles %}
+                      <tr>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{ user.email }}</strong></td>
+                        <td>{{ user.firstName }}</td>
+                        <td>
+                          {{ user.lastName }}
+                        </td>
+                        <td><span class="badge bg-label-primary me-1">Active</span></td>
+                        <td>
+                          <button class="btn btn-primary" ><i class="bx bx-edit-alt me-1"></i> </button>
+                          <button class="btn btn-danger" ><i class="bx bx-trash me-1"></i> </button>
+                        </td>
+                      </tr>
+                      {% endif %}
+                    {% else %}
+                      <tr>
+                        <td colspan="5">Aucun utilisateur trouvé</td>
+                      </tr>
+                    {% endfor %} 
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+{% endblock %}
+
+
+
+
+
+>>>>>>> integration

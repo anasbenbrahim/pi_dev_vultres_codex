@@ -2,17 +2,355 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
+use App\Entity\Commentaire;
+use App\Entity\Event;
+use App\Entity\Publication;
+use App\Entity\Reclamation;
+use App\Form\ClientForm;
+use App\Form\ClientType;
+use App\Form\CommentaireType;
+use App\Form\PasswordForm;
+use App\Form\PublicationType;
+use App\Form\ReclamationType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+#[Route('/')]
 final class ClientController extends AbstractController
 {
-    #[Route('/', name: 'app_client')]
+    #[Route( name: 'app_client')]
     public function index(): Response
     {
         return $this->render('client/index.html.twig', [
             'controller_name' => 'ClientController',
         ]);
     }
+
+
+    #[Route('/{id}/edit', name: 'app_profile_edit', methods: ['GET', 'POST'])]
+    public function editClient(Request $request, Client $patient, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $form = $this->createForm(ClientType::class, $patient, [
+            'is_edit' => true, // L'utilisateur connecté, donc on n'affiche pas le champ de mot de passe
+        ]);
+        $form->handleRequest($request);
+
+        $formPassword = $this->createForm(PasswordForm::class);
+        $formPassword->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+
+           
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_client', [], Response::HTTP_SEE_OTHER);
+        }
+
+        if ($formPassword->isSubmitted() && $formPassword->isValid()) {
+            $newPassword = $formPassword->get('plainPassword')->getData();
+            $hashedPassword = $passwordHasher->hashPassword($patient, $newPassword);
+            $patient->setPassword($hashedPassword);
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_client', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('customer/client_edit.html.twig', [
+            'patient' => $patient,
+            'form' => $form->createView(),
+            'formP' => $formPassword->createView(),
+        ]);
+    }
+
+
+
+    #[Route('/publicationclient', name: 'publication_client')]
+    public function indexPublication(EntityManagerInterface $entityManager): Response
+    {
+        $publications = $entityManager->getRepository(Publication::class)->findAll();
+
+        return $this->render('publication/index.html.twig', [
+            'publications' => $publications,
+        ]);
+    }
+
+    #[Route('/publication/new', name: 'publication_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $publication = new Publication();
+        $publication->setDate(new \DateTime());  
+        $form = $this->createForm(PublicationType::class, $publication);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($publication);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('publication_client');
+        }
+
+        return $this->render('publication/new.html.twig', [
+            'publication' => $publication,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/{id}/delete', name: 'publication_delete')]
+    public function deletepub(Publication $publication, EntityManagerInterface $entityManager): Response
+    {
+        foreach ($publication->getCommentaires() as $commentaire) {
+            $entityManager->remove($commentaire);
+        }
+
+        $entityManager->remove($publication);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('publication_client');
+    }
+
+
+    #[Route('/publication/{id}/edit', name: 'publication_edit')]
+    public function editPublication(Request $request, Publication $publication, EntityManagerInterface $entityManager): Response
+    {
+        if (!$publication->getDate()) {
+            $publication->setDate(new \DateTime());
+        }
+
+        $form = $this->createForm(PublicationType::class, $publication);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            return $this->redirectToRoute('publication_client');
+        }
+
+        return $this->render('publication/edit.html.twig', [
+            'publication' => $publication,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/publication/{id}', name: 'publication_show')]
+    public function show(Publication $publication, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $client = $publication->getClient();
+        $commentaire = new Commentaire();
+        $commentaire->setPublication($publication);
+
+        $commentaireForm = $this->createForm(CommentaireType::class, $commentaire);
+        $commentaireForm->handleRequest($request);
+
+        if ($commentaireForm->isSubmitted() && $commentaireForm->isValid()) {
+            $entityManager->persist($commentaire);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('publication_show', ['id' => $publication->getId()]);
+        }
+        return $this->render('publication/show.html.twig', [
+            'publication' => $publication,
+            'client' => $client,
+            'commentaires' => $publication->getCommentaires(),
+            'commentaire_form' => $commentaireForm->createView(),
+        ]);
+    }
+
+    #[Route('/commentaire/', name: 'commentaire_index')]
+    public function indexcommentaire(EntityManagerInterface $entityManager): Response
+    {
+        $commentaires = $entityManager->getRepository(Commentaire::class)->findAll();
+
+        return $this->render('commentaire/index.html.twig', [
+            'commentaires' => $commentaires,
+        ]);
+    }
+
+    #[Route('/commentaire/new', name: 'commentaire_new')]
+    public function newcommentaire(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $commentaire = new Commentaire();
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($commentaire);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('commentaire_index');
+        }
+
+        return $this->render('commentaire/new.html.twig', [
+            'commentaire' => $commentaire,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/commentaire/{id}/edit', name: 'commentaire_edit')]
+    public function edit(Request $request, int $id, EntityManagerInterface $entityManager): Response
+    {
+        $commentaire = $entityManager->getRepository(Commentaire::class)->find($id);
+
+        if (!$commentaire) {
+            throw new NotFoundHttpException('Commentaire not found');
+        }
+
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('publication_show', ['id' => $commentaire->getPublication()->getId()]);
+        }
+
+        return $this->render('commentaire/edit.html.twig', [
+            'commentaire' => $commentaire,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/commentaire/delete/{id}', name: 'commentaire_delete')]
+    public function delete(Request $request, int $id, EntityManagerInterface $entityManager): Response
+    {
+        $commentaire = $entityManager->getRepository(Commentaire::class)->find($id);
+
+        if (!$commentaire) {
+            throw new NotFoundHttpException('Commentaire not found');
+        }
+
+        $publicationId = $commentaire->getPublication()->getId();
+
+        $entityManager->remove($commentaire);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('publication_show', ['id' => $publicationId]);
+    }
+
+
+    #[Route('/reclamation', name: 'reclamation_index')]
+    public function indexreclamation(EntityManagerInterface $entityManager): Response
+    {
+        $reclamations = $entityManager->getRepository(Reclamation::class)->findAll();
+
+        return $this->render('reclamation/index.html.twig', [
+            'reclamations' => $reclamations,
+        ]);
+    }
+
+
+    #[Route('/reclamation/new/{publicationId}', name: 'reclamation_new')]
+    public function newreclamation(Request $request, EntityManagerInterface $entityManager, $publicationId): Response
+    {
+        $publication = $entityManager->getRepository(Publication::class)->find($publicationId);
+
+        if (!$publication) {
+            throw $this->createNotFoundException('Publication not found');
+        }
+
+        $reclamation = new Reclamation();
+        $reclamation->setDate(new \DateTime());
+        $reclamation->setPublication($publication);
+
+        $form = $this->createForm(ReclamationType::class, $reclamation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($reclamation);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('reclamation_index');  
+        }
+
+        return $this->render('reclamation/new.html.twig', [
+            'reclamation' => $reclamation,
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+
+    #[Route('/reclamation/{id}', name: 'reclamation_show')]
+    public function showreclammation(Reclamation $reclamation): Response
+    {
+        return $this->render('reclamation/show.html.twig', [
+            'reclamation' => $reclamation,
+        ]);
+    }
+
+    #[Route('/reclamation/{id}/edit', name: 'reclamation_edit')]
+    public function editreclammation(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(ReclamationType::class, $reclamation);
+        $form->handleRequest($request);
+
+        if ($reclamation->getDate() === null) {
+            $reclamation->setDate(new \DateTime());
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            return $this->redirectToRoute('reclamation_index');
+        }
+
+        return $this->render('reclamation/edit.html.twig', [
+            'reclamation' => $reclamation,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/reclamation/{id}/delete', name: 'reclamation_delete')]
+    public function deletereclammation(Reclamation $reclamation, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($reclamation);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('reclamation_index');
+    }
+
+    #[Route('/event/test',name: 'app_event_indexclient',methods: ['GET'])]
+    public function test(EntityManagerInterface $entityManager): Response
+    {
+        $events = $entityManager->getRepository(Event::class)->findAll();
+        return $this->render('event/showevent.html.twig',['events' => $events]);
+    }
+    #[Route('/event/detail/{id}','event_detail_client',methods: ['GET'])]
+    public function detail(EntityManagerInterface $entityManager,$id): Response
+    {
+        //$events=new events();
+        $events = $entityManager->getRepository(Event::class)->find($id);
+        return $this->render('event/detaille.html.twig',['event' => $events]);
+    }
+
+
+
+    #[Route('/clientProfile', name: 'app_profile_client')]
+    public function indexprofileclient(): Response
+    {
+
+        $user = $this->getUser();
+
+        // Vérifier si l'utilisateur est connecté
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
+        }
+
+        return $this->render('customer/show.html.twig', [
+            'controller_name' => 'ProfileController',
+            'client' => $user,
+        ]);
+    }
+
+    
+
+    
+
+
+
 }

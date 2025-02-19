@@ -12,7 +12,6 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Validator\Constraints\EqualTo;
 
 class RegistrationFormType extends AbstractType
 {
@@ -36,7 +35,7 @@ class RegistrationFormType extends AbstractType
                     'Fournisseur' => 'ROLE_FOURNISSEUR',
                     'Fermier' => 'ROLE_FERMIER',
                     'Employee' => 'ROLE_EMPLOYEE',
-                 //   'Super Admin' => 'ROLE_SUPER_ADMIN', // Ajouté ici
+                    
                 ],
                 'multiple' => true,
                 'expanded' => false,

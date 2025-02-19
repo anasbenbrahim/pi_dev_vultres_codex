@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Événements{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <style>
+        .container {
+            max-width: 90%;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .create-event {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        td img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .show, .edit {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .show {
+            background: #2980b9;
+            color: white;
+        }
+
+        .edit {
+            background: #f39c12;
+            color: white;
+        }
+
+        .show:hover {
+            background: #1a5276;
+        }
+
+        .edit:hover {
+            background: #e67e22;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Liste des Événements</h1>
+        <a href="{{ path('app_event_new') }}" class="create-event">Créer un nouvel événement</a>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Date</th>
+                    <th>Photo</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>{{ event.nom }}</td>
+                        <td>{{ event.date|date('d/m/Y') }}</td>
+                        <td>
+                            {% if event.photo %}
+                                <img src="{{ asset(event.photo) }}" alt="Photo de l'événement">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('app_event_show', {'id': event.id}) }}" class="show">Afficher</a>
+                            <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="edit">Modifier</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

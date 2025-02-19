@@ -51,7 +51,7 @@ class SecurityAuthenticator extends AbstractLoginFormAuthenticator
 
         $user = $token->getUser();
 
-        $adminRoles = ['ROLE_SUPER_ADMIN', 'ROLE_FERMIER', 'ROLE_FOURNISSEUR', 'ROLE_EMPLOYEE'];
+        $adminRoles = ['ROLE_SUPER_ADMIN', 'ROLE_EMPLOYEE'];
 
         foreach ($adminRoles as $role) {
             if (in_array($role, $user->getRoles(), true)) {
@@ -61,6 +61,13 @@ class SecurityAuthenticator extends AbstractLoginFormAuthenticator
 
         if(in_array('ROLE_CLIENT', $user->getRoles(), true)){
             return new RedirectResponse($this->urlGenerator->generate('app_client'));
+        }
+        if(in_array('ROLE_FERMIER', $user->getRoles(), true)){
+            return new RedirectResponse($this->urlGenerator->generate('app_fermier'));
+        }
+
+        if(in_array('ROLE_FOURNISSEUR', $user->getRoles(), true)){
+            return new RedirectResponse($this->urlGenerator->generate('app_fournisseur'));
         }
 
         

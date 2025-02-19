@@ -146,6 +146,7 @@
                             <div class="collapse navbar-collapse" id="navbarsExample04">
                                 <ul class="navbar-nav mr-auto">
                                     <li class="nav-item active">
+<<<<<<< HEAD
                                         <a class="nav-link" href="{{ path('app_client') }}"> Home </a>
                                     </li>
                                     <li class="nav-item">
@@ -159,10 +160,40 @@
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="#contact">Contact</a>
+=======
+                                        <a class="nav-link" href="{{ path('app_client') }}">
+                                            <i class="bi bi-house-door"></i> Home
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#about">
+                                            <i class="bi bi-info-circle"></i> About
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('app_product_index') }}">Products </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('app_event_indexclient') }}">
+                                            <i class="bi bi-calendar-event"></i> Events
+                                        </a>
+                                    </li>
+
+                                    
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('publication_client') }}">
+                                            <i class="bi bi-newspaper"></i> Blog
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ path('show_equipement') }}">Equipements</a> 
+>>>>>>> integration
                                     </li>
                                     <li class="nav-item d_none">
                                         <a class="nav-link" href="#"><i class="fa fa-search" aria-hidden="true"></i></a>
                                     </li>
+<<<<<<< HEAD
                                     <li class=" d_none get_btn">
                                          {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <div class="dropdown">
@@ -179,6 +210,32 @@
     </div>
   </div>
 </div>
+=======
+                                    <li class="d_none get_btn">
+                                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                        <div class="dropdown">
+                                            <a class="dropdown-toggle text-light" type="button" id="accountDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="bi bi-person-circle"></i> Account
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="accountDropdown">
+                                                <div class="ajust">
+                                                    {% if is_granted('ROLE_CLIENT') %}
+                                                        <a class="dropdown-item text-dark" href="{{ path('app_profile_client') }}">
+                                                            <i class="bi bi-person"></i> <b>Profile</b>
+                                                        </a>
+                                                    {% endif %}
+                                                    {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_FERMIER') or is_granted('ROLE_FOURNISSEUR') %}
+                                                        <a class="dropdown-item text-dark" href="{{ path('app_profile') }}">
+                                                            <i class="bi bi-person"></i> <b>Profile</b>
+                                                        </a>
+                                                    {% endif %}
+                                                    <a class="dropdown-item text-dark" href="{{ path('app_logout') }}">
+                                                        <i class="bi bi-box-arrow-right"></i> <b>Logout</b>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+>>>>>>> integration
     {% else %}
         <a href="{{ path('app_login') }}">Login</a>
     {% endif %}
@@ -302,4 +359,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> integration
