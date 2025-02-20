@@ -10,7 +10,7 @@ use App\Entity\Event;
 use App\Entity\Publication;
 use App\Entity\Reclamation;
 use App\Entity\Notification;
-
+use App\Service\NotificationService;
 use App\Form\ClientForm;
 use App\Form\ClientType;
 use App\Form\CommentaireType;
@@ -24,6 +24,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 #[Route('/')]
 final class ClientController extends AbstractController
@@ -275,37 +277,43 @@ public function indexreclamation(EntityManagerInterface $entityManager): Respons
 }
 
 
+#[Route('/reclamation/new/{publicationId}', name: 'reclamation_new')]
+public function newReclamation(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer, $publicationId): Response
+{
+    $publication = $entityManager->getRepository(Publication::class)->find($publicationId);
 
-    #[Route('/reclamation/new/{publicationId}', name: 'reclamation_new')]
-    public function newreclamation(Request $request, EntityManagerInterface $entityManager, $publicationId): Response
-    {
-        $publication = $entityManager->getRepository(Publication::class)->find($publicationId);
-    
-        if (!$publication) {
-            throw $this->createNotFoundException('Publication not found');
-        }
-    
-        $reclamation = new Reclamation();
-        $reclamation->setDate(new \DateTime());
-        $reclamation->setPublication($publication);
-            $client = $this->getUser(); 
-        $reclamation->setClient($client); 
-    
-        $form = $this->createForm(ReclamationType::class, $reclamation);
-        $form->handleRequest($request);
-    
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($reclamation);
-            $entityManager->flush();
-    
-            return $this->redirectToRoute('reclamation_index');  
-        }
-    
-        return $this->render('reclamation/new.html.twig', [
-            'reclamation' => $reclamation,
-            'form' => $form->createView(),
-        ]);
+    if (!$publication) {
+        throw $this->createNotFoundException('Publication not found');
     }
+
+    $reclamation = new Reclamation();
+    $reclamation->setDate(new \DateTime());
+    $reclamation->setPublication($publication);
+    $client = $this->getUser();
+    $reclamation->setClient($client);
+
+    $form = $this->createForm(ReclamationType::class, $reclamation);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $entityManager->persist($reclamation);
+        $entityManager->flush();
+        $email = (new Email())
+            ->from('amine.graja589@gmail.com')
+            ->to('anasbenbrahim491@gmail.com')
+            ->subject('New Reclamation Submitted')
+            ->html('<p>A new reclamation has been submitted for publication: ' . $reclamation->getPublication()->getTitre() . '</p>');
+        $mailer->send($email);
+        return $this->redirectToRoute('reclamation_index');
+    }
+    return $this->render('reclamation/new.html.twig', [
+        'reclamation' => $reclamation,
+        'form' => $form->createView(),
+    ]);
+}
+
+
+
 
     #[Route('/publications/search', name: 'publication_search')]
     public function searchByTitre(Request $request, PublicationRepository $publicationRepository): Response
