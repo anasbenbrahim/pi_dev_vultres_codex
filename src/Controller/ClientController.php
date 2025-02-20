@@ -9,6 +9,8 @@ use App\Entity\Commentaire;
 use App\Entity\Event;
 use App\Entity\Publication;
 use App\Entity\Reclamation;
+use App\Entity\Notification;
+
 use App\Form\ClientForm;
 use App\Form\ClientType;
 use App\Form\CommentaireType;
@@ -160,6 +162,12 @@ public function show(Publication $publication, Request $request, EntityManagerIn
 
         $entityManager->persist($commentaire);
         $entityManager->flush();
+        $notification = new Notification();
+            $notification->setMessage("New comment on publication: " . $publication->getTitre())
+                         ->setPublication($publication)
+                         ->setReading(false);
+            $entityManager->persist($notification);
+            $entityManager->flush();
 
         return $this->redirectToRoute('publication_show', ['id' => $publication->getId()]);
     }
@@ -406,6 +414,39 @@ public function clientReclamations(int $clientId, EntityManagerInterface $entity
             'client' => $user,
         ]);
     }
+
+    #[Route('/notifications', name: 'notifications')]
+public function indexnotifcation(NotificationRepository $notificationRepository, Security $security): Response
+{
+    $user = $security->getUser();
+    $notifications = $notificationRepository->findBy(['client' => $user], ['date' => 'DESC']);
+
+    return $this->render('notification/index.html.twig', [
+        'notifications' => $notifications,
+    ]);
+}
+
+
+    #[Route('/notification/{id}/read', name: 'notification_read')]
+    public function markAsRead(Notification $notification, EntityManagerInterface $entityManager): Response
+    {
+        $notification->setReading(true);
+        $entityManager->flush();
+        return $this->redirectToRoute('notification_index');
+    }
+
+    #[Route('/publication/{id}/clear_notifications', name: 'publication_clear_notifications')]
+    public function clearNotifications(Publication $publication, EntityManagerInterface $entityManager): Response
+    {
+        $notifications = $entityManager->getRepository(Notification::class)->findBy(['publication' => $publication]);
+        foreach ($notifications as $notification) {
+            $entityManager->remove($notification);
+        }
+        $entityManager->flush();
+        $this->addFlash('success', 'Toutes les notifications ont été supprimées.');
+        return $this->redirectToRoute('publication_show', ['id' => $publication->getId()]);
+    }
+
 
     
 

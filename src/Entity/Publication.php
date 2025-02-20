@@ -51,11 +51,17 @@ class Publication
     #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'publication', cascade: ['remove'])]
     private Collection $reclamations;
 
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'publication', cascade: ['remove'])]
+private Collection $notifications;
+
+
     public function __construct()
     {
         $this->ratings = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+
         $this->date = new \DateTime();
     }
 
@@ -126,7 +132,7 @@ class Publication
 
     public function getAverageRating(): float
     {
-        $ratings = $this->ratings; // Assuming $ratings is a collection of Rating entities
+        $ratings = $this->ratings; 
     
         if ($ratings->isEmpty()) {
             return 0;
@@ -151,5 +157,29 @@ class Publication
     public function __toString(): string
     {
         return $this->titre;
+    }
+
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setPublication($this);
+        }
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            if ($notification->getPublication() === $this) {
+                $notification->setPublication(null);
+            }
+        }
+        return $this;
     }
 }
