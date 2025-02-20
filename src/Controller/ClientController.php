@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\PublicationRepository;
 use App\Entity\Client;
 use App\Entity\Commentaire;
 use App\Entity\Event;
@@ -88,21 +89,15 @@ final class ClientController extends AbstractController
 {
     $publication = new Publication();
     $publication->setDate(new \DateTime());
-
-    // Associate the publication with the currently logged-in user
-    $client = $this->getUser();  // Get the currently logged-in client
-    $publication->setClient($client);  // Associate the publication with the client
-
+    $client = $this->getUser();  
+    $publication->setClient($client);  
     $form = $this->createForm(PublicationType::class, $publication);
     $form->handleRequest($request);
-
     if ($form->isSubmitted() && $form->isValid()) {
         $entityManager->persist($publication);
         $entityManager->flush();
-
         return $this->redirectToRoute('publication_client');
     }
-
     return $this->render('publication/new.html.twig', [
         'publication' => $publication,
         'form' => $form->createView(),
@@ -158,7 +153,6 @@ public function show(Publication $publication, Request $request, EntityManagerIn
     $commentaireForm->handleRequest($request);
 
     if ($commentaireForm->isSubmitted() && $commentaireForm->isValid()) {
-        // ✅ Filtrage des mots interdits
         $badWords = ['test', 'test2', 'test3'];
         $cleanedComment = str_ireplace($badWords, '***', $commentaire->getDescription());
         $commentaire->setDescription($cleanedComment);
@@ -254,14 +248,11 @@ public function show(Publication $publication, Request $request, EntityManagerIn
     #[Route('/reclamation', name: 'reclamation_index')]
 public function indexreclamation(EntityManagerInterface $entityManager): Response
 {
-    // Get the currently logged-in user (client)
     $client = $this->getUser();
 
     if (!$client) {
         throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
     }
-
-    // Find the reclamations for the currently logged-in user
     $reclamations = $entityManager->getRepository(Reclamation::class)->findBy(['client' => $client]);
 
     return $this->render('reclamation/index.html.twig', [
@@ -283,10 +274,8 @@ public function indexreclamation(EntityManagerInterface $entityManager): Respons
         $reclamation = new Reclamation();
         $reclamation->setDate(new \DateTime());
         $reclamation->setPublication($publication);
-    
-        // Associate the reclamation with the currently logged-in user
-        $client = $this->getUser();  // Get the currently logged-in client
-        $reclamation->setClient($client);  // Associate the reclamation with the client
+            $client = $this->getUser(); 
+        $reclamation->setClient($client); 
     
         $form = $this->createForm(ReclamationType::class, $reclamation);
         $form->handleRequest($request);
@@ -303,6 +292,23 @@ public function indexreclamation(EntityManagerInterface $entityManager): Respons
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/publications/search', name: 'publication_search')]
+    public function searchByTitre(Request $request, PublicationRepository $publicationRepository): Response
+    {
+        $titre = $request->query->get('titre', '');  // Default to empty if no search term is provided
+            $publications = $publicationRepository->createQueryBuilder('p')
+            ->where('p.titre LIKE :titre')
+            ->setParameter('titre', '%' . $titre . '%')
+            ->getQuery()
+            ->getResult();
+    
+        return $this->render('publication/index.html.twig', [
+            'publications' => $publications,
+            'searchTerm' => $titre, 
+        ]);
+    }
+    
 
 
 

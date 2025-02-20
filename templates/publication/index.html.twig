@@ -6,8 +6,15 @@
    <div class="container card mt-3 mb-3">
       <div class="card-header">
          <h1 class="text-center">Liste des publications</h1>
+         <!-- Formulaire de recherche -->
+         <form method="get" action="{{ path('publication_search') }}" class="d-flex justify-content-center mt-3">
+            <input type="text" name="titre" class="form-control w-50" placeholder="Rechercher par titre..." value="{{ searchTerm ?? '' }}">
+            <button type="submit" class="btn btn-primary ms-2">
+               <i class="fa fa-search"></i> Rechercher
+            </button>
+         </form>
       </div>
-   
+
       <div class="card-body">
          <div class="row">
             {% for publication in publications %}
@@ -16,7 +23,7 @@
                      <a href="{{ path('reclamation_index') }}" class="btn btn-danger mb-4">
                         <i class="fa fa-exclamation-circle"></i> Liste des réclamations
                      </a>
-                     
+
                      <img src="{{ publication.image }}" class="card-img-top" alt="Image" style="border-radius: 10px; height: 200px; object-fit: cover;">
                      <div class="card-body">
                         <h5 class="card-title">{{ publication.titre }}</h5>
