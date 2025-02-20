@@ -8,8 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Datecontrol;
-
 
 #[ORM\Entity(repositoryClass: PublicationRepository::class)]
 class Publication
@@ -20,15 +18,15 @@ class Publication
     private ?int $id = null;
 
     #[Assert\NotBlank(message: "Le titre est obligatoire.")]
-    #[Assert\Regex(pattern: "/^[a-zA-Z\s]+$/",message: "Le titre doit contenir uniquement des lettres et des espaces.")]
+    #[Assert\Regex(pattern: "/^[a-zA-Z\s]+$/", message: "Le titre doit contenir uniquement des lettres et des espaces.")]
     #[Assert\Length(max: 50, maxMessage: "Le titre ne doit pas dépasser 50 caractères.")]
-    #[Assert\Length(min: 2, minMessage: "Le titre doit contenir au moins 2 caractères.",)]
+    #[Assert\Length(min: 2, minMessage: "Le titre doit contenir au moins 2 caractères.")]
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
     #[Assert\NotBlank(message: "La description est obligatoire.")]
     #[Assert\Length(max: 255, maxMessage: "La description ne doit pas dépasser 255 caractères.")]
-    #[Assert\Length(min: 2, minMessage: "La description doit contenir au moins 2 caractères.",)]
+    #[Assert\Length(min: 2, minMessage: "La description doit contenir au moins 2 caractères.")]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
@@ -40,71 +38,36 @@ class Publication
     #[Assert\Url(message: "L'URL de l'image doit être valide.")]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
-    #[ORM\Column(type: 'integer', nullable: true)]
-private ?int $rating = null;
 
     #[ORM\ManyToOne(inversedBy: 'publications')]
     private ?Client $client = null;
     
+    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: "publication", cascade: ["remove"])]
+    private Collection $ratings;
 
-    /**
-     * @var Collection<int, Commentaire>
-     */
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'publication', cascade: ['remove'])]
     private Collection $commentaires;
 
     #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'publication', cascade: ['remove'])]
     private Collection $reclamations;
 
-    /**
-     * @var Collection<int, Notification>
-     */
-   
-
     public function __construct()
     {
+        $this->ratings = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
         $this->date = new \DateTime();
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getRating(): ?int
-{
-    return $this->rating;
-}
-
-public function setRating(?int $rating): self
-{
-    $this->rating = $rating;
-    return $this;
-}
-
-    public function getTitre()
+    public function getTitre(): ?string
     {
         return $this->titre;
     }
-
-    public function __toString(): string
-    {
-        return $this->titre;
-    }
-
-
-public function getClient(): ?Client
-{
-    return $this->client;
-}
-
-public function setClient(?Client $client): static
-{
-    $this->client = $client;
-    return $this;
-}
 
     public function setTitre(?string $titre): static
     {
@@ -112,7 +75,7 @@ public function setClient(?Client $client): static
         return $this;
     }
 
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -123,7 +86,7 @@ public function setClient(?Client $client): static
         return $this;
     }
 
-    public function getDate()
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
@@ -134,7 +97,7 @@ public function setClient(?Client $client): static
         return $this;
     }
 
-    public function getImage()
+    public function getImage(): ?string
     {
         return $this->image;
     }
@@ -145,28 +108,39 @@ public function setClient(?Client $client): static
         return $this;
     }
 
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): static
+    {
+        $this->client = $client;
+        return $this;
+    }
+
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function getAverageRating(): float
+    {
+        $ratings = $this->ratings; // Assuming $ratings is a collection of Rating entities
+    
+        if ($ratings->isEmpty()) {
+            return 0;
+        }
+    
+        $total = array_reduce($ratings->toArray(), fn($sum, $rating) => $sum + $rating->getRating(), 0);
+        return $total / count($ratings);
+    }
+    
+
+
     public function getCommentaires(): Collection
     {
         return $this->commentaires;
-    }
-
-    public function addCommentaire(Commentaire $commentaire): static
-    {
-        if (!$this->commentaires->contains($commentaire)) {
-            $this->commentaires->add($commentaire);
-            $commentaire->setPublication($this);
-        }
-        return $this;
-    }
-
-    public function removeCommentaire(Commentaire $commentaire): static
-    {
-        if ($this->commentaires->removeElement($commentaire)) {
-            if ($commentaire->getPublication() === $this) {
-                $commentaire->setPublication(null);
-            }
-        }
-        return $this;
     }
 
     public function getReclamations(): Collection
@@ -174,24 +148,8 @@ public function setClient(?Client $client): static
         return $this->reclamations;
     }
 
-    public function addReclamation(Reclamation $reclamation): static
+    public function __toString(): string
     {
-        if (!$this->reclamations->contains($reclamation)) {
-            $this->reclamations->add($reclamation);
-            $reclamation->setPublication($this);
-        }
-        return $this;
+        return $this->titre;
     }
-
-    public function removeReclamation(Reclamation $reclamation): static
-    {
-        if ($this->reclamations->removeElement($reclamation)) {
-            if ($reclamation->getPublication() === $this) {
-                $reclamation->setPublication(null);
-            }
-        }
-        return $this;
-    }
-
-   
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use App\Repository\PublicationRepository;
 use App\Entity\Client;
 use App\Entity\Commentaire;
@@ -204,28 +205,33 @@ public function show(Publication $publication, Request $request, EntityManagerIn
     }
 
     #[Route('/commentaire/{id}/edit', name: 'commentaire_edit')]
-    public function edit(Request $request, int $id, EntityManagerInterface $entityManager): Response
-    {
-        $commentaire = $entityManager->getRepository(Commentaire::class)->find($id);
+public function edit(Request $request, int $id, EntityManagerInterface $entityManager): Response
+{
+    $commentaire = $entityManager->getRepository(Commentaire::class)->find($id);
 
-        if (!$commentaire) {
-            throw new NotFoundHttpException('Commentaire not found');
-        }
-
-        $form = $this->createForm(CommentaireType::class, $commentaire);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('publication_show', ['id' => $commentaire->getPublication()->getId()]);
-        }
-
-        return $this->render('commentaire/edit.html.twig', [
-            'commentaire' => $commentaire,
-            'form' => $form->createView(),
-        ]);
+    if (!$commentaire) {
+        throw new NotFoundHttpException('Commentaire not found');
     }
+
+    $form = $this->createForm(CommentaireType::class, $commentaire);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $badWords = ['test', 'test2', 'test3'];
+        $cleanedComment = str_ireplace($badWords, '***', $commentaire->getDescription());
+        $commentaire->setDescription($cleanedComment);
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('publication_show', ['id' => $commentaire->getPublication()->getId()]);
+    }
+
+    return $this->render('commentaire/edit.html.twig', [
+        'commentaire' => $commentaire,
+        'form' => $form->createView(),
+    ]);
+}
+
 
     #[Route('/commentaire/delete/{id}', name: 'commentaire_delete')]
     public function delete(Request $request, int $id, EntityManagerInterface $entityManager): Response
@@ -296,7 +302,7 @@ public function indexreclamation(EntityManagerInterface $entityManager): Respons
     #[Route('/publications/search', name: 'publication_search')]
     public function searchByTitre(Request $request, PublicationRepository $publicationRepository): Response
     {
-        $titre = $request->query->get('titre', '');  // Default to empty if no search term is provided
+        $titre = $request->query->get('titre', '');  
             $publications = $publicationRepository->createQueryBuilder('p')
             ->where('p.titre LIKE :titre')
             ->setParameter('titre', '%' . $titre . '%')

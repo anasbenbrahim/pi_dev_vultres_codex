@@ -39,16 +39,20 @@
             </form>
         {% endif %}
 
-        <!-- Rating System -->
         <h3>Note :</h3>
         <div class="rating" data-id="{{ publication.id }}">
+            {% set userRating = publication.ratings | filter(r => r.client == app.user) | first %}
             {% for i in 1..5 %}
-                <i class="fa-star fa {% if publication.rating is not null and i <= publication.rating %}fas{% else %}far{% endif %}" data-value="{{ i }}"></i>
+                <i class="fa-star fa {% if userRating and i <= userRating.rating %}fas{% else %}far{% endif %}" data-value="{{ i }}"></i>
             {% endfor %}
         </div>
-        <p id="rating-result">Note actuelle : {{ publication.rating is not null ? publication.rating : 'Pas encore notée' }}</p>
-
-        <!-- Comment Section -->
+        <p id="rating-result">
+            {% if userRating %}
+                Note actuelle : {{ userRating.rating }}
+            {% else %}
+                Pas encore notée
+            {% endif %}
+        </p>
         <div class="commentaire-section mt-4">
             <h1>Créer un commentaire</h1>
 
@@ -67,16 +71,27 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Créer</button>
-           
+
             {{ form_end(commentaire_form) }}
 
             <h3>Commentaires :</h3>
             {% for commentaire in commentaires %}
                 <div class="commentaire mb-3 p-3" style="border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
                     <p><strong>Description :</strong> {{ commentaire.description }}</p>
+                    
                     {% if commentaire.image %}
                         <img src="{{ commentaire.image }}" alt="Image du commentaire" class="img-fluid mb-2" style="max-width: 100px; border-radius: 10px;">
                     {% endif %}
+
+                    <!-- Afficher le nom de l'utilisateur (client) qui a commenté -->
+                    <p><strong>Commenté par :</strong> 
+                        {% if commentaire.client %}
+                            {{ commentaire.client.lastName }}
+                        {% else %}
+                            <span style="color: red;">Client non défini</span>
+                        {% endif %}
+                    </p>
+
                     <div class="commentaire-actions mt-2">
                         {% if app.user == commentaire.client %}
                             <a href="{{ path('commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-warning" title="Modifier le commentaire">
@@ -99,8 +114,6 @@
             {% endfor %}
         </div>
     </div>
-
-    <!-- Rating Script -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -109,18 +122,23 @@
                 let rating = $(this).data("value");
 
                 $.ajax({
-                    url: "/publication/rate/" + publicationId,
-                    method: "POST",
+                    url: `/publication/rate/${publicationId}`,
+                    method: "PATCH",
                     contentType: "application/json",
                     data: JSON.stringify({ rating: rating }),
                     success: function(response) {
-                        $("#rating-result").text("Note actuelle : " + response.rating);
-                        $(".rating i").removeClass("fas").addClass("far");
-                        $(".rating i").each(function() {
-                            if ($(this).data("value") <= response.rating) {
-                                $(this).removeClass("far").addClass("fas");
-                            }
-                        });
+                        if (response.success) {
+                            $("#rating-result").text("Note actuelle : " + response.averageRating.toFixed(1));
+                            $(".rating i").removeClass("fas").addClass("far");
+                            $(".rating i").each(function() {
+                                if ($(this).data("value") <= response.averageRating) {
+                                    $(this).removeClass("far").addClass("fas");
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        alert("Erreur: " + (xhr.responseJSON ? xhr.responseJSON.error : "Erreur inconnue"));
                     }
                 });
             });
