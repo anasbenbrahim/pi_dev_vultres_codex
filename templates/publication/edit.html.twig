@@ -5,16 +5,23 @@
 {% block body %}
 
 <style>
-.container{
+    .container {
         width: 40%;
-}
-</style>
-    <div class="container card mt-3 mb-3 shadow">
-        <div class="card-header">
-        <h1>Modifier la publication</h1>
-        </div>
+    }
 
-<div class="card-body">
+    .error {
+        color: red; /* Makes error messages red */
+        font-size: 12px;
+        margin-top: 5px;
+    }
+</style>
+
+<div class="container card mt-3 mb-3 shadow">
+    <div class="card-header">
+        <h1 class="text-center">Modifier la publication</h1>
+    </div>
+
+    <div class="card-body">
         {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
         <div class="form-group">
@@ -42,10 +49,9 @@
         </div>
 
         <button type="submit" class="btn btn-warning text-light form-control">Enregistrer</button>
-        
-        {{ form_end(form) }}
 
-       
+        {{ form_end(form) }}
     </div>
-    </div>
+</div>
+
 {% endblock %}

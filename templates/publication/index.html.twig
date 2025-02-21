@@ -9,7 +9,7 @@
          <!-- Formulaire de recherche -->
          <form method="get" action="{{ path('publication_search') }}" class="d-flex justify-content-center mt-3">
             <input type="text" name="titre" class="form-control w-50" placeholder="Rechercher..." value="{{ searchTerm ?? '' }}">
-            <button type="submit" class="btn btn-primary ms-2">
+            <button type="submit" class="btn btn-warning ms-2">
                <i class="fa fa-search"></i> Rechercher
             </button>
          </form>
@@ -19,10 +19,32 @@
          <div class="row">
             {% for publication in publications %}
                <div class="col-md-4">
-                  <div class="card mb-4" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                     <a href="{{ path('reclamation_index') }}" class="btn btn-danger mb-4">
-                        <i class="fa fa-exclamation-circle"></i> Liste des réclamations
-                     </a>
+                  <div class="card mb-4 position-relative" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                     <!-- Settings Dropdown (Three Dots) -->
+                     {% if app.user == publication.client %}
+                        <div class="dropdown position-absolute top-0 end-0 m-2">
+                           <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="settingsDropdown{{ publication.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="fa fa-ellipsis-v"></i>
+                           </button>
+                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown{{ publication.id }}">
+                              <li>
+                                 <a class="dropdown-item" href="{{ path('publication_edit', {'id': publication.id}) }}">
+                                    <i class="fa fa-edit"></i> Modifier
+                                 </a>
+                              </li>
+                              <li>
+                                 <a href="{{ path('publication_delete', {'id': publication.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette publication ?');" class="dropdown-item text-danger">
+                                    <i class="fa fa-trash"></i> Supprimer
+                                 </a>
+                              </li>
+                              <li>
+                                 <a href="{{ path('reclamation_index', {'publicationId': publication.id}) }}" class="dropdown-item text-primary">
+                                    <i class="fa fa-list"></i> Voir mes réclamations
+                                 </a>
+                              </li>
+                           </ul>
+                        </div>
+                     {% endif %}
 
                      <img src="{{ publication.image }}" class="card-img-top" alt="Image" style="border-radius: 10px; height: 200px; object-fit: cover;">
                      <div class="card-body">
@@ -36,23 +58,14 @@
                               <span style="color: red;">Client non défini</span>
                            {% endif %}
                         </p>
-                        <div class="d-flex justify-content-between">
-                           {% if app.user == publication.client %}
-                              <a href="{{ path('publication_edit', {'id': publication.id}) }}" class="btn btn-warning">
-                                 <i class="fa fa-edit text-light"></i>
-                              </a>
 
-                              <a href="{{ path('publication_delete', {'id': publication.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette publication ?');" class="btn btn-danger">
-                                 <i class="fa fa-trash"></i>
-                              </a>
-                           {% endif %}
-
+                        <div class="d-flex justify-content-between align-items-center mt-3">
                            <a href="{{ path('publication_show', {'id': publication.id}) }}" class="btn btn-info">
-                              <i class="fa fa-eye"></i>
+                              <i class="fa fa-eye"></i> 
                            </a>
 
                            <a href="{{ path('reclamation_new', {'publicationId': publication.id}) }}" class="btn btn-danger">
-                              <i class="fa fa-exclamation-circle"></i>
+                              <i class="fa fa-exclamation-circle"></i> 
                            </a>
                         </div>
                      </div>
@@ -72,4 +85,15 @@
          <i class="fa fa-plus"></i> Créer une nouvelle publication
       </a>
    </div>
+
+   <style>
+      .dropdown.position-absolute {
+         z-index: 10;
+      }
+
+      .btn-sm {
+         padding: 0.25rem 0.5rem;
+         font-size: 0.875rem;
+      }
+   </style>
 {% endblock %}
