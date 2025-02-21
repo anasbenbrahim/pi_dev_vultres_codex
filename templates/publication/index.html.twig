@@ -8,7 +8,7 @@
          <h1 class="text-center">Liste des publications</h1>
          <!-- Formulaire de recherche -->
          <form method="get" action="{{ path('publication_search') }}" class="d-flex justify-content-center mt-3">
-            <input type="text" name="titre" class="form-control w-50" placeholder="Rechercher par titre..." value="{{ searchTerm ?? '' }}">
+            <input type="text" name="titre" class="form-control w-50" placeholder="Rechercher..." value="{{ searchTerm ?? '' }}">
             <button type="submit" class="btn btn-primary ms-2">
                <i class="fa fa-search"></i> Rechercher
             </button>
@@ -54,12 +54,6 @@
                            <a href="{{ path('reclamation_new', {'publicationId': publication.id}) }}" class="btn btn-danger">
                               <i class="fa fa-exclamation-circle"></i>
                            </a>
-
-                           {% if publication.client %}
-                              <a href="{{ path('client_reclamations', {'clientId': publication.client.id}) }}" class="btn btn-primary">
-                                 <i class="fa fa-list"></i> 
-                              </a>
-                           {% endif %}
                         </div>
                      </div>
                   </div>
