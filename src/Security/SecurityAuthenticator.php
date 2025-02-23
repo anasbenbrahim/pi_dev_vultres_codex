@@ -15,6 +15,9 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\User;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 
 class SecurityAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -22,19 +25,35 @@ class SecurityAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
     
+    private $entityManager;
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
-    {
+    public function __construct(
+        private UrlGeneratorInterface $urlGenerator,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->entityManager = $entityManager;
     }
 
     public function authenticate(Request $request): Passport
     {
         $email = $request->getPayload()->getString('email');
-
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
+        $userBadge = new UserBadge($email, function($userIdentifier) {
+            $user = $this->entityManager->getRepository(User::class)
+                ->findOneBy(['email' => $userIdentifier]);
+
+            if ($user && $user->getConfirmationToken() !== null) {
+                throw new CustomUserMessageAuthenticationException(
+                    'Please confirm your email address before logging in.'
+                );
+            }
+
+            return $user;
+        });
+
         return new Passport(
-            new UserBadge($email),
+            $userBadge,
             new PasswordCredentials($request->getPayload()->getString('password')),
             [
                 new CsrfTokenBadge('authenticate', $request->getPayload()->getString('_csrf_token')),
@@ -49,7 +68,9 @@ class SecurityAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
+        /** @var User $user */
         $user = $token->getUser();
+
 
         $adminRoles = ['ROLE_SUPER_ADMIN', 'ROLE_EMPLOYEE'];
 

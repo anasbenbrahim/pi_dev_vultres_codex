@@ -9,10 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Fermier extends User
 {
     #[ORM\Column(length: 255, nullable: true)]
-    
     private ?string $farmName = null;
-
-   
 
     public function getFarmName(): ?string
     {
@@ -26,5 +23,4 @@ class Fermier extends User
         return $this;
     }
 
-    
 }

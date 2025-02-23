@@ -11,12 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Fournisseur extends User
 {
     #[ORM\Column(length: 255, nullable: true)]
-    
     private ?string $companyName = null;
-
-    
-
-   
 
     public function getCompanyName(): ?string
     {
@@ -30,9 +25,4 @@ class Fournisseur extends User
         return $this;
     }
 
-   
-
-    
-
-    
 }

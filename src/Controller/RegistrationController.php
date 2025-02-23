@@ -18,11 +18,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use App\Form\FermierType;
 use App\Form\FournisseurType;
 
 class RegistrationController extends AbstractController
 {
+    private MailerInterface $mailer;
+
+    public function __construct(MailerInterface $mailer)
+    {
+        $this->mailer = $mailer;
+    }
     #[Route('/register', name: 'app_register')]
 public function register(
     Request $request,
@@ -42,10 +50,13 @@ public function register(
         $fermier->setRoles(['ROLE_FERMIER']);
         $fermier->setPassword($userPasswordHasher->hashPassword($fermier, $plainPassword));
 
+        $fermier->setConfirmationToken(bin2hex(random_bytes(32))); // Generate confirmation token
         $entityManager->persist($fermier);
+        $this->sendConfirmationEmail($fermier); // Send confirmation email
         $entityManager->flush();
 
-        return $security->login($fermier, SecurityAuthenticator::class, 'main');
+        $this->addFlash('success', 'Please check your email to confirm your registration.');
+        return $this->redirectToRoute('app_login');
     }
 
     // Formulaire Fournisseur
@@ -60,10 +71,13 @@ public function register(
         $fournisseur->setRoles(['ROLE_FOURNISSEUR']);
         $fournisseur->setPassword($userPasswordHasher->hashPassword($fournisseur, $plainPassword));
 
+        $fournisseur->setConfirmationToken(bin2hex(random_bytes(32))); // Generate confirmation token
         $entityManager->persist($fournisseur);
+        $this->sendConfirmationEmail($fournisseur); // Send confirmation email
         $entityManager->flush();
 
-        return $security->login($fournisseur, SecurityAuthenticator::class, 'main');
+        $this->addFlash('success', 'Please check your email to confirm your registration.');
+        return $this->redirectToRoute('app_login');
     }
 
 
@@ -86,13 +100,16 @@ public function register(
         $client->setRoles(['ROLE_CLIENT']);
         $client->setPassword($userPasswordHasher->hashPassword($client, $plainPassword));
 
+        $client->setConfirmationToken(bin2hex(random_bytes(32))); // Generate confirmation token
         $entityManager->persist($client);
+        $this->sendConfirmationEmail($client); // Send confirmation email
         $entityManager->flush();
 
-        return $security->login($client, SecurityAuthenticator::class, 'main');
+        $this->addFlash('success', 'Please check your email to confirm your registration.');
+        return $this->redirectToRoute('app_login');
     }
 
-    // Passer les deux formulaires à la vue Twig
+    // Passer les formulaires à la vue Twig
     return $this->render('registration/register.html.twig', [
         'fermierType' => $fermierForm->createView(),
         'fournissuerType' => $fournisseurForm->createView(),
@@ -100,7 +117,36 @@ public function register(
     ]);
 }
 
-    
+    private function sendConfirmationEmail($user): void
+    {
+        $email = (new Email())
+            ->from('noreply@example.com')
+            ->to($user->getEmail())
+            ->subject('Please Confirm Your Email')
+            ->html($this->renderView('email/email.html.twig', [
+                'user' => $user,
+                'token' => $user->getConfirmationToken(),
+            ]));
 
-    
+        $this->mailer->send($email);
+    }
+
+    #[Route('/confirm-email/{token}', name: 'app_confirm_email')]
+    public function confirmEmail(string $token, EntityManagerInterface $entityManager): Response
+    {
+        // Find user by confirmation token
+        $user = $entityManager->getRepository(User::class)->findOneBy(['confirmationToken' => $token]);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Invalid confirmation token');
+        }
+
+        // Clear the confirmation token
+        $user->setConfirmationToken(null);
+        $entityManager->flush();
+
+        // Redirect to login with success message
+        $this->addFlash('success', 'Your email has been confirmed! You can now log in.');
+        return $this->redirectToRoute('app_login');
+    }
 }

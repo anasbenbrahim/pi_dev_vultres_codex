@@ -326,15 +326,29 @@ final class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/publication', name: 'publication_index_admin')]
-    public function indexPublication(EntityManagerInterface $entityManager): Response
-    {
-        $publications = $entityManager->getRepository(Publication::class)->findAll();
+    
 
-        return $this->render('publication/indexadmin.html.twig', [
-            'publications' => $publications,
-        ]);
-    }
+
+    #[Route('/publication', name: 'publication_index_admin')]
+public function indexPublication(EntityManagerInterface $entityManager): Response
+{
+    $publications = $entityManager->getRepository(Publication::class)->findAll();
+
+    // Rendre le premier template
+    $template1 = $this->renderView('publication/indexadmin.html.twig', [
+        'publications' => $publications,
+    ]);
+
+    // Rendre le deuxième template
+    $template2 = $this->renderView('client/index.html.twig', [
+        'publications' => $publications,
+    ]);
+
+    // Combiner les deux templates dans une seule réponse
+    $combinedContent = $template1 . $template2;
+
+    return new Response($combinedContent);
+}
 
     
 
@@ -358,7 +372,7 @@ final class AdminController extends AbstractController
     {
         $reclamations = $entityManager->getRepository(Reclamation::class)->findAll();
         $publications = $entityManager->getRepository(Publication::class)->findAll();
-        return $this->render('reclamation/indexadmin.html.twig', [
+        return $this->render('reclamation/indexadmin.html.twig' , [
             'reclamations' => $reclamations,
             'publications' => $publications,
         ]);

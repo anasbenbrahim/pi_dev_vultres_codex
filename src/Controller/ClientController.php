@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Entity\Commentaire;
 use App\Entity\Event;
 use App\Entity\Publication;
@@ -20,18 +23,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Repository\OfferRepository;
+use App\Entity\Offer;
 
 #[Route('/')]
 final class ClientController extends AbstractController
 {
     #[Route( name: 'app_client')]
-    public function index(): Response
+    public function index(EntityManagerInterface $entityManager): Response
     {
+        $publications = $entityManager->getRepository(Publication::class)->findAll();
         return $this->render('client/index.html.twig', [
             'controller_name' => 'ClientController',
+            'publications' => $publications,
         ]);
     }
-
 
     #[Route('/{id}/edit', name: 'app_profile_edit', methods: ['GET', 'POST'])]
     public function editClient(Request $request, Client $patient, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
@@ -45,11 +51,7 @@ final class ClientController extends AbstractController
         $formPassword->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
-
-           
             $entityManager->flush();
-
             return $this->redirectToRoute('app_client', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -57,9 +59,7 @@ final class ClientController extends AbstractController
             $newPassword = $formPassword->get('plainPassword')->getData();
             $hashedPassword = $passwordHasher->hashPassword($patient, $newPassword);
             $patient->setPassword($hashedPassword);
-
             $entityManager->flush();
-
             return $this->redirectToRoute('app_client', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -70,13 +70,10 @@ final class ClientController extends AbstractController
         ]);
     }
 
-
-
     #[Route('/publicationclient', name: 'publication_client')]
     public function indexPublication(EntityManagerInterface $entityManager): Response
     {
         $publications = $entityManager->getRepository(Publication::class)->findAll();
-
         return $this->render('publication/index.html.twig', [
             'publications' => $publications,
         ]);
@@ -93,7 +90,6 @@ final class ClientController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($publication);
             $entityManager->flush();
-
             return $this->redirectToRoute('publication_client');
         }
 
@@ -109,13 +105,10 @@ final class ClientController extends AbstractController
         foreach ($publication->getCommentaires() as $commentaire) {
             $entityManager->remove($commentaire);
         }
-
         $entityManager->remove($publication);
         $entityManager->flush();
-
         return $this->redirectToRoute('publication_client');
     }
-
 
     #[Route('/publication/{id}/edit', name: 'publication_edit')]
     public function editPublication(Request $request, Publication $publication, EntityManagerInterface $entityManager): Response
@@ -123,7 +116,6 @@ final class ClientController extends AbstractController
         if (!$publication->getDate()) {
             $publication->setDate(new \DateTime());
         }
-
         $form = $this->createForm(PublicationType::class, $publication);
         $form->handleRequest($request);
 
@@ -144,14 +136,12 @@ final class ClientController extends AbstractController
         $client = $publication->getClient();
         $commentaire = new Commentaire();
         $commentaire->setPublication($publication);
-
         $commentaireForm = $this->createForm(CommentaireType::class, $commentaire);
         $commentaireForm->handleRequest($request);
 
         if ($commentaireForm->isSubmitted() && $commentaireForm->isValid()) {
             $entityManager->persist($commentaire);
             $entityManager->flush();
-
             return $this->redirectToRoute('publication_show', ['id' => $publication->getId()]);
         }
         return $this->render('publication/show.html.twig', [
@@ -166,7 +156,6 @@ final class ClientController extends AbstractController
     public function indexcommentaire(EntityManagerInterface $entityManager): Response
     {
         $commentaires = $entityManager->getRepository(Commentaire::class)->findAll();
-
         return $this->render('commentaire/index.html.twig', [
             'commentaires' => $commentaires,
         ]);
@@ -182,7 +171,6 @@ final class ClientController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($commentaire);
             $entityManager->flush();
-
             return $this->redirectToRoute('commentaire_index');
         }
 
@@ -206,7 +194,6 @@ final class ClientController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
             return $this->redirectToRoute('publication_show', ['id' => $commentaire->getPublication()->getId()]);
         }
 
@@ -226,24 +213,19 @@ final class ClientController extends AbstractController
         }
 
         $publicationId = $commentaire->getPublication()->getId();
-
         $entityManager->remove($commentaire);
         $entityManager->flush();
-
         return $this->redirectToRoute('publication_show', ['id' => $publicationId]);
     }
-
 
     #[Route('/reclamation', name: 'reclamation_index')]
     public function indexreclamation(EntityManagerInterface $entityManager): Response
     {
         $reclamations = $entityManager->getRepository(Reclamation::class)->findAll();
-
         return $this->render('reclamation/index.html.twig', [
             'reclamations' => $reclamations,
         ]);
     }
-
 
     #[Route('/reclamation/new/{publicationId}', name: 'reclamation_new')]
     public function newreclamation(Request $request, EntityManagerInterface $entityManager, $publicationId): Response
@@ -264,7 +246,6 @@ final class ClientController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($reclamation);
             $entityManager->flush();
-
             return $this->redirectToRoute('reclamation_index');  
         }
 
@@ -273,8 +254,6 @@ final class ClientController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-
 
     #[Route('/reclamation/{id}', name: 'reclamation_show')]
     public function showreclammation(Reclamation $reclamation): Response
@@ -310,7 +289,6 @@ final class ClientController extends AbstractController
     {
         $entityManager->remove($reclamation);
         $entityManager->flush();
-
         return $this->redirectToRoute('reclamation_index');
     }
 
@@ -323,17 +301,13 @@ final class ClientController extends AbstractController
     #[Route('/event/detail/{id}','event_detail_client',methods: ['GET'])]
     public function detail(EntityManagerInterface $entityManager,$id): Response
     {
-        //$events=new events();
         $events = $entityManager->getRepository(Event::class)->find($id);
         return $this->render('event/detaille.html.twig',['event' => $events]);
     }
 
-
-
     #[Route('/clientProfile', name: 'app_profile_client')]
     public function indexprofileclient(): Response
     {
-
         $user = $this->getUser();
 
         // Vérifier si l'utilisateur est connecté
@@ -346,11 +320,4 @@ final class ClientController extends AbstractController
             'client' => $user,
         ]);
     }
-
-    
-
-    
-
-
-
 }
