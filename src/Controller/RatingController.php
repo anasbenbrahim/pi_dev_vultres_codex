@@ -21,7 +21,8 @@ class RatingController extends AbstractController
     ): JsonResponse {
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
-                $ratingValue = $data['rating'] ?? null;
+        $ratingValue = $data['rating'] ?? null;
+
         if (!is_numeric($ratingValue) || $ratingValue < 1 || $ratingValue > 5) {
             return new JsonResponse(['error' => 'Invalid rating value'], 400);
         }
@@ -49,12 +50,25 @@ class RatingController extends AbstractController
     private function calculateAverageRating(Publication $publication, $ratingRepo): float
     {
         $ratings = $ratingRepo->findBy(['publication' => $publication]);
-
         if (empty($ratings)) {
             return 0;
         }
-
         $total = array_reduce($ratings, fn($sum, $rating) => $sum + $rating->getRating(), 0);
         return round($total / count($ratings), 1);
+    }
+
+    public function getTopRatedPublications(EntityManagerInterface $entityManager): array
+    {
+        $publications = $entityManager->getRepository(Publication::class)->findAll();
+        $topRated = [];
+        
+        foreach ($publications as $publication) {
+            $ratings = $entityManager->getRepository(Rating::class)->findBy(['publication' => $publication]);
+            $average = $this->calculateAverageRating($publication, $entityManager->getRepository(Rating::class));
+            if (count($ratings) >= 2 && $average > 3) {
+                $topRated[] = $publication;
+            }
+        }
+        return $topRated;
     }
 }

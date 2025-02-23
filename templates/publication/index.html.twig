@@ -18,8 +18,9 @@
       <div class="card-body">
          <div class="row">
             {% for publication in publications %}
+               {% set isTopRated = publication.ratings | filter(r => r.rating > 3) | length >= 2 %}
                <div class="col-md-4">
-                  <div class="card mb-4 position-relative" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                  <div class="card mb-4 position-relative {{ isTopRated ? 'top-rated' : '' }}" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                      <!-- Settings Dropdown (Three Dots) -->
                      {% if app.user == publication.client %}
                         <div class="dropdown position-absolute top-0 end-0 m-2">
@@ -60,6 +61,13 @@
                         </p>
 
                         <div class="d-flex justify-content-between align-items-center mt-3">
+                           <!-- Rating display -->
+                           {% if isTopRated %}
+                              <div class="rating">
+                                 <span class="badge bg-warning text-dark">Top Rated</span>
+                              </div>
+                           {% endif %}
+
                            <a href="{{ path('publication_show', {'id': publication.id}) }}" class="btn btn-info">
                               <i class="fa fa-eye"></i> 
                            </a>
@@ -94,6 +102,17 @@
       .btn-sm {
          padding: 0.25rem 0.5rem;
          font-size: 0.875rem;
+      }
+
+      .top-rated {
+         border: 2px solid gold;
+         background-color: #fff3cd;
+      }
+
+      .rating .badge {
+         font-size: 14px;
+         padding: 0.5rem 1rem;
+         font-weight: bold;
       }
    </style>
 {% endblock %}

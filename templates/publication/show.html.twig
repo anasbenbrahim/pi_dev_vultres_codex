@@ -3,7 +3,9 @@
 {% block title %}Détails de la publication{% endblock %}
 
 {% block body %}
-    <div class="container card mt-5 mb-5 shadow-lg p-4 rounded" style="max-width: 900px;">
+    {% set isTopRated = publication.ratings | filter(r => r.rating > 3) | length >= 2 %}
+
+    <div class="container card mt-5 mb-5 shadow-lg p-4 rounded {{ isTopRated ? 'top-rated' : '' }}" style="max-width: 900px;">
         <!-- Settings Dropdown (Three Dots) - Positioned to the Top-Right -->
         {% if app.user == publication.client %}
             <div class="dropdown position-absolute top-0 end-0 m-3">
@@ -100,7 +102,8 @@
             {{ form_end(commentaire_form) }}
 
             <h3 class="text-center mt-5">Commentaires :</h3>
-            <div class="commentaires-list">
+            <button id="toggleCommentairesBtn" class="btn btn-warning mb-3">Afficher les commentaires</button>
+            <div id="commentairesList" class="commentaires-list" style="display: none;">
                 {% for commentaire in commentaires %}
                     <div class="commentaire mb-3 p-3 rounded" style="border: 1px solid #ddd; background-color: #f9f9f9;">
                         <p><strong>Description :</strong> {{ commentaire.description }}</p>
@@ -141,66 +144,64 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Rating functionality
-            $(".rating i").click(function() {
-                let publicationId = $(".rating").data("id");
-                let rating = $(this).data("value");
+    <style>
+        .top-rated {
+            border: 3px solid gold;
+            background-color: #fff3cd;
+        }
+    </style>
 
-                $.ajax({
-                    url: `/publication/rate/${publicationId}`,
-                    method: "PATCH",
-                    contentType: "application/json",
-                    data: JSON.stringify({ rating: rating }),
-                    success: function(response) {
-                        if (response.success) {
-                            $("#rating-result").text("Note actuelle : " + response.averageRating.toFixed(1));
-                            $(".rating i").removeClass("fas").addClass("far");
-                            $(".rating i").each(function() {
-                                if ($(this).data("value") <= response.averageRating) {
-                                    $(this).removeClass("far").addClass("fas");
-                                }
-                            });
-                        }
+    <script>
+        document.querySelectorAll('.rating .fa-star').forEach(star => {
+            star.addEventListener('click', function () {
+                const ratingValue = this.getAttribute('data-value');
+                const publicationId = this.closest('.rating').getAttribute('data-id');
+                
+                fetch(`/publication/rate/${publicationId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
                     },
-                    error: function(xhr) {
-                        alert("Erreur: " + (xhr.responseJSON ? xhr.responseJSON.error : "Erreur inconnue"));
+                    body: JSON.stringify({ rating: ratingValue })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('rating-result').innerText = `Note actuelle : ${data.averageRating}`;
+                        // Update the stars on success
+                        updateStars(ratingValue);
+                    } else {
+                        alert(data.error);
                     }
                 });
             });
         });
+
+        function updateStars(ratingValue) {
+            const stars = document.querySelectorAll('.rating .fa-star');
+            stars.forEach(star => {
+                if (star.getAttribute('data-value') <= ratingValue) {
+                    star.classList.remove('far');
+                    star.classList.add('fas');
+                } else {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                }
+            });
+        }
+
+        // JavaScript for toggling comment visibility
+        document.getElementById('toggleCommentairesBtn').addEventListener('click', function () {
+            const commentairesList = document.getElementById('commentairesList');
+            if (commentairesList.style.display === 'none') {
+                commentairesList.style.display = 'block';
+                this.innerText = 'Masquer les commentaires';
+            } else {
+                commentairesList.style.display = 'none';
+                this.innerText = 'Afficher les commentaires';
+            }
+        });
     </script>
-
-    <style>
-        .dropdown.position-absolute {
-            z-index: 10;
-        }
-
-        .commentaire-section {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .commentaires-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .commentaire-actions {
-            margin-top: 10px;
-            text-align: right;
-        }
-
-        /* Optional: Add some hover effects for the buttons */
-        .btn-warning:hover {
-            background-color: #ffb606;
-        }
-
-        .btn-danger:hover {
-            background-color: #e3342f;
-        }
-    </style>
 
 {% endblock %}
