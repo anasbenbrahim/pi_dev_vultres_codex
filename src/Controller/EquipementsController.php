@@ -119,7 +119,7 @@ final class EquipementsController extends AbstractController
     ]);
 
 
-    }
+}
 
     #[Route('/add_equipement','add_equipement_fournisseur')]
     public function addequipement(ManagerRegistry $doctrine,EquipementsRepository $repo,Request $request,#[Autowire('%photo_dir%')] string $photoDir ){

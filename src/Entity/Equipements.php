@@ -8,6 +8,8 @@ use Symfony\Component\Mime\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use App\Entity\User;
 
 #[ORM\Entity(repositoryClass: EquipementsRepository::class)]
@@ -53,7 +55,13 @@ class Equipements
     #[ORM\JoinColumn(nullable:false)]
     private ?User $user = null;
 
-   
+    #[ORM\OneToMany(mappedBy: 'equipement', targetEntity: Devis::class)]
+    private Collection $devis;
+    public function __construct()
+    {
+        $this->devis = new ArrayCollection();
+    }
+    
 
     public function getId(): ?int
     {
@@ -146,6 +154,10 @@ class Equipements
 
         return $this;
     }
-
+    public function getDevis(): Collection
+    {
+        return $this->devis;
+    }
+    
    
 }

@@ -1,1 +1,22 @@
 {% extends 'baseclient.html.twig' %}
+{% block css %}
+    <style>
+        .product-card {
+            max-width: 600px;
+            margin: auto;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container mt-5 text-center">
+        <div class="card product-card shadow-lg p-3">
+            <img src="{{asset('uploads/images/' ~ equipement.image)}}" class="card-img-top" alt="Produit Agricole">
+            <div class="card-body">
+                <h5 class="card-title">{{equipement.nom}}</h5>
+                <h4 class="text-primary">{{equipement.quantite}} Pieces restantes</h4>
+                <p class="card-text">{{equipement.description}}</p>
+                <a href="{{ path('demande_devis', {'id': equipement.id}) }}" class="btn btn-success">Demander un Devis</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

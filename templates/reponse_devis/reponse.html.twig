@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    {{ form_start(form,{'attr':{'novalidate':'novalidate'}}) }}
+    <div class="row">
+        {{ form_label(form.reponse,"reponse") }}  
+        {{ form_widget(form.reponse,{'attr':{'placeholder': 'Veuillez entrer le reponse','class':'form-control'}}) }}
+        {{ form_errors(form.reponse) }}
+    </div>
+    <div class="d-grid gap-2 mt-4">
+        {{ form_widget(form.save, {'attr': {'class': 'btn btn-success me-md-2'}}) }}
+    </div>
+    {{ form_end(form)}}
+{% endblock %}
