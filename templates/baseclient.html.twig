@@ -50,7 +50,28 @@
                     <li><a href="testimonials.html">Testimonials</a></li>
                     <li><a href="blog.html">Blog</a></li>
                     <li><a href="contact.html">Contact</a></li>
-                    <li><a class="btn btn-success btn-lg" href="{{ path('app_login') }}" style="padding: 10px 25px; border-radius: 25px; font-weight: 600; transition: all 0.3s ease;">Login</a></li>
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                   
+
+
+                        
+
+
+    <li class="dropdown"><a href="#"><span><b class="text-success">My Account</b></span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+        <ul>
+        <li><a href="{{ path('app_profile') }}">Profile</a></li>
+              
+        <li><a href="{{ path('app_logout') }}">Logout</a></li>
+              
+        </ul>
+    </li>
+        
+    {% else %}
+    <li>
+        <a class="btn btn-success btn-lg" href="{{ path('app_login') }}" style="padding: 10px 25px; border-radius: 25px; font-weight: 600; transition: all 0.3s ease;">Login</a>
+    </li>
+    {% endif %}
+                    
 
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
