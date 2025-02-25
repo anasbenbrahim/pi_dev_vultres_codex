@@ -33,10 +33,9 @@ final class DemandeController extends AbstractController
             // Handle file upload
             $cvFile = $form->get('cvFile')->getData();
             if ($cvFile) {
-                $demande->setUpdatedAt(new \DateTimeImmutable()); // Use DateTimeImmutable
+                $demande->setUpdatedAt(new \DateTimeImmutable());
             }
 
-            // Set the associated Offer
             $demande->setOffer($form->get('offer')->getData());
 
             $entityManager->persist($demande);
