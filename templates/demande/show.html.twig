@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}La liste des demandes Demande{% endblock %}
+
+{% block body %}
+    <h1 class="text-success">Demande Details</h1>
+    <div class="alert alert-info" role="alert">
+        Here are the details for the selected demande.
+    </div>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Demand ID</th>
+                <td>{{ demande.id }}</td>
+            </tr>
+            <tr>
+                <th>Service</th>
+                <td>{{ demande.service }}</td>
+            </tr>
+            <tr>
+                <th>Date_demande</th>
+                <td>{{ demande.dateDemande ? demande.dateDemande|date('d-m-Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>CV</th>
+                <td>
+                    {% if demande.cvFileName %}
+                        <a href="{{ asset('uploads/cv/' ~ demande.cvFileName) }}" target="_blank">View CV</a>
+                    {% else %}
+                        <span class="text-muted">No CV</span>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="text-center mt-3">
+        <a href="{{ path('app_demande_index') }}" class="btn btn-secondary">Back to List</a>
+        <a href="{{ path('app_demande_edit', {'id': demande.id}) }}" class="btn btn-warning">Edit</a>
+    </div>
+
+    {{ include('demande/_delete_form.html.twig') }}
+{% endblock %}

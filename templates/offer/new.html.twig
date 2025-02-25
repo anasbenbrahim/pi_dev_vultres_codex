@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create New Offer{% endblock %}
+
+{% block body %}
+    <h1 class="text-success">Create New Offer</h1>
+    <div class="alert alert-info" role="alert">
+        Please fill in the details below to create a new offer.
+    </div>
+
+    <div class="container mt-5">
+        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+            <div class="mb-3">
+                {{ form_label(form.nom, 'Nom', {'class': 'form-label'}) }}
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Enter offer name', 'required': 'required'}}) }}
+                <div class="invalid-feedback">Please provide a name for the offer.</div>
+                {{ form_errors(form.nom) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.domain, 'Domain', {'class': 'form-label'}) }}
+                {{ form_widget(form.domain, {'attr': {'class': 'form-control', 'placeholder': 'Enter domain', 'required': 'required'}}) }}
+                <div class="invalid-feedback">Please provide a valid domain.</div>
+                {{ form_errors(form.domain) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.dateOffer, 'Date Offer', {'class': 'form-label'}) }}  <!-- Corrected -->
+                {{ form_widget(form.dateOffer, {'attr': {'class': 'form-control', 'required': 'required'}}) }}  <!-- Corrected -->
+                <div class="invalid-feedback">Please provide a valid date.</div>
+                {{ form_errors(form.dateOffer) }}  <!-- Corrected -->
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.nbPlaces, 'Number of Places', {'class': 'form-label'}) }}
+                {{ form_widget(form.nbPlaces, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                <div class="invalid-feedback">Please provide the number of places.</div>
+                {{ form_errors(form.nbPlaces) }}
+            </div>
+
+            <button type="submit" class="btn btn-success">Submit</button>
+        {{ form_end(form) }}
+
+        <div class="text-center mt-3">
+            <a href="{{ path('app_offer_index') }}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+{% endblock %}

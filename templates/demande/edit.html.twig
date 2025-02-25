@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Demande{% endblock %}
+
+{% block body %}
+    <h1 class="text-success">Edit Demande</h1>
+    <div class="alert alert-info" role="alert">
+        Please update the details below for the demande.
+    </div>
+
+    <div class="container mt-4">
+        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+            <div class="mb-3">
+                {{ form_label(form.service, 'Service', {'class': 'form-label'}) }}
+                {{ form_widget(form.service, {'attr': {'class': 'form-control', 'placeholder': 'Enter service', 'required': 'required'}}) }}
+                <div class="invalid-feedback">Please provide a service.</div>
+                {{ form_errors(form.service) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.date_demande, 'Date Demande', {'class': 'form-label'}) }}
+                {{ form_widget(form.date_demande, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                <div class="invalid-feedback">Please provide a valid date.</div>
+                {{ form_errors(form.date_demande) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.cvFile, 'CV', {'class': 'form-label'}) }}
+                {{ form_widget(form.cvFile, {'attr': {'class': 'form-control', 'accept': 'application/pdf'}}) }}
+                <div class="invalid-feedback">Please upload a valid CV file.</div>
+                {{ form_errors(form.cvFile) }}
+                {% if demande.cvFileName %}
+                    <div class="mt-2">
+                        <strong>Current CV:</strong>
+                        <a href="{{ asset('uploads/cv/' ~ demande.cvFileName) }}" target="_blank">View CV</a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.offer, 'Offer', {'class': 'form-label'}) }}
+                {{ form_widget(form.offer, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                <div class="invalid-feedback">Please select an offer.</div>
+                {{ form_errors(form.offer) }}
+            </div>
+
+            <button type="submit" class="btn btn-success">Submit</button>
+        {{ form_end(form) }}
+
+        <div class="text-center mt-3">
+            <a href="{{ path('app_demande_index') }}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+    {{ include('demande/_delete_form.html.twig') }}
+{% endblock %}

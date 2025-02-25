@@ -4,3 +4,7 @@ controllers:
         namespace: App\Controller
     type: attribute
 
+delete_offer:
+    path: /offer/{id}/delete
+    controller: App\Controller\OfferController::delete
+    methods: [POST]

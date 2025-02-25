@@ -1,0 +1,11 @@
+
+{% block body %}
+    {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.domain) }}
+        {{ form_row(form.date_offer) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.nb_places) }}
+        <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+{% endblock %}

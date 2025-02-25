@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create New Demande{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Create New Demande</h1>
+
+    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+        <div class="mb-3">
+            {{ form_label(form.service, 'Service', {'class': 'form-label'}) }}
+            {{ form_widget(form.service, {'attr': {'class': 'form-control', 'placeholder': 'Enter service', 'required': 'required'}}) }}
+            <div class="invalid-feedback">Please provide a service.</div>
+            {{ form_errors(form.service) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.date_demande, 'Date Demande', {'class': 'form-label'}) }}
+            {{ form_widget(form.date_demande, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+            <div class="invalid-feedback">Please provide a valid date.</div>
+            {{ form_errors(form.date_demande) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.cvFile, 'CV', {'class': 'form-label'}) }} 
+            {{ form_widget(form.cvFile, {'attr': {'class': 'form-control', 'accept': 'application/pdf'}}) }} 
+
+            <div class="invalid-feedback">Please upload a valid CV file.</div>
+            {{ form_errors(form.cvFile) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.offer, 'Offer', {'class': 'form-label'}) }}
+            {{ form_widget(form.offer, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+            <div class="invalid-feedback">Please select an offer.</div>
+            {{ form_errors(form.offer) }}
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit</button>
+    {{ form_end(form) }}
+
+    <div class="text-center mt-3">
+        <a href="{{ path('app_demande_index') }}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'Offre - {{ offer.getNom() }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Détails de l'Offre</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+            <div class="card-header bg-primary text-white">
+                    Informations de l'Offre
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>ID:</strong> {{ offer.getId() }}</li>
+                        <li class="list-group-item"><strong>Nom:</strong> {{ offer.getNom() }}</li>
+                        <li class="list-group-item"><strong>Domaine:</strong> {{ offer.getDomain() }}</li>
+                        <li class="list-group-item"><strong>Date de l'Offre:</strong> {{ offer.getDateOffer() ? offer.getDateOffer()|date('Y/m/d') : 'Non définie' }}</li>
+                        <li class="list-group-item"><strong>Nombre de Places:</strong> {{ offer.getNbPlaces() }}</li>
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+            <div class="card-header bg-primary text-white">
+
+                    Description de l'Offre
+                </div>
+                <div class="card-body">
+                    <p>{{ offer.getDescription() }}</p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{{ path('app_offer_edit', {'id': offer.getId()}) }}" class="btn btn-primary">Modifier</a>
+        <a href="{{ path('app_offer_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        {{ include('offer/_delete_form.html.twig') }}
+    </div>
+</div>
+{% endblock %}

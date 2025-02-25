@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Offer{% endblock %}
+
+{% block body %}
+    <h1 class="text-success">Edit Offer</h1>
+    <div class="alert alert-info" role="alert">
+        Please update the details below for the offer.
+    </div>
+
+    <div class="container mt-5">
+        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+            <div class="mb-3">
+                {{ form_label(form.nom, 'Nom', {'class': 'form-label'}) }}
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Enter offer name', 'required': 'required'}}) }}
+                {{ form_errors(form.nom) }}
+                <div class="invalid-feedback">Please provide a name for the offer.</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.domain, 'Domain', {'class': 'form-label'}) }}
+                {{ form_widget(form.domain, {'attr': {'class': 'form-control', 'placeholder': 'Enter domain', 'required': 'required'}}) }}
+                {{ form_errors(form.domain) }}
+                <div class="invalid-feedback">Please provide a valid domain.</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.dateOffer, 'Date Offer', {'class': 'form-label'}) }}
+                {{ form_widget(form.dateOffer, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                {{ form_errors(form.dateOffer) }}
+                <div class="invalid-feedback">Please provide a valid date.</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.description, 'Description', {'class': 'form-label'}) }}
+                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                {{ form_errors(form.description) }}
+                <div class="invalid-feedback">Please provide a description.</div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.nbPlaces, 'Number of Places', {'class': 'form-label'}) }}  <!-- Corrected -->
+                {{ form_widget(form.nbPlaces, {'attr': {'class': 'form-control', 'required': 'required'}}) }}  <!-- Corrected -->
+                {{ form_errors(form.nbPlaces) }}  <!-- Corrected -->
+                <div class="invalid-feedback">Please provide the number of places.</div>
+            </div>
+
+            <button type="submit" class="btn btn-success">Update</button>
+        {{ form_end(form) }}
+
+        <div class="text-center mt-3">
+            <a href="{{ path('app_offer_index') }}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+    {{ include('offer/_delete_form.html.twig') }}
+{% endblock %}
