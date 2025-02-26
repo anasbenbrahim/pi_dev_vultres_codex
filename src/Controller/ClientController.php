@@ -350,12 +350,14 @@ public function search(Request $request, PublicationRepository $publicationRepos
         ->getQuery()
         ->getResult();
 
-    if ($request->isXmlHttpRequest()) { // Check if it's an AJAX request (optional)
+    if ($request->isXmlHttpRequest()) {
+        // Return the list as a partial template when it's an AJAX request
         return $this->render('publication/_list.html.twig', [
             'publications' => $publications
         ]);
     }
 
+    // For regular requests, return the full page with the search term and list
     return $this->render('publication/index.html.twig', [
         'publications' => $publications,
         'searchTerm' => $titre
