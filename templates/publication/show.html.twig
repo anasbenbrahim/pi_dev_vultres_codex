@@ -60,23 +60,25 @@
             {% endif %}
         </p>
 
-        <!-- Notification Icon in Navbar -->
-        <li class="nav-item dropdown">
-            <a class="nav-link" href="#" id="notificationDropdown" role="button">
-                <i class="fa-solid fa-bell"></i>
-                <span id="notificationCount" class="badge bg-danger">{{ publication.notifications|length }}</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
-                {% for notification in publication.notifications %}
-                    <a class="dropdown-item" href="{{ path('notification_read', {'id': notification.id}) }}">
-                        {{ notification.message }}
-                        <small class="text-muted">{{ notification.date|date('H:i') }}</small>
-                    </a>
-                {% else %}
-                    <span class="dropdown-item text-muted">Aucune nouvelle notification</span>
-                {% endfor %}
-            </div>
-        </li>
+        <!-- Notification Icon in Navbar (Visible only for the publication owner) -->
+        {% if app.user == publication.client %}
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="#" id="notificationDropdown" role="button">
+                    <i class="fa-solid fa-bell"></i>
+                    <span id="notificationCount" class="badge bg-danger">{{ publication.notifications|length }}</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                    {% for notification in publication.notifications %}
+                        <a class="dropdown-item" href="{{ path('notification_read', {'id': notification.id}) }}">
+                            {{ notification.message }}
+                            <small class="text-muted">{{ notification.date|date('H:i') }}</small>
+                        </a>
+                    {% else %}
+                        <span class="dropdown-item text-muted">Aucune nouvelle notification</span>
+                    {% endfor %}
+                </div>
+            </li>
+        {% endif %}
 
         <div class="commentaire-section mt-5">
             <h3 class="text-center mb-4">Créer un commentaire</h3>
@@ -102,7 +104,7 @@
             {{ form_end(commentaire_form) }}
 
             <h3 class="text-center mt-5">Commentaires :</h3>
-            <button id="toggleCommentairesBtn" class="btn btn-warning mb-3">Afficher les commentaires</button>
+            <button id="toggleCommentairesBtn" class="btn btn-wa mb-3">Afficher les commentaires</button>
             <div id="commentairesList" class="commentaires-list" style="display: none;">
                 {% for commentaire in commentaires %}
                     <div class="commentaire mb-3 p-3 rounded" style="border: 1px solid #ddd; background-color: #f9f9f9;">

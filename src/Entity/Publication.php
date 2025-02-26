@@ -40,7 +40,8 @@ class Publication
     private ?string $image = null;
 
     #[ORM\ManyToOne(inversedBy: 'publications')]
-    private ?Client $client = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Client $client = null; // Owner of the publication
     
     #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: "publication", cascade: ["remove"])]
     private Collection $ratings;
@@ -52,8 +53,7 @@ class Publication
     private Collection $reclamations;
 
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'publication', cascade: ['remove'])]
-private Collection $notifications;
-
+    private Collection $notifications;
 
     public function __construct()
     {
@@ -61,8 +61,7 @@ private Collection $notifications;
         $this->commentaires = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
         $this->notifications = new ArrayCollection();
-
-        $this->date = new \DateTime();
+        $this->date = new \DateTime(); // Default date to current time
     }
 
     public function getId(): ?int
@@ -141,8 +140,6 @@ private Collection $notifications;
         $total = array_reduce($ratings->toArray(), fn($sum, $rating) => $sum + $rating->getRating(), 0);
         return $total / count($ratings);
     }
-    
-
 
     public function getCommentaires(): Collection
     {

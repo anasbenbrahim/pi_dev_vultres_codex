@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use App\Entity\User; // Ensure this line is included
+use App\Entity\User;
 
 #[ORM\Entity]
 class Client extends User
@@ -19,10 +19,14 @@ class Client extends User
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'client')]
     private $commentaires;
 
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Notification::class)]
+    private $notifications;  // This was correctly defined, but now needs initialization
+
     public function __construct()
     {
         $this->reclamations = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
+        $this->notifications = new ArrayCollection();  // Initialize notifications collection
     }
 
     public function getReclamations(): Collection
@@ -85,6 +89,33 @@ class Client extends User
     public function setAddress(?string $address): static
     {
         $this->address = $address;
+        return $this;
+    }
+
+    // Getter and Setter for notifications
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setClient($this);
+        }
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->contains($notification)) {
+            $this->notifications->removeElement($notification);
+            if ($notification->getClient() === $this) {
+                $notification->setClient(null);
+            }
+        }
+
         return $this;
     }
 }

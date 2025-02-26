@@ -6,8 +6,6 @@ use App\Repository\NotificationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 
-
-
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 class Notification
 {
@@ -25,11 +23,13 @@ class Notification
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $date = null;
-    
-
 
     #[ORM\Column]
     private ?bool $Reading = false;
+
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'notifications')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Client $client = null;
 
     public function getId(): ?int
     {
@@ -47,25 +47,22 @@ class Notification
 
         return $this;
     }
-   
 
-public function getDate(): ?\DateTimeInterface
-{
-    return $this->date;
-}
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
 
-public function setDate(\DateTimeInterface $date): static
-{
-    $this->date = $date;
-    return $this;
-}
+    public function setDate(\DateTimeInterface $date): static
+    {
+        $this->date = $date;
+        return $this;
+    }
 
-public function __construct()
-{
-    $this->date = new \DateTime(); // Définit la date actuelle par défaut
-}
-
-
+    public function __construct()
+    {
+        $this->date = new \DateTime(); // Définit la date actuelle par défaut
+    }
 
     public function getPublication(): ?Publication
     {
@@ -87,6 +84,19 @@ public function __construct()
     public function setReading(bool $Reading): static
     {
         $this->Reading = $Reading;
+
+        return $this;
+    }
+
+    // Getter and Setter for Client
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): static
+    {
+        $this->client = $client;
 
         return $this;
     }

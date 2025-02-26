@@ -109,6 +109,8 @@ final class ClientController extends AbstractController
     ]);
 }
 
+
+
     #[Route('/{id}/delete', name: 'publication_delete')]
     public function deletepub(Publication $publication, EntityManagerInterface $entityManager): Response
     {
@@ -149,7 +151,7 @@ final class ClientController extends AbstractController
     #[Route('/publication/{id}', name: 'publication_show')]
 public function show(Publication $publication, Request $request, EntityManagerInterface $entityManager): Response
 {
-    $client = $publication->getClient();
+    $client = $publication->getClient(); // Owner of the publication
     $commentaire = new Commentaire();
     $commentaire->setPublication($publication);
     $commentaire->setClient($this->getUser());
@@ -158,19 +160,28 @@ public function show(Publication $publication, Request $request, EntityManagerIn
     $commentaireForm->handleRequest($request);
 
     if ($commentaireForm->isSubmitted() && $commentaireForm->isValid()) {
+        // Clean the comment (example: remove bad words)
         $badWords = ['test', 'test2', 'test3'];
         $cleanedComment = str_ireplace($badWords, '***', $commentaire->getDescription());
         $commentaire->setDescription($cleanedComment);
 
+        // Persist the comment
         $entityManager->persist($commentaire);
         $entityManager->flush();
-        $notification = new Notification();
-            $notification->setMessage("New comment on publication: " . $publication->getTitre())
+
+        // Send notification only to the publication owner if the current user is not the owner
+        if ($client !== $this->getUser()) { 
+            $notification = new Notification();
+            $notification->setMessage("New comment on your publication: " . $publication->getTitre())
                          ->setPublication($publication)
-                         ->setReading(false);
+                         ->setReading(false)
+                         ->setClient($client); // Send notification to the publication owner
             $entityManager->persist($notification);
             $entityManager->flush();
+        }
 
+        // This should update the notification count for the owner of the publication
+        $entityManager->refresh($client); // Ensure the client entity is updated
         return $this->redirectToRoute('publication_show', ['id' => $publication->getId()]);
     }
 
@@ -181,6 +192,9 @@ public function show(Publication $publication, Request $request, EntityManagerIn
         'commentaire_form' => $commentaireForm->createView(),
     ]);
 }
+
+
+
 
 
 
@@ -315,21 +329,29 @@ public function newReclamation(Request $request, EntityManagerInterface $entityM
 
 
 
-    #[Route('/publications/search', name: 'publication_search')]
-    public function searchByTitre(Request $request, PublicationRepository $publicationRepository): Response
-    {
-        $titre = $request->query->get('titre', '');  
-            $publications = $publicationRepository->createQueryBuilder('p')
-            ->where('p.titre LIKE :titre')
-            ->setParameter('titre', '%' . $titre . '%')
-            ->getQuery()
-            ->getResult();
-    
-        return $this->render('publication/index.html.twig', [
-            'publications' => $publications,
-            'searchTerm' => $titre, 
+#[Route('/publications/search', name: 'publication_search', methods: ['GET'])]
+public function search(Request $request, PublicationRepository $publicationRepository): Response
+{
+    $titre = $request->query->get('titre', '');
+
+    $publications = $publicationRepository->createQueryBuilder('p')
+        ->where('p.titre LIKE :titre')
+        ->setParameter('titre', '%' . $titre . '%')
+        ->getQuery()
+        ->getResult();
+
+    if ($request->isXmlHttpRequest()) { // Check if it's an AJAX request (optional)
+        return $this->render('publication/_list.html.twig', [
+            'publications' => $publications
         ]);
     }
+
+    return $this->render('publication/index.html.twig', [
+        'publications' => $publications,
+        'searchTerm' => $titre
+    ]);
+}
+
     
 
 
@@ -424,15 +446,24 @@ public function clientReclamations(int $clientId, EntityManagerInterface $entity
     }
 
     #[Route('/notifications', name: 'notifications')]
-public function indexnotifcation(NotificationRepository $notificationRepository, Security $security): Response
+public function notifications(Request $request, EntityManagerInterface $entityManager): Response
 {
-    $user = $security->getUser();
-    $notifications = $notificationRepository->findBy(['client' => $user], ['date' => 'DESC']);
+    $user = $this->getUser(); // Get the logged-in user
+
+    // Get the notifications related to publications that the user is involved with
+    $notifications = $entityManager->getRepository(Notification::class)
+        ->createQueryBuilder('n')
+        ->innerJoin('n.publication', 'p')
+        ->where('p.client = :user OR EXISTS (SELECT 1 FROM App\Entity\Commentaire c WHERE c.publication = p AND c.client = :user)')
+        ->setParameter('user', $user)
+        ->getQuery()
+        ->getResult();
 
     return $this->render('notification/index.html.twig', [
         'notifications' => $notifications,
     ]);
 }
+
 
 
     #[Route('/notification/{id}/read', name: 'notification_read')]
