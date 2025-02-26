@@ -148,7 +148,9 @@ final class ClientController extends AbstractController
 
     
 
-    #[Route('/publication/{id}', name: 'publication_show')]
+    // In your PublicationController
+
+#[Route('/publication/{id}', name: 'publication_show')]
 public function show(Publication $publication, Request $request, EntityManagerInterface $entityManager): Response
 {
     $client = $publication->getClient(); // Owner of the publication
@@ -160,7 +162,7 @@ public function show(Publication $publication, Request $request, EntityManagerIn
     $commentaireForm->handleRequest($request);
 
     if ($commentaireForm->isSubmitted() && $commentaireForm->isValid()) {
-        // Clean the comment (example: remove bad words)
+        // Clean the comment
         $badWords = ['test', 'test2', 'test3'];
         $cleanedComment = str_ireplace($badWords, '***', $commentaire->getDescription());
         $commentaire->setDescription($cleanedComment);
@@ -169,10 +171,10 @@ public function show(Publication $publication, Request $request, EntityManagerIn
         $entityManager->persist($commentaire);
         $entityManager->flush();
 
-        // Send notification only to the publication owner if the current user is not the owner
-        if ($client !== $this->getUser()) { 
+        // Always send notification to the publication owner (client)
+        if ($client !== $this->getUser()) {
             $notification = new Notification();
-            $notification->setMessage("New comment on your publication: " . $publication->getTitre())
+            $notification->setMessage("New comment on your publication: " . $publication->getTitre() . " by " . $this->getUser()->getLastName())
                          ->setPublication($publication)
                          ->setReading(false)
                          ->setClient($client); // Send notification to the publication owner
@@ -180,9 +182,17 @@ public function show(Publication $publication, Request $request, EntityManagerIn
             $entityManager->flush();
         }
 
-        // This should update the notification count for the owner of the publication
-        $entityManager->refresh($client); // Ensure the client entity is updated
+       
         return $this->redirectToRoute('publication_show', ['id' => $publication->getId()]);
+    }
+
+    // Mark notifications as read when the owner clicks on a notification
+    if ($request->get('notification_id')) {
+        $notification = $entityManager->getRepository(Notification::class)->find($request->get('notification_id'));
+        if ($notification && $notification->getClient() === $this->getUser()) {
+            $notification->setReading(true);
+            $entityManager->flush();
+        }
     }
 
     return $this->render('publication/show.html.twig', [
@@ -459,7 +469,7 @@ public function notifications(Request $request, EntityManagerInterface $entityMa
         ->getQuery()
         ->getResult();
 
-    return $this->render('notification/index.html.twig', [
+    return $this->render('notification/list.html.twig', [
         'notifications' => $notifications,
     ]);
 }
@@ -471,7 +481,7 @@ public function notifications(Request $request, EntityManagerInterface $entityMa
     {
         $notification->setReading(true);
         $entityManager->flush();
-        return $this->redirectToRoute('notification_index');
+        return $this->redirectToRoute('notifications');
     }
 
     #[Route('/publication/{id}/clear_notifications', name: 'publication_clear_notifications')]

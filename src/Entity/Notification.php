@@ -31,6 +31,10 @@ class Notification
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $client = null;
 
+    #[ORM\ManyToOne(targetEntity: Commentaire::class, inversedBy: 'notifications')]
+#[ORM\JoinColumn(nullable: true)] 
+private ?Commentaire $commentaire = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -100,4 +104,16 @@ class Notification
 
         return $this;
     }
+
+    public function getCommentaire(): ?Commentaire
+{
+    return $this->commentaire;
+}
+
+public function setCommentaire(?Commentaire $commentaire): static
+{
+    $this->commentaire = $commentaire;
+    return $this;
+}
+
 }
