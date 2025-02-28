@@ -82,6 +82,12 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Devis::class, mappedBy: 'fournisseur')]
     private Collection $devis_fournisseur;
 
+    /**
+     * @var Collection<int, ReponseDevis>
+     */
+    #[ORM\OneToMany(targetEntity: ReponseDevis::class, mappedBy: 'fermier')]
+    private Collection $fermier_reponsedevis;
+
     public function __construct()
     {
         $this->equipements = new ArrayCollection();
@@ -89,6 +95,7 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->devis = new ArrayCollection();
         $this->reponseDevis = new ArrayCollection();
         $this->devis_fournisseur = new ArrayCollection();
+        $this->fermier_reponsedevis = new ArrayCollection();
     }
 
     /**
@@ -318,6 +325,36 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($devisFournisseur->getFournisseur() === $this) {
                 $devisFournisseur->setFournisseur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReponseDevis>
+     */
+    public function getFermierReponsedevis(): Collection
+    {
+        return $this->fermier_reponsedevis;
+    }
+
+    public function addFermierReponsedevi(ReponseDevis $fermierReponsedevi): static
+    {
+        if (!$this->fermier_reponsedevis->contains($fermierReponsedevi)) {
+            $this->fermier_reponsedevis->add($fermierReponsedevi);
+            $fermierReponsedevi->setFermier($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFermierReponsedevi(ReponseDevis $fermierReponsedevi): static
+    {
+        if ($this->fermier_reponsedevis->removeElement($fermierReponsedevi)) {
+            // set the owning side to null (unless already changed)
+            if ($fermierReponsedevi->getFermier() === $this) {
+                $fermierReponsedevi->setFermier(null);
             }
         }
 

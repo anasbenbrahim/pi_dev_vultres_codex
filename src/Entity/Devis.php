@@ -31,6 +31,7 @@ class Devis
     #[ORM\JoinColumn(nullable: false)]
     private ?User $fournisseur = null;
 
+
     public function getId(): ?int
     {
         return $this->id;
@@ -95,5 +96,6 @@ class Devis
 
         return $this;
     }
+
 
 }

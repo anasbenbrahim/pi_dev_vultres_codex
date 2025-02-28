@@ -12,7 +12,7 @@ use App\Entity\User;
 use App\Repository\DevisRepository;
 use App\Repository\EquipementsRepository;
 use App\Form\ReponseDevisType;
-
+use App\Repository\ReponseDevisRepository;
 
 final class ReponseDevisController extends AbstractController
 {
@@ -25,6 +25,7 @@ final class ReponseDevisController extends AbstractController
         $equipement_demandee=$devis->getEquipement();
         $id_equipement=$equipement_demandee->getId();
         $equipement=$repo_equipement->find($id_equipement);
+        $fermier=$devis->getFermier();
         $reponse->setDevis($devis);
         $reponse->setFournisseur($devis->getFournisseur());
         if($devis->getQuantite() > $equipement->getQuantite()){
@@ -33,6 +34,7 @@ final class ReponseDevisController extends AbstractController
 
         }
         else{
+            $reponse->setFermier($fermier);
             $form=$this->createForm(ReponseDevisType::class,$reponse);
             $form->handleRequest($request);
             if($form->isSubmitted() && $form->isValid()){
@@ -43,6 +45,28 @@ final class ReponseDevisController extends AbstractController
                 return $this->redirectToRoute('show_devis'); 
             }
         }
-        return $this->render('reponse_devis/reponse.html.twig',['form'=>$form]);
+        return $this->render('reponse_devis/reponse.html.twig',['form'=>$form,'equipement'=>$equipement_demandee]);
+    }
+    #[Route('/show_reponse_devis','show_reponse')]
+    public function show_reponse(DevisRepository $repodevis,ReponseDevisRepository $repoReponse){
+        $user=$this->getUser();
+        if($user instanceof User )
+        {
+            $id=$user->getId();
+            $devis=$repodevis->findBy(['fermier'=>$id]);
+            $reponse=$repoReponse->findBy(['fermier'=>$id]);
+            return $this->render('reponse_devis/show_reponse.html.twig',["liste_reponse"=>$reponse,"liste_devis"=>$devis]);   
+        }
+        else
+            return $this->redirectToRoute('app_login'); // Redirect if not authenticated
+
+
+        /*$id_devis=$devis->getId();
+        $reponse=$repodevis->find(['devis'=>$id_devis]);
+        if(!$reponse){
+            return $this->redirectToRoute('');
+        }
+        else
+            return $this->render('reponse_devis/show_reponse.html.twig',["reponse"=>$reponse]);*/
     }
 }

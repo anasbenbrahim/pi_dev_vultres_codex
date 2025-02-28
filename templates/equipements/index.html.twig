@@ -13,7 +13,7 @@
           
 <div class="container mx-auto mt-4">
     <div class="row">
-     {% if list is not empty %}
+    {% if list is not empty %}
     {% for equipement in list %}
         <div class="col-md-4">
             <div class="card shadow" style="width: 18rem;">
@@ -25,19 +25,15 @@
                     <h4 class="card-title text-center">{{equipement.nom}} <span class="ms-5">{{equipement.prix}} DT</span></h4>
                    
                     <p class="card-text mb-3">{{equipement.description}}</p>
+                {% if is_granted('ROLE_FERMIER') %}
                     <a href="{{path('show_detail',{'id':equipement.id})}}"  class="btn btn-warning"><i class="fas fa-link"></i> Buy Now</a>
-                    
+                {% endif %}   
                 </div>
             </div>
         </div>
         
-                  {% endfor %}
+    {% endfor %}
 {% endif %}
-       
-
-        
-        
-        
         
     </div>
 </div>

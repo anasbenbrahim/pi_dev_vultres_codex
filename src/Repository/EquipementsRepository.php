@@ -16,6 +16,14 @@ class EquipementsRepository extends ServiceEntityRepository
         parent::__construct($registry, Equipements::class);
     }
 
+    public function findEquipement( string $nom): array{
+        
+            return $this->createQueryBuilder('s')
+            ->where('s.nom LIKE :nom')
+            ->setParameter('nom', '%'.$nom.'%')
+            ->getQuery()
+            ->getResult();   
+    }
     //    /**
     //     * @return Equipements[] Returns an array of Equipements objects
     //     */

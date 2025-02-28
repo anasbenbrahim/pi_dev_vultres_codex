@@ -51,14 +51,13 @@ final class DevisController extends AbstractController
         $user=$this->getUser();
         if($user instanceof User){
             $id=$user->getId();
-            $list=$repo->findBy(["fournisseur"=>$id,]);
+            $list=$repo->findBy(["fournisseur"=>$id]);
             return $this->render('equipements/devis.html.twig', [
                 'list' => $list,
             ]);
         }
         else
-            return $this->redirectToRoute('app_login'); // Redirect if not authenticated
-
-        
+            return $this->redirectToRoute('app_login'); 
+                
     }
 }

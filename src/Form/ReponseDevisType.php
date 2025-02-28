@@ -7,6 +7,8 @@ use App\Entity\ReponseDevis;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,6 +20,8 @@ class ReponseDevisType extends AbstractType
     {
         $builder
             ->add('reponse',TextareaType::class)
+            ->add('prix')
+            ->add('etat',ChoiceType::class,['choices'=>['Validé'=>true,'Non validé'=>false],'expanded'=> true,'multiple'=>false])
             ->add('save',SubmitType::class,['label'=>'Envoyer reponse'])
         ;
     }

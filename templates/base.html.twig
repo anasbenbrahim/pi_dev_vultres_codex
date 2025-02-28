@@ -206,6 +206,14 @@ lang="en"
         </a>
     </li>
 {% endif %}
+{% if is_granted('ROLE_FERMIER')  %}
+    <li class="menu-item">
+        <a href="{{ path('show_reponse') }}" class="menu-link">
+            <i class="bi bi-calendar-check-fill menu-icon"></i>
+            <div data-i18n="Account Settings">Reponse devis</div>
+        </a>
+    </li>
+{% endif %}
 
 
 

@@ -15,6 +15,10 @@ use App\Form\AddEquipementsType;
 use App\Form\ModifierEquipementType;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 final class EquipementsController extends AbstractController
 {      
     #[Route('/equipement/show_equipement' , name: 'show_equipement')]
@@ -149,5 +153,17 @@ final class EquipementsController extends AbstractController
             return $this->redirectToRoute('show_equipement_dashboard');
         }
         return $this->render("/equipements/add.html.twig",["form"=>$form]);
+    }
+    #[Route('/equipement/searchEquipement', name: 'search_equipement')]
+    public function searchEquipement(Request $request, NormalizerInterface $normalizer, EquipementsRepository $repo): JsonResponse
+    {
+    $searchValue = $request->get('searchValue');
+    $equipements = $repo->findEquipement($searchValue);
+    if (empty($equipements)) {
+        return new JsonResponse([]);
+    }
+    $jsonContent = $normalizer->normalize($equipements, 'json',
+    ['groups' => 'equipements']);
+    return new JsonResponse($jsonContent);
     }
 }
