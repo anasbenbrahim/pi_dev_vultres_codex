@@ -10,7 +10,7 @@
     }
 
     .error {
-        color: red; /* Makes error messages red */
+        color: red;
         font-size: 12px;
         margin-top: 5px;
     }
@@ -43,7 +43,21 @@
         </div>
 
         <div class="form-group">
-            {{ form_label(form.image) }}
+            <label class="small-label">{{ form_label(form.imageChoice) }}</label>
+            {{ form_widget(form.imageChoice, {'attr': {'class': 'form-control'}}) }}
+            <div class="error">{{ form_errors(form.imageChoice) }}</div>
+        </div>
+
+        <!-- File Upload Section -->
+        <div id="fileUpload" class="form-group" style="display: none;">
+            <label class="small-label">{{ form_label(form.imageFile) }}</label>
+            {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+            <div class="error">{{ form_errors(form.imageFile) }}</div>
+        </div>
+
+        <!-- URL Input Section -->
+        <div id="urlInput" class="form-group" style="display: none;">
+            <label class="small-label">{{ form_label(form.image) }}</label>
             {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
             <div class="error">{{ form_errors(form.image) }}</div>
         </div>
@@ -53,5 +67,31 @@
         {{ form_end(form) }}
     </div>
 </div>
+
+<script>
+    // JavaScript to toggle between file upload and URL input
+    const fileUploadSection = document.getElementById('fileUpload');
+    const urlInputSection = document.getElementById('urlInput');
+    const imageChoiceRadioButtons = document.querySelectorAll('input[name="publication[imageChoice]"]');
+    
+    // Set the initial visibility based on the current selection
+    function updateVisibility() {
+        const selectedValue = document.querySelector('input[name="publication[imageChoice]"]:checked');
+        if (selectedValue && selectedValue.value === 'upload') {
+            fileUploadSection.style.display = 'block';
+            urlInputSection.style.display = 'none';
+        } else if (selectedValue && selectedValue.value === 'url') {
+            fileUploadSection.style.display = 'none';
+            urlInputSection.style.display = 'block';
+        }
+    }
+    
+    imageChoiceRadioButtons.forEach(radio => {
+        radio.addEventListener('change', updateVisibility);
+    });
+    
+    // Call updateVisibility initially to set the correct state
+    updateVisibility();
+</script>
 
 {% endblock %}

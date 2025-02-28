@@ -28,6 +28,20 @@
             </div>
 
             <div class="form-group">
+                <label class="small-label">{{ form_label(form.imageChoice) }}</label>
+                {{ form_widget(form.imageChoice, {'attr': {'class': 'form-control'}}) }}
+                <div class="error">{{ form_errors(form.imageChoice) }}</div>
+            </div>
+
+            <!-- File Upload Section -->
+            <div id="fileUpload" class="form-group" style="display: block;">
+                <label class="small-label">{{ form_label(form.imageFile) }}</label>
+                {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+                <div class="error">{{ form_errors(form.imageFile) }}</div>
+            </div>
+
+            <!-- URL Input Section -->
+            <div id="urlInput" class="form-group" style="display: none;">
                 <label class="small-label">{{ form_label(form.image) }}</label>
                 {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
                 <div class="error">{{ form_errors(form.image) }}</div>
@@ -41,13 +55,13 @@
 
     <style>
         .title {
-            text-align: center; /* Centers the title */
+            text-align: center;
             margin-bottom: 20px;
         }
 
         .form-box {
-            max-width: 500px; /* Makes form smaller and centered */
-            margin: 20px auto; /* Centers the form */
+            max-width: 500px;
+            margin: 20px auto;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 10px;
@@ -56,16 +70,40 @@
         }
         
         .small-label {
-            font-size: 12px; /* Makes labels smaller */
+            font-size: 12px;
             font-weight: bold;
             display: block;
             margin-bottom: 3px;
         }
 
         .error {
-            color: red; /* Makes error messages red */
+            color: red;
             font-size: 12px;
             margin-top: 5px;
         }
     </style>
+
+    <script>
+        // JavaScript to toggle between file upload and URL input
+        const fileUploadSection = document.getElementById('fileUpload');
+        const urlInputSection = document.getElementById('urlInput');
+        const imageChoiceRadioButtons = document.querySelectorAll('input[name="publication[imageChoice]"]');
+        
+        // Ensure file upload section is visible by default
+        fileUploadSection.style.display = 'block';
+        urlInputSection.style.display = 'none';
+
+        // Toggle based on file or URL selection
+        imageChoiceRadioButtons.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'upload') {
+                    fileUploadSection.style.display = 'block';
+                    urlInputSection.style.display = 'none';
+                } else if (this.value === 'url') {
+                    fileUploadSection.style.display = 'none';
+                    urlInputSection.style.display = 'block';
+                }
+            });
+        });
+    </script>
 {% endblock %}

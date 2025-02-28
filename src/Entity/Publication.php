@@ -34,10 +34,13 @@ class Publication
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
-    #[Assert\NotBlank(message: "L'URL de l'image est obligatoire.")]
-    #[Assert\Url(message: "L'URL de l'image doit être valide.")]
+  
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
+
+    // New imageChoice property
+    #[Assert\Choice(["upload", "url"], message: "Choisissez une méthode valide pour l'image.")]
+    private ?string $imageChoice = 'upload'; // Default choice
 
     #[ORM\ManyToOne(inversedBy: 'publications')]
     #[ORM\JoinColumn(nullable: false)]
@@ -113,6 +116,18 @@ class Publication
         return $this;
     }
 
+    // New getter and setter for imageChoice
+    public function getImageChoice(): ?string
+    {
+        return $this->imageChoice;
+    }
+
+    public function setImageChoice(?string $imageChoice): static
+    {
+        $this->imageChoice = $imageChoice;
+        return $this;
+    }
+
     public function getClient(): ?Client
     {
         return $this->client;
@@ -128,6 +143,12 @@ class Publication
     {
         return $this->ratings;
     }
+
+    public function setImageUrl(?string $imageUrl): static
+{
+    $this->image = $imageUrl; 
+    return $this;
+}
 
     public function getAverageRating(): float
     {

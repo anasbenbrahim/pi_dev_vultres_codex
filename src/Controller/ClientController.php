@@ -26,6 +26,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Cloudinary\Cloudinary;
 
 #[Route('/')]
 final class ClientController extends AbstractController
@@ -89,25 +90,59 @@ final class ClientController extends AbstractController
         ]);
     }
 
+    private $cloudinary;
+
+    public function __construct(Cloudinary $cloudinary)
+    {
+        $this->cloudinary = $cloudinary;
+    }
+
     #[Route('/publication/new', name: 'publication_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+public function new(Request $request, EntityManagerInterface $entityManager): Response
 {
     $publication = new Publication();
     $publication->setDate(new \DateTime());
-    $client = $this->getUser();  
-    $publication->setClient($client);  
+    $client = $this->getUser();
+    $publication->setClient($client);
+
     $form = $this->createForm(PublicationType::class, $publication);
     $form->handleRequest($request);
+
     if ($form->isSubmitted() && $form->isValid()) {
+        // Handle image upload if the user chooses to upload a file
+        if ($publication->getImageChoice() === 'upload') {
+            $imageFile = $form->get('imageFile')->getData();
+            if ($imageFile) {
+                $uploadResult = $this->cloudinary->uploadApi()->upload($imageFile->getPathname(), [
+                    'folder' => 'publications_images',
+                ]);
+                $publication->setImageUrl($uploadResult['secure_url']);
+            }
+        }
+
+        // Handle URL image if the user chooses to provide a URL
+        if ($publication->getImageChoice() === 'url') {
+            $url = $form->get('image')->getData();
+            if ($url) {
+                $publication->setImageUrl($url); // Store the URL directly
+            }
+        }
+
+        // Persist the publication entity
         $entityManager->persist($publication);
         $entityManager->flush();
+
         return $this->redirectToRoute('publication_client');
     }
+
     return $this->render('publication/new.html.twig', [
         'publication' => $publication,
         'form' => $form->createView(),
     ]);
 }
+
+
+
 
 
 
@@ -126,30 +161,47 @@ final class ClientController extends AbstractController
 
 
     #[Route('/publication/{id}/edit', name: 'publication_edit')]
-    public function editPublication(Request $request, Publication $publication, EntityManagerInterface $entityManager): Response
-    {
-        if (!$publication->getDate()) {
-            $publication->setDate(new \DateTime());
-        }
-
-        $form = $this->createForm(PublicationType::class, $publication);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-            return $this->redirectToRoute('publication_client');
-        }
-
-        return $this->render('publication/edit.html.twig', [
-            'publication' => $publication,
-            'form' => $form->createView(),
-        ]);
+public function editPublication(Request $request, Publication $publication, EntityManagerInterface $entityManager): Response
+{
+    if (!$publication->getDate()) {
+        $publication->setDate(new \DateTime());
     }
 
+    $form = $this->createForm(PublicationType::class, $publication);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Handle image upload if the user chooses to upload a file
+        if ($publication->getImageChoice() === 'upload') {
+            $imageFile = $form->get('imageFile')->getData();
+            if ($imageFile) {
+                $uploadResult = $this->cloudinary->uploadApi()->upload($imageFile->getPathname(), [
+                    'folder' => 'publications_images',
+                ]);
+                $publication->setImageUrl($uploadResult['secure_url']);
+            }
+        }
+
+        // Handle URL image if the user chooses to provide a URL
+        if ($publication->getImageChoice() === 'url') {
+            $url = $form->get('image')->getData();
+            if ($url) {
+                $publication->setImageUrl($url); // Store the URL directly
+            }
+        }
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('publication_client');
+    }
+
+    return $this->render('publication/edit.html.twig', [
+        'publication' => $publication,
+        'form' => $form->createView(),
+    ]);
+}
+
     
-
-    // In your PublicationController
-
 #[Route('/publication/{id}', name: 'publication_show')]
 public function show(Publication $publication, Request $request, EntityManagerInterface $entityManager): Response
 {
