@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add New Product{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Add a New Product</h1>
+
+    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+        <div class="mb-3">
+            {{ form_label(form.nomprod, 'Product Name', {'class': 'form-label'}) }}
+            {{ form_widget(form.nomprod, {'attr': {'class': 'form-control', 'placeholder': 'Enter product name', 'required': 'required', 'minlength': '3', 'maxlength': '50'}}) }}
+            <div class="invalid-feedback">The product name must be between 3 and 50 characters.</div>
+            {{ form_errors(form.nomprod) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.prix, 'Price', {'class': 'form-label'}) }}
+            {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': 'Enter price', 'required': 'required', 'min': '0.01', 'step': '0.01'}}) }}
+            <div class="invalid-feedback">The price must be a positive number.</div>
+            {{ form_errors(form.prix) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.quantite, 'Quantity', {'class': 'form-label'}) }}
+            {{ form_widget(form.quantite, {'attr': {'class': 'form-control', 'placeholder': 'Enter quantity', 'required': 'required', 'min': '0'}}) }}
+            <div class="invalid-feedback">Quantity cannot be negative.</div>
+            {{ form_errors(form.quantite) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.descr, 'Description', {'class': 'form-label'}) }}
+            {{ form_widget(form.descr, {'attr': {'class': 'form-control', 'placeholder': 'Enter product description', 'required': 'required', 'maxlength': '255'}}) }}
+            <div class="invalid-feedback">Description cannot exceed 255 characters.</div>
+            {{ form_errors(form.descr) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.image, 'Image', {'class': 'form-label'}) }}
+            {{ form_widget(form.image, {'attr': {'class': 'form-control', 'accept': 'image/*'}}) }}
+            <div class="invalid-feedback">Please upload a valid image file (JPG, PNG, GIF, max 2MB).</div>
+            {{ form_errors(form.image) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.category, 'Category', {'class': 'form-label'}) }}
+            {{ form_widget(form.category, {'attr': {'class': 'form-select', 'required': 'required'}}) }}
+            <div class="invalid-feedback">Please select a category.</div>
+            {{ form_errors(form.category) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.status, 'Availability', {'class': 'form-label'}) }}
+            <div class="form-check">
+                {{ form_widget(form.status, {'attr': {'class': 'form-check-input'}}) }}
+                <label class="form-check-label" for="form_status">
+                    {% if form.status.vars.value %}
+                        Available
+                    {% else %}
+                        Not Available
+                    {% endif %}
+                </label>
+            </div>
+            {{ form_errors(form.status) }}
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit</button>
+    {{ form_end(form) }}
+</div>
+
+<script>
+    // Bootstrap form validation
+    (function () {
+        'use strict';
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var forms = document.querySelectorAll('.needs-validation');
+
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        });
+    })();
+</script>
+{% endblock %}

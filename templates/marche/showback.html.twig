@@ -1,0 +1,49 @@
+{% extends 'baseback.html.twig' %}
+
+{% block title %}Marche
+{% endblock %}
+
+{% block body %}
+	<h1>Marche</h1>
+
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>IdUser</th>
+				<td>{{ marche.idUser }}</td>
+			</tr>
+			<tr>
+				<th>Prodid</th>
+				<td>{{ marche.prodid }}</td>
+			</tr>
+			<tr>
+				<th>Nomprod</th>
+				<td>{{ marche.nomprod }}</td>
+			</tr>
+			<tr>
+				<th>Prix</th>
+				<td>{{ marche.prix }}</td>
+			</tr>
+			<tr>
+				<th>Dateajout</th>
+				<td>{{ marche.dateajout ? marche.dateajout|date('Y-m-d') : '' }}</td>
+			</tr>
+			<tr>
+				<th>Qte</th>
+				<td>{{ marche.quantite }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_marcheback_index') }}" class="btn btn-secondary">Retourner au list</a>
+
+	<a href="{{ path('app_marcheback_edit', {'id': marche.id}) }}" class="btn btn-success">Modifier</a>
+
+	<form method="post" action="{{ path('app_marcheback_delete', {'id': marche.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+		<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ marche.id) }}">
+		<button class="btn btn-danger">Supprimer</button>
+	</form>
+
+
+	{# {{ include('marche/_delete_form.html.twig') }} #}
+{% endblock %}

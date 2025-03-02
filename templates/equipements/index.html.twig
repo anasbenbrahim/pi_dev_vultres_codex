@@ -1,0 +1,65 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Hello ProductsController!{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+
+<style>
+
+
+</style>
+
+          
+<div class="container mx-auto mt-4">
+    <div class="row">
+     {% if list is not empty %}
+    {% for equipement in list %}
+        <div class="col-md-4">
+            <div class="card shadow" style="width: 18rem;">
+            <div class="">
+                <img src="{{asset('uploads/images/' ~ equipement.image)}}" class="card-img-top" alt="...">
+                <hr>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title text-center">{{equipement.nom}} <span class="ms-5">{{equipement.prix}} DT</span></h4>
+                   
+                    <p class="card-text mb-3">{{equipement.description}}</p>
+                    <a href="{{path('show_detail',{'id':equipement.id})}}"  class="btn btn-warning"><i class="fas fa-link"></i> Buy Now</a>
+                    
+                </div>
+            </div>
+        </div>
+        
+                  {% endfor %}
+{% endif %}
+       
+
+        
+        
+        
+        
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

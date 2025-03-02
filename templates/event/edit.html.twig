@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit event{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .container {
+            max-width: 50%;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        button {
+            background: #2980b9;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #21618c;
+        }
+
+        .btn-secondary {
+            background: #7f8c8d;
+            padding: 10px;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #636e72;
+        }
+
+        .btn-danger {
+            background: #c0392b;
+            padding: 10px;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .btn-danger:hover {
+            background: #922b21;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Edit event</h1>
+
+        {{ include('event/_form.html.twig', {'button_label': 'Update'}) }}
+
+        <div class="actions">
+            <a href="{{ path('app_event_index') }}" class="btn-secondary">Back to list</a>
+            {{ include('event/_delete_form.html.twig', {'button_label': 'Delete'}) }}
+        </div>
+    </div>
+{% endblock %}

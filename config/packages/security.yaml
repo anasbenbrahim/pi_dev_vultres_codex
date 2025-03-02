@@ -1,0 +1,41 @@
+security:
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+            custom_authenticator: App\Security\SecurityAuthenticator
+
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                target: app_client
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+                always_remember_me: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+         - { path: ^/admin, roles: [ROLE_SUPER_ADMIN] }
+         - { path: ^/client, roles: [ROLE_CLIENT] }
+         - { path: ^/fermier, roles: [ROLE_FERMIER] }
+         - { path: ^/product, roles: [ROLE_FERMIER,ROLE_SUPER_ADMIN] }
+         - { path: ^/fournisseur, roles: [ROLE_FOURNISSEUR] }
+         - { path: ^/home, roles: PUBLIC_ACCESS }
+         - { path: ^/access-denied, roles: IS_AUTHENTICATED_ANONYMOUSLY } # New entry for access denied

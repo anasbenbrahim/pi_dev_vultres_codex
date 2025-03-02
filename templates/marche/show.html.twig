@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Marche{% endblock %}
+
+{% block body %}
+    <h1>Marche</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ marche.id }}</td>
+            </tr>
+            <tr>
+                <th>Id_user</th>
+                <td>{{ marche.idUser }}</td>
+            </tr>
+            <tr>
+                <th>Prodid</th>
+                <td>{{ marche.prodid }}</td>
+            </tr>
+            <tr>
+                <th>Nomprod</th>
+                <td>{{ marche.nomprod }}</td>
+            </tr>
+            <tr>
+                <th>Prix</th>
+                <td>{{ marche.prix }}</td>
+            </tr>
+            <tr>
+                <th>Dateajout</th>
+                <td>{{ marche.dateajout ? marche.dateajout|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Quantite</th>
+                <td>{{ marche.quantite }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>{{ marche.image }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_marche_index') }}">back to list</a>
+
+    <a href="{{ path('app_marche_edit', {'id': marche.id}) }}">edit</a>
+
+    {{ include('marche/_delete_form.html.twig') }}
+{% endblock %}

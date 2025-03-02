@@ -1,0 +1,50 @@
+{% extends 'baseclientp.html.twig' %}
+
+{% block title %}Commande Confirmée{% endblock %}
+
+{% block body %}
+<div class="container py-5 text-center">
+    <h2 class="text-success"><i class="bi bi-check-circle"></i> Merci pour votre commande !</h2>
+    <p class="fs-5">Votre commande a été enregistrée avec succès.</p>
+
+    <h3 class="mt-4">Détails de la commande</h3>
+    <table class="table table-bordered mt-3">
+        <tr>
+            <th>Numéro de commande</th>
+            <td>{{ order.id }}</td>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <td>{{ order.createdAt|date('d/m/Y H:i') }}</td>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <td>{{ order.total }} TND</td>
+        </tr>
+    </table>
+
+    <h4 class="mt-4">Articles commandés</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité</th>
+                <th>Prix unitaire</th>
+                <th>Sous-total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.orderItems %}
+            <tr>
+                 <td>{{ item.produit.nomprod }}</td>
+                 <td>{{ item.quantite }}</td>
+                 <td>{{ item.produit.prix }} TND</td>
+                <td>{{ item.prix }} TND</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_marche') }}" class="btn btn-primary mt-3">Retour aux produits</a>
+</div>
+{% endblock %}

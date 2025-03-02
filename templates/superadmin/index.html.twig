@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Superadmin index{% endblock %}
+
+{% block body %}
+    <h1>Superadmin index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>LastName</th>
+                <th>FirstName</th>
+                <th>Code</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for superadmin in superadmins %}
+            <tr>
+               
+                <td>{{ superadmin.email }}</td>
+                <td>{{ superadmin.roles ? superadmin.roles|json_encode : '' }}</td>
+                <td>{{ superadmin.password }}</td>
+                <td>{{ superadmin.lastName }}</td>
+                <td>{{ superadmin.firstName }}</td>
+               
+                <td>
+                    <a href="{{ path('app_superadmin_show', {'id': superadmin.id}) }}">show</a>
+                    <a href="{{ path('app_superadmin_edit', {'id': superadmin.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_superadmin_new') }}">Create new</a>
+{% endblock %}

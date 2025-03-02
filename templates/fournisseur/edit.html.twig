@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Fournisseur{% endblock %}
+
+{% block body %}
+   
+
+    {{ include('fournisseur/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a class="btn btn-warning" href="{{ path('app_fournisseur_index') }}"> <i class="bx bx-arrow-back"></i>  back to list</a>
+
+  
+{% endblock %}
