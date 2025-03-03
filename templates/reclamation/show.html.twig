@@ -1,0 +1,48 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Reclamation Details{% endblock %}
+
+{% block body %}
+    <style>
+        .page-title {
+            font-size: 2rem;
+            color: #343a40;
+        }
+
+        .container {
+            max-width: 900px;
+            margin-top: 30px;
+        }
+
+        .reclamation-details {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .reclamation-details h3 {
+            color: #007bff;
+        }
+
+        .reclamation-details p {
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            font-size: 1rem;
+        }
+    </style>
+
+    <div class="container">
+        <h1 class="page-title">Reclamation Details</h1>
+
+        <div class="reclamation-details">
+            <h3>{{ reclamation.titre }}</h3>
+            <p><strong>Description:</strong> {{ reclamation.description }}</p>
+            <div class="mt-4">
+                <a href="{{ path('reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-warning">Edit</a>
+                <a href="{{ path('reclamation_delete', {'id': reclamation.id}) }}" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,123 @@
+
+
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Password Reset Email Sent{% endblock %}
+
+{% block body %}
+    <style>
+        /*------------ Login container ------------*/
+        .box-area {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /*------------ Right box ------------*/
+        .right-box {
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /*------------ Custom Placeholder ------------*/
+        ::placeholder {
+            font-size: 16px;
+        }
+
+        .rounded-4 {
+            border-radius: 20px;
+        }
+
+        .rounded-5 {
+            border-radius: 30px;
+        }
+
+        /*------------ For small screens------------*/
+        @media only screen and (max-width: 768px) {
+            .box-area {
+                margin: 0 10px;
+            }
+
+            .left-box {
+                height: 100px;
+                overflow: hidden;
+            }
+
+            .right-box {
+                padding: 20px;
+            }
+        }
+
+        .input-group .btn {
+            position: relative;
+            z-index: 2;
+            height: auto;
+        }
+
+        #left-content {
+            background: #000000;
+            background: url('/images/logo sans back.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        #logo {
+            background: rgb(0, 109, 9);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+      
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .btn-warning {
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease;
+        }
+
+        
+
+        .text-danger {
+            color: #dc3545;
+            font-size: 0.9rem;
+        }
+    </style>
+
+    <div class="card">
+        <h1>Password Reset Email Sent</h1>
+        <p class="text-warning">
+            If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
+            This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+        </p>
+        <p>
+            If you don't receive an email, please check your spam folder or 
+            <a href="{{ path('app_forgot_password_request') }}">try again</a>.
+        </p>
+        <a href="{{ path('app_login') }}" class="btn btn-success text-light">Return to Login</a>
+    </div>
+{% endblock %}

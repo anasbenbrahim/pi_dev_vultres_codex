@@ -1,0 +1,73 @@
+{% extends 'baseback.html.twig' %}
+
+{% block title %}Marche Admin
+{% endblock %}
+
+{% block body %}
+	<h1>Marche
+	</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				{# <th>IdUser</th> #}
+				{# <th>Prodid</th> #}
+					<th>
+				Nom produit
+				</th>
+					<th>
+				Prix
+				</th>
+					<th>
+				Date d'ajout
+				</th>
+					<th>
+				Quantite
+				</th>
+					
+					<th>
+				Codebar
+			</th>
+		</tr>
+		</thead>
+			<tbody>
+				{% for marche in marches %}
+					<tr>
+					{# <td>{{ marche.idUser }}</td> #}
+					{# <td>{{ marche.prodid }}</td> #}
+						<td>
+					{{ marche.nomprod }}
+					</td>
+						<td>
+					{{ marche.prix }}
+					</td>
+						<td>
+					{{ marche.dateajout ? marche.dateajout|date('Y-m-d') : '' }}
+					</td>
+						<td>
+					{{ marche.qte }}
+					
+					<td>
+						{# {% if barcodeHtmlArray[marche.id] is defined %} #}
+						<a href="{{ path('download_barcode', {'id': marche.id}) }}" class="btn btn-secondary">
+							<i class="fas fa-barcode"></i>
+						</a>
+						{# Telecharger #}
+						{# {% endif %} #}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="7"></td>
+					<td></td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="8">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+
+	{# <a href="{{ path('app_marcheback_new') }}" class="btn btn-primary">Creer Nouveau</a> #}
+{% endblock %}

@@ -1,0 +1,262 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block dark_mode_toggle %}
+    <button id="darkModeToggle" class="btn btn-outline-light position-fixed top-0 end-0 mt-3 me-3 shadow-lg rounded-pill px-4 py-2" onclick="toggleDarkMode()">
+        <i class="fas fa-moon me-2"></i> Mode Sombre
+    </button>
+{% endblock %}
+
+{% block product_heading %}
+    <div class="text-center text-white py-5 banner-overlay">
+        <h1 class="display-3 fw-bold mb-3 animated fadeInDown">🌾 Bienvenue au Marché Agricole</h1>
+        <p class="lead opacity-75 animated fadeInUp">Découvrez des produits frais et locaux en un seul clic</p>
+    </div>
+{% endblock %}
+
+{% block banner_image %}
+    <div class="market-banner position-relative d-flex align-items-center justify-content-center" style="background-image: url('{{ asset('img/market.jpg') }}');">
+        <div class="overlay position-absolute w-100 h-100 bg-dark opacity-50"></div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        {# Section de recherche avancée #}
+        <div class="text-center mb-4">
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                {# Filtre par catégorie #}
+                <select id="categoryFilter" class="form-select w-auto shadow-sm rounded-pill px-4" onchange="filterProducts()">
+                    <option value="">Toutes les catégories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.name }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+
+                {# Filtre par fourchette de prix #}
+                <input type="number" id="minPrice" class="form-control w-auto shadow-sm rounded-pill px-4" 
+                       placeholder="Prix min" oninput="filterProducts()" min="0">
+                <input type="number" id="maxPrice" class="form-control w-auto shadow-sm rounded-pill px-4" 
+                       placeholder="Prix max" oninput="filterProducts()" min="0">
+
+                {# Barre de recherche par nom de produit #}
+                <input type="text" id="searchBar" class="form-control w-auto shadow-sm rounded-pill px-4" 
+                       placeholder="🔍 Rechercher un produit..." onkeyup="filterProducts()">
+            </div>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            {# Regroupement manuel des produits par catégorie #}
+            {% set grouped_marches = {} %}
+            {% set uncategorized = [] %}
+
+            {% for marche in marches %}
+                {% if marche.category %}
+                    {% if marche.category.name not in grouped_marches|keys %}
+                        {% set grouped_marches = grouped_marches|merge({(marche.category.name): []}) %}
+                    {% endif %}
+                    {% set grouped_marches = grouped_marches|merge({(marche.category.name): grouped_marches[marche.category.name]|merge([marche])}) %}
+                {% else %}
+                    {% set uncategorized = uncategorized|merge([marche]) %}
+                {% endif %}
+            {% endfor %}
+
+            {# Affichage des produits sans catégorie en premier #}
+            {% if uncategorized|length > 0 %}
+                <div class="col-12 mb-4">
+                    <h3 class="text-success mb-3 border-bottom pb-2">Uncategorized</h3>
+                </div>
+                {% for marche in uncategorized %}
+                    <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-category="Uncategorized">
+                        <div class="card product-card h-100 border-0 shadow rounded-lg overflow-hidden">
+                            <div class="card-img-top position-relative">
+                                <img class="img-fluid rounded-top" src="{{ asset(marche.image) }}" alt="{{ marche.nomprod }}" style="width: 100%; height: 250px; object-fit: cover;">
+                            </div>
+                            <div class="card-body text-center bg-white p-4">
+                                <h5 class="card-title fw-bold text-dark">
+                                    <a href="{{ path('app_marche_show', {'id': marche.id}) }}" class="text-decoration-none text-success">
+                                        🌿 {{ marche.nomprod }}
+                                    </a>
+                                </h5>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <span class="badge bg-success text-light py-2 px-3">
+                                        <i class="bi bi-currency-tnd"></i> {{ marche.prix }}
+                                    </span>
+                                    <span class="badge bg-secondary py-2 px-3">
+                                        <i class="bi bi-box-seam"></i> {{ marche.quantite }}
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-center gap-2 mt-3">
+                                    <a href="{{ path('cart_addinmarche', {'id': marche.id}) }}" class="btn btn-outline-success rounded-circle shadow-sm px-3" title="Ajouter au panier">
+                                        <i class="bi bi-cart-plus"></i>
+                                    </a>
+                                    <a href="{{ path('app_marche_generate_qr', {'id': marche.id}) }}" class="btn btn-outline-info rounded-circle shadow-sm px-3" title="Générer QR Code">
+                                        <i class="bi bi-qr-code-scan"></i>
+                                    </a>
+                                    <a href="{{ path('download_barcode', {'id': marche.id}) }}" class="btn btn-outline-warning rounded-circle shadow-sm px-3" title="Télécharger code-barres">
+                                        <i class="bi bi-upc-scan"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {# Affichage des produits catégorisés #}
+            {% for category_name, category_marches in grouped_marches %}
+                {% if category_name is not empty %}
+                    <div class="col-12 mb-4">
+                        <h3 class="text-success mb-3 border-bottom pb-2">{{ category_name }}</h3>
+                    </div>
+                    {% for marche in category_marches %}
+                        <div class="col-md-6 col-lg-4 col-xl-3 product-item" data-category="{{ category_name }}">
+                            <div class="card product-card h-100 border-0 shadow rounded-lg overflow-hidden">
+                                <div class="card-img-top position-relative">
+                                    <img class="img-fluid rounded-top" src="{{ asset(marche.image) }}" alt="{{ marche.nomprod }}" style="width: 100%; height: 250px; object-fit: cover;">
+                                </div>
+                                <div class="card-body text-center bg-white p-4">
+                                    <h5 class="card-title fw-bold text-dark">
+                                        <a href="{{ path('app_marche_show', {'id': marche.id}) }}" class="text-decoration-none text-success">
+                                            🌿 {{ marche.nomprod }}
+                                        </a>
+                                    </h5>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <span class="badge bg-success text-light py-2 px-3">
+                                            <i class="bi bi-currency-tnd"></i> {{ marche.prix }}
+                                        </span>
+                                        <span class="badge bg-secondary py-2 px-3">
+                                            <i class="bi bi-box-seam"></i> {{ marche.quantite }}
+                                        </span>
+                                    </div>
+                                    <div class="d-flex justify-content-center gap-2 mt-3">
+                                        <a href="{{ path('cart_addinmarche', {'id': marche.id}) }}" class="btn btn-outline-success rounded-circle shadow-sm px-3" title="Ajouter au panier">
+                                            <i class="bi bi-cart-plus"></i>
+                                        </a>
+                                        <a href="{{ path('app_marche_generate_qr', {'id': marche.id}) }}" class="btn btn-outline-info rounded-circle shadow-sm px-3" title="Générer QR Code">
+                                            <i class="bi bi-qr-code-scan"></i>
+                                        </a>
+                                        <a href="{{ path('download_barcode', {'id': marche.id}) }}" class="btn btn-outline-warning rounded-circle shadow-sm px-3" title="Télécharger code-barres">
+                                            <i class="bi bi-upc-scan"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+            {% if marches|length == 0 %}
+                <div class="col-12 text-center py-5">
+                    <div class="alert alert-info shadow-sm">Aucun produit disponible pour le moment</div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{{ path('cart_index') }}" class="btn btn-primary btn-lg shadow rounded-pill px-4 py-2">
+                <i class="bi bi-cart-check me-2"></i> 🛒 Voir mon panier
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .market-banner {
+            width: 100%;
+            height: 450px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .banner-overlay {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 40px;
+            border-radius: 15px;
+        }
+
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 15px;
+            background: #fff;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .badge {
+            font-size: 1rem;
+            padding: 0.5em 1em;
+        }
+
+        #searchBar {
+            max-width: 300px;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 1rem;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function filterProducts() {
+            const searchInput = document.getElementById('searchBar').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value.toLowerCase();
+            
+            // Récupère et convertit les prix min/max (si vides => 0 ou Infinity)
+            const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
+            const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+
+            const items = document.querySelectorAll('.product-item');
+            const categories = document.querySelectorAll('.col-12.mb-4'); 
+            let hasVisibleItems = false;
+            
+            items.forEach(item => {
+                const productName = item.querySelector('.card-title a').innerText.toLowerCase();
+                const productCategory = item.dataset.category.toLowerCase();
+
+                // Extrait le prix numérique depuis la badge (ex: "12.5" ou "15")
+                const priceText = item.querySelector('.badge.bg-success').innerText;
+                // Retire tout sauf les chiffres et le point
+                const productPrice = parseFloat(priceText.replace(/[^\d.]/g, '')) || 0;
+                
+                const matchesSearch = productName.includes(searchInput);
+                const matchesCategory = categoryFilter === '' || productCategory === categoryFilter;
+                const matchesPrice = productPrice >= minPrice && productPrice <= maxPrice;
+                
+                const isVisible = matchesSearch && matchesCategory && matchesPrice;
+                item.style.display = isVisible ? "block" : "none";
+                if (isVisible) hasVisibleItems = true;
+            });
+
+            // Affiche ou masque chaque titre de catégorie en fonction des produits visibles
+            categories.forEach(category => {
+                // Vérifie s'il y a un <h3> dans la div de catégorie
+                const h3 = category.querySelector('h3');
+                if (!h3) return; // Si ce n'est pas un bloc de titre de catégorie, on ignore
+
+                const categoryName = h3.innerText.toLowerCase();
+                const categoryItemsContainer = category.nextElementSibling; 
+                if (!categoryItemsContainer) return;
+
+                // Récupère les .product-item du container
+                const categoryItems = categoryItemsContainer.querySelectorAll('.product-item');
+                const hasVisible = Array.from(categoryItems).some(item => item.style.display !== 'none');
+                category.style.display = hasVisible ? 'block' : 'none';
+            });
+
+            // Affiche ou masque le message "Aucun produit disponible" si aucun item n'est visible
+            let noProductsMessage = document.querySelector('.alert.alert-info');
+            if (noProductsMessage) {
+                noProductsMessage.style.display = hasVisibleItems ? 'none' : 'block';
+            }
+        }
+    </script>
+{% endblock %}

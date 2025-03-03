@@ -1,0 +1,41 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Mes Réclamations{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Mes Réclamations</h1>
+
+        {% if reclamations is empty %}
+            <p>Aucune réclamation trouvée.</p>
+        {% else %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reclamation in reclamations %}
+                        <tr>
+                            <td>{{ reclamation.titre }}</td>
+                            <td>{{ reclamation.description }}</td>
+                            <td>{{ reclamation.status.label() }}</td> <!-- Fix applied here -->
+                            <td>{{ reclamation.date ? reclamation.date|date('d/m/Y') : 'N/A' }}</td>
+                            <td>
+                                <a href="{{ path('reclamation_show', {'id': reclamation.id}) }}" class="btn btn-info"></a>
+                                <a href="{{ path('reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-warning"></a>
+                                <a href="{{ path('reclamation_delete', {'id': reclamation.id}) }}" class="btn btn-danger"
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réclamation ?');"></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto gap-2 mt-0 mb-md-0 mb-4">
+        <div class="dt-buttons btn-group flex-wrap gap-4 mt-2 mb-2">
+                <a href="{{path('add_category_equipement')}}"><button class="btn btn-success" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEcommerceCustomerAdd"><span><span class="d-flex align-items-center gap-2"><i class="icon-base bx bx-plus icon-sm"></i> <span class="d-none d-sm-inline-block">Ajouter equipement</span></span></span></button></a>
+        </div>
+    </div>
+    <table class="table">
+    <thead>
+        <tr>
+        <th scope="col">id de category</th>
+        <th scope="col">type de categorie</th>
+        <th scope="col">Supprimer</th>
+        <th scope="col">Modifier</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in list %}
+            <tr>
+                <td>{{category.id}}</td>                
+                <td>{{category.type}}</td>
+                <td><a href="{{ path('delete_categoryAgri', {'id': category.id}) }}">Supprimer</a></td>
+                <td><a href=""></a>Modifier</td>
+            </tr>
+    </tbody>
+    {% endfor %}
+    </table>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Liste des publications{% endblock %}
+
+{% block body %}
+   <div class="container card mt-3 mb-3">
+      <div class="card-header">
+         <h1 class="text-center">Liste des publications</h1>
+         <!-- Formulaire de recherche -->
+         <form id="searchForm" method="get" action="{{ path('publication_search') }}" class="d-flex justify-content-center mt-3">
+            <input type="text" name="titre" id="searchInput" class="form-control w-50" 
+                   placeholder="Rechercher..." value="{{ searchTerm ?? '' }}">
+            <button type="submit" class="btn btn-warning ms-2" style="display: none;">
+               <i class="fa fa-search"></i> Rechercher
+            </button>
+         </form>
+      </div>
+
+      <div class="card-body">
+         <div class="row" id="publicationList">
+            {% include 'publication/_list.html.twig' with {'publications': publications} %}
+         </div>
+      </div>
+
+      <a href="{{ path('publication_new') }}" class="btn btn-warning mb-4">
+         <i class="fa fa-plus"></i> Créer une nouvelle publication
+      </a>
+   </div>
+
+   <style>
+      .dropdown.position-absolute {
+         z-index: 10;
+      }
+
+      .btn-sm {
+         padding: 0.25rem 0.5rem;
+         font-size: 0.875rem;
+      }
+
+      .top-rated {
+         border: 2px solid gold;
+         background-color: #fff3cd;
+      }
+
+      .rating .badge {
+         font-size: 14px;
+         padding: 0.5rem 1rem;
+         font-weight: bold;
+      }
+   </style>
+
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+   <script>
+      $(document).ready(function() {
+         // Trigger the search when the user types in the input field
+         $('#searchInput').on('input', function() {
+            var searchTerm = $(this).val(); // Get the value of the search input
+
+            $.ajax({
+               url: '{{ path('publication_search') }}', // Your controller path
+               method: 'GET',
+               data: { titre: searchTerm }, // Send search term as query parameter
+               success: function(response) {
+                  // Replace the content of the #publicationList div with the new results
+                  $('#publicationList').html(response);
+               },
+               error: function() {
+                  alert("Erreur lors de la recherche.");
+               }
+            });
+         });
+      });
+   </script>
+
+{% endblock %}
