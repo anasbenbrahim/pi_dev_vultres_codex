@@ -1,0 +1,60 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Détails de la Commande #{{ order.id }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Détails de la Commande #{{ order.id }}</h1>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Informations de la Commande</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Date:</strong> {{ order.createdAt|date('d/m/Y H:i') }}</p>
+                        <p><strong>Statut:</strong> {{ order.status }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Total:</strong> {{ order.total }} DT</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">Articles Commandés</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Quantité</th>
+                            <th>Prix Unitaire</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.orderItems %}
+                        <tr>
+                            <td>{{ item.produit.nomprod }}</td>
+                            <td>{{ item.quantite }}</td>
+                            <td>{{ item.produit.prix }} DT</td>
+                            <td>{{ item.prix }} DT</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a href="{{ path('app_order_history') }}" class="btn btn-primary">
+                Retour à l'historique
+            </a>
+        </div>
+    </div>
+{% endblock %}

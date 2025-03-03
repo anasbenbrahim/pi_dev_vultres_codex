@@ -1,0 +1,69 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Modifier la Réclamation{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="page-title">Modifier la Réclamation</h1>
+
+        <div class="form-box">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            <div class="form-group">
+                <label class="small-label">{{ form_label(form.titre, 'Titre de la réclamation') }}</label>
+                {{ form_widget(form.titre, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le titre'}}) }}
+                <div class="error">{{ form_errors(form.titre) }}</div>
+            </div>
+
+            <div class="form-group">
+                <label class="small-label">{{ form_label(form.description, 'Description de la réclamation') }}</label>
+                {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Décrivez votre réclamation'}}) }}
+                <div class="error">{{ form_errors(form.description) }}</div>
+            </div>
+
+            <!-- Date field added above the submit button -->
+            <div class="form-group">
+                <label class="small-label">{{ form_label(form.date, 'Date de la réclamation') }}</label>
+                {{ form_widget(form.date, {'attr': {'class': 'form-control'}}) }}
+                <div class="error">{{ form_errors(form.date) }}</div>
+            </div>
+
+            <div class="form-group mt-4">
+                <button class="btn btn-warning btn-lg form-control">Enregistrer les modifications</button>
+            </div>
+
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+
+    <style>
+        .page-title {
+            text-align: center; /* Centers the title */
+            margin-bottom: 20px;
+        }
+
+        .form-box {
+            max-width: 500px; /* Makes form smaller */
+            margin: 20px auto; /* Centers the form */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .small-label {
+            font-size: 12px; /* Makes labels smaller */
+            font-weight: bold;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .error {
+            color: red; /* Makes error messages red */
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+{% endblock %}
