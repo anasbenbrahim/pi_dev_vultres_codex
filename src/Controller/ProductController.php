@@ -2,10 +2,9 @@
 
 namespace App\Controller;
 
-
-use App\Entity\Produit; // Changed Produit to Product
-use App\Form\ProduitType; // Changed ProduitType to ProductType
-use App\Repository\ProduitRepository; // Changed ProduitRepository to ProduitRepository
+use App\Entity\Produit; 
+use App\Form\ProduitType; 
+use App\Repository\ProduitRepository; 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,78 +13,171 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Repository\OrderItemRepository;
+use Symfony\Component\Notifier\NotifierInterface;
+use Symfony\Component\Notifier\Notification\Notification;
+use App\Controller\NotificationsController;
 
 #[Route('/product')]
 final class ProductController extends AbstractController
 {
+    
+    #[Route('/revenue', name: 'app_product_revenue', methods: ['GET'])]
+    public function getRevenueByProduct(Request $request, OrderRepository $orderRepository): Response
+    {
+        $user = $this->getUser(); 
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour voir vos produits.');
+        }
+
+        $revenueData = $orderRepository->getRevenueByProductForUser($user->getId());
+
+        return $this->render('product/revenue.html.twig', [
+            'revenueData' => $revenueData,
+        ]);
+    }
     #[Route(name: 'app_product_index', methods: ['GET'])]
-public function index(ProduitRepository $produitRepository): Response
+public function index(Request $request, ProduitRepository $produitRepository, NotifierInterface $notifier): Response
 {
-    $user = $this->getUser(); // Récupère l'utilisateur connecté
+    $user = $this->getUser(); 
 
     if (!$user) {
         throw $this->createAccessDeniedException('Vous devez être connecté pour voir vos produits.');
     }
 
-    // Récupérer uniquement les produits de l'utilisateur connecté
-    $produits = $produitRepository->findBy(['user' => $user]);
+    $searchTerm = $request->query->get('search');
+    $produits = $produitRepository->findBy(['user' => $user]); // Retrieve all products for the user
+    $allProduits = $produitRepository->findBy(['user' => $user]); // Retrieve all products for notifications
 
-    return $this->render('product/index.html.twig', [
-        'produits' => $produits,
-    ]);
-}
-
-    
-#[Route('/new', name: 'app_product_new')]
-public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
-{
-    // Récupérer l'utilisateur connecté
-    $user = $this->getUser();
-    if (!$user) {
-        throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter un produit.');
+    if ($searchTerm) {
+        $produits = $produitRepository->searchByTerm($searchTerm, $user);
     }
 
-    $produit = new Produit();
-    $produit->setUser($user); 
+    // Pagination
+    $page = $request->query->getInt('page', 1);
+    $limit = 1; // Number of products per page
+    $total = count($produits);
+    $produits = array_slice($produits, ($page - 1) * $limit, $limit);
 
-    $form = $this->createForm(ProduitType::class, $produit);
-    $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $imageFile = $form->get('image')->getData();
-        if ($imageFile) {
-            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = $slugger->slug($originalFilename);
-            $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+        $notifications = []; // Initialize notifications array
 
-            try {
-                // Définir le répertoire d'upload (dans le dossier 'public/uploads')
-                $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads';
-
-                // Déplacer l'image téléchargée vers le répertoire défini
-                $imageFile->move(
-                    $uploadDir,
-                    $newFilename
-                );
-            } catch (FileException $e) {
-                $this->addFlash('error', 'Une erreur est survenue lors du téléversement de l\'image.');
+        foreach ($allProduits as $produit) {
+            $currentTimestamp = time(); // Store the current timestamp
+        
+            if ($produit->getQuantite() === 0) { // Check stock level for notifications
+                // Store the notification data
+                $sentAt = $currentTimestamp; // Store the timestamp of when the notification was sent
+                $timeAgo = $this->getTimeAgo($sentAt, $currentTimestamp); // Calculate time ago
+        
+                // Add the notification
+                $notifications[] = [
+                    'message' => "Le produit '{$produit->getNomprod()}' est en rupture de stock.",
+                    'sentAt' => $sentAt,
+                    'timeAgo' => $timeAgo, 
+                ];
+        
+                // Send the notification
+                $notifier->send(new Notification("Le produit '{$produit->getNomprod()}' est en rupture de stock.", ['chat/slack']));
+            } elseif ($produit->getQuantite() < 5) { // Check stock level for notifications
+                // Store the notification data
+                $sentAt = $currentTimestamp; // Store the timestamp of when the notification was sent
+                $timeAgo = $this->getTimeAgo($sentAt, $currentTimestamp); // Calculate time ago
+        
+                // Add the notification
+                $notifications[] = [
+                    'message' => "Le produit '{$produit->getNomprod()}' a une quantité faible.",
+                    'sentAt' => $sentAt,
+                    'timeAgo' => $timeAgo, 
+                ];
+        
+                // Send the notification
+                $notifier->send(new Notification("Le produit '{$produit->getNomprod()}' a une quantité faible.", ['chat/slack']));
             }
+        }
+        
+        
 
-            // Enregistrer le chemin relatif de l'image dans la base de données
-            $produit->setImage('uploads/' . $newFilename);
+        return $this->render('product/index.html.twig', [
+    'current_page' => $page,
+    'total_pages' => ceil($total / $limit),
+            'produits' => $produits,
+            'notifications' => $notifications,
+        ]);
+    }
+
+   
+    
+    public function getTimeAgo($sentAt, $currentTimestamp) {
+        $timeDifference = $currentTimestamp - $sentAt;
+    
+        if ($timeDifference < 60) {
+            return "Just now"; 
+        } elseif ($timeDifference < 3600) {
+            return floor($timeDifference / 60) . " minute(s) ago";
+        } elseif ($timeDifference < 86400) {
+            return floor($timeDifference / 3600) . " hour(s) ago";
+        } elseif ($timeDifference < 2592000) {
+            return floor($timeDifference / 86400) . " day(s) ago";
+        } else {
+            return floor($timeDifference / 2592000) . " month(s) ago";
+        }
+    }
+    
+
+    #[Route('/new', name: 'app_product_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, NotifierInterface $notifier): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter un produit.');
         }
 
-        $entityManager->persist($produit);
-        $entityManager->flush();
+        $produit = new Produit();
+        $produit->setUser($user); 
 
-        return $this->redirectToRoute('app_product_index');
+        $form = $this->createForm(ProduitType::class, $produit);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+    // Validate image file type
+    $imageFile = $form->get('image')->getData();
+    if ($imageFile && !in_array($imageFile->guessExtension(), ['jpg', 'jpeg', 'png', 'gif'])) {
+        $this->addFlash('error', 'Invalid image format. Please upload a JPG, JPEG, PNG, or GIF file.');
+        return $this->redirectToRoute('app_product_new');
     }
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
 
-    return $this->render('product/new.html.twig', [
-        'form' => $form->createView(),
-    ]);
-}
+                try {
+                    $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads';
+                    $imageFile->move($uploadDir, $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Une erreur est survenue lors du téléversement de l\'image.');
+                }
 
+                $produit->setImage('uploads/' . $newFilename);
+            }
+
+            $entityManager->persist($produit);
+            $entityManager->flush();
+
+            if ($produit->getQuantite() === 0) {
+                $notifier->send(new Notification("Le produit '{$produit->getNomprod()}' est en rupture de stock.", ['chat/slack']));
+            } elseif ($produit->getQuantite() < 5) {
+                $notifier->send(new Notification("Le produit '{$produit->getNomprod()}' a une quantité faible.", ['chat/slack']));
+            }
+
+            return $this->redirectToRoute('app_product_index');
+        }
+
+        return $this->render('product/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
     public function show(Produit $produit): Response
@@ -96,82 +188,85 @@ public function new(Request $request, EntityManagerInterface $entityManager, Slu
     }
 
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Produit $produit, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function edit(Request $request, Produit $produit, EntityManagerInterface $entityManager, SluggerInterface $slugger, NotifierInterface $notifier): Response
     {
+        $notifications = [
+            (object) ['message' => "Le produit 'Peche' est en rupture de stock.", 'timeAgo' => '2 hours ago'],
+            (object) ['message' => "Le produit 'Pomme de terre' a une quantité faible.", 'timeAgo' => '1 hour ago']
+        ];
+        
         $form = $this->createForm(ProduitType::class, $produit);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $imageFile */
             $imageFile = $form->get('image')->getData();
-    
+
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
-    
                 try {
                     // Déplacer l’image vers 'public/uploads/'
                     $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads';
                     $imageFile->move($uploadDir, $newFilename);
-    
-                    // Supprimer l'ancienne image si nécessaire
+
                     if ($produit->getImage() && file_exists($uploadDir . '/' . $produit->getImage())) {
                         unlink($uploadDir . '/' . $produit->getImage());
                     }
-    
-                    // Mettre à jour le champ image avec le nouveau nom de fichier
+
                     $produit->setImage('uploads/' . $newFilename);
                 } catch (FileException $e) {
                     // Gérer l'erreur d'upload
                     $this->addFlash('error', 'Erreur lors du téléchargement de l’image.');
                 }
             }
-    
+
+            // Check product quantity for notifications
+            if ($produit->getQuantite() === 0) {
+                $notifications[] = "Le produit '{$produit->getNomprod()}' est en rupture de stock.";
+                $notifier->send(new Notification("Le produit '{$produit->getNomprod()}' est en rupture de stock.", ['chat/slack']));
+            } elseif ($produit->getQuantite() < 5) {
+                $notifications[] = "Le produit '{$produit->getNomprod()}' a une quantité faible.";
+                $notifier->send(new Notification("Le produit '{$produit->getNomprod()}' a une quantité faible.", ['chat/slack']));
+            }
+
             $entityManager->flush();
-    
+
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
-    
+
         return $this->render('product/edit.html.twig', [
             'produit' => $produit,
             'form' => $form->createView(),
+            'notifications' => $notifications, // Pass notifications to the view
         ]);
     }
-    
 
     #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
     public function delete(Request $request, Produit $produit, EntityManagerInterface $entityManager, OrderItemRepository $orderItemRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$produit->getId(), $request->getPayload()->getString('_token'))) {
-            // Begin transaction
             $entityManager->getConnection()->beginTransaction();
             
             try {
-                // Delete associated order items
                 $orderItems = $orderItemRepository->findBy(['produit' => $produit]);
                 foreach ($orderItems as $orderItem) {
                     $entityManager->remove($orderItem);
                 }
                 
-                // Remove the product
                 $entityManager->remove($produit);
                 $entityManager->flush();
                 
-                // Commit transaction
                 $entityManager->getConnection()->commit();
                 
                 $this->addFlash('success', 'Product and associated order items deleted successfully.');
             } catch (\Exception $e) {
-                // Rollback transaction on error
                 $entityManager->getConnection()->rollBack();
                 $this->addFlash('error', 'An error occurred while deleting the product: ' . $e->getMessage());
             }
         }
 
-
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
     }
-
-
 }

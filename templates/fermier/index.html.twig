@@ -4,6 +4,19 @@
 
 {% block body %}
 
+<style>
+    .pagination .btn {
+        transition: all 0.3s ease;
+    }
+    .pagination .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .pagination .btn.active {
+        font-weight: bold;
+    }
+</style>
+
     <div class="card">
         <h5 class="card-header">List fermiers</h5>
         <button id="signInButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addfermierModal"><b> <i class="bx bx-add-to-queue me-1"></i> Add fermier </b></button>
@@ -66,7 +79,13 @@
                             <td>
                                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ fermier.id }}"><i class="bx bx-trash me-1"></i></button>
                                 <a class="btn btn-success" href="{{ path('fermier_edit', {'id': fermier.id}) }}"><i class="bx bx-edit me-1"></i></a>
+                                {% if fermier.isBanned %}
+                                    <a href="{{ path('fermier_unban', {'id': fermier.id}) }}" class="btn btn-warning"><i class="bx bx-check-circle me-1"></i></a>
+                                {% else %}
+                                    <a href="{{ path('fermier_ban', {'id': fermier.id}) }}" class="btn btn-secondary"><i class="bx bx-block me-1"></i></a>
+                                {% endif %}
                             </td>
+                            
                         </tr>
 
                         <!-- Modal de confirmation de suppression pour chaque fermier -->
@@ -96,7 +115,32 @@
                         </tr>
                     {% endfor %}
                 </tbody>
+               
             </table>
+           
+             
         </div>
     </div>
+    <div class="mt-4">
+    <div class="pagination d-flex justify-content-center align-items-center gap-2">
+        {% if current_page > 1 %}
+            <a href="{{ path('app_fermier_index', {'page': current_page - 1}) }}" class="btn btn-outline-secondary rounded-pill px-4">
+                <i class="bx bx-chevron-left"></i> Previous
+            </a>
+        {% endif %}
+
+        {% for page in range(1, total_pages) %}
+            <a href="{{ path('app_fermier_index', {'page': page}) }}" 
+               class="btn btn-outline-success rounded-pill {{ page == current_page ? 'active bg-success text-white' : '' }}">
+                {{ page }}
+            </a>
+        {% endfor %}
+
+        {% if current_page < total_pages %}
+            <a href="{{ path('app_fermier_index', {'page': current_page + 1}) }}" class="btn btn-outline-secondary rounded-pill px-4">
+                Next <i class="bx bx-chevron-right"></i>
+            </a>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

@@ -59,7 +59,10 @@ final class AdminController extends AbstractController
             $fermier = new Fermier();
             $fermierForm = $this->createForm(FermierForm::class, $fermier);
             $fermierForm->handleRequest($request);
-
+            $page = $request->query->getInt('page', 1);
+            $limit = 5; // Number of products per page
+            $total = count($fermiers);
+            $fermiers = array_slice($fermiers, ($page - 1) * $limit, $limit);
 
             if ($fermierForm->isSubmitted() && $fermierForm->isValid()) {
                 $existingUser = $userRepository->findOneBy(['email' => $fermier->getEmail()]);
@@ -80,11 +83,14 @@ final class AdminController extends AbstractController
                         $password // <-- Utilisez la variable $password déjà générée
                     )
                 );
-                
+                $token = bin2hex(random_bytes(32));
         
+                $fermier->setConfirmationToken($token); // Store the confirmation token
                 $entityManager->persist($fermier);
+                
                 $entityManager->flush();
 
+                // Generate a token for email confirmation
                 $email = (new Email())
                 ->from('anasbenbrahim491@gmail.com')
                 ->to($fermier->getEmail())
@@ -92,8 +98,10 @@ final class AdminController extends AbstractController
                 ->html($this->renderView(
                     'email/email.html.twig',
                     [
+                        'user' => $fermier, // Pass the fermier object as user
                         'email' => $fermier->getEmail(),
                         'password' => $password, // <-- Utilisez $password ici
+                        'token' => $token, // Pass the generated token
                     ]
                 ));
 
@@ -107,6 +115,8 @@ final class AdminController extends AbstractController
         return $this->render('fermier/index.html.twig', [
             'fermiers' => $fermiers,
             'fermierFormType' => $fermierForm->createView(),
+            'current_page' => $page,
+            'total_pages' => ceil($total / $limit),
         ]);
     }
 
@@ -118,7 +128,10 @@ final class AdminController extends AbstractController
             ->getRepository(Client::class)
             ->findAll();
 
-
+            $page = $request->query->getInt('page', 1);
+            $limit = 5; // Number of products per page
+            $total = count($clients);
+            $clients = array_slice($clients, ($page - 1) * $limit,$limit);
             $client = new Client();
             $clientForm = $this->createForm(ClientForm::class, $client);
             $clientForm->handleRequest($request);
@@ -142,11 +155,14 @@ final class AdminController extends AbstractController
                         $password // <-- Utilisez la variable $password déjà générée
                     )
                 );
-                
+                $token = bin2hex(random_bytes(32));
         
+                $client->setConfirmationToken($token); // Store the confirmation token
                 $entityManager->persist($client);
+                
                 $entityManager->flush();
 
+                 // Generate a token for email confirmation
                 $email = (new Email())
                 ->from('anasbenbrahim491@gmail.com')
                 ->to($client->getEmail())
@@ -154,8 +170,10 @@ final class AdminController extends AbstractController
                 ->html($this->renderView(
                     'email/email.html.twig',
                     [
+                        'user' => $client, // Pass the client object as user
                         'email' => $client->getEmail(),
                         'password' => $password, // <-- Utilisez $password ici
+                        'token' => $token, // Pass the generated token
                     ]
                 ));
 
@@ -169,6 +187,8 @@ final class AdminController extends AbstractController
         return $this->render('customer/index.html.twig', [
             'clients' => $clients,
             'clientFormType' => $clientForm->createView(),
+            'current_page' => $page,
+            'total_pages' => ceil($total/$limit),
         ]);
     }
 
@@ -178,7 +198,10 @@ final class AdminController extends AbstractController
         $fournisseurs = $entityManager
             ->getRepository(Fournisseur::class)
             ->findAll();
-
+            $page = $request->query->getInt('page', 1);
+            $limit = 5; // Number of products per page
+            $total = count($fournisseurs);
+            $fournisseurs = array_slice($fournisseurs, ($page - 1) * $limit,$limit);
             $fournisseur = new Fournisseur();
             $fournisseurForm = $this->createForm(FournisseurForm::class, $fournisseur);
             $fournisseurForm->handleRequest($request);
@@ -203,10 +226,12 @@ final class AdminController extends AbstractController
                     )
                 );
                 
+                $token = bin2hex(random_bytes(32));
         
+                $fournisseur->setConfirmationToken($token); 
                 $entityManager->persist($fournisseur);
                 $entityManager->flush();
-
+                // Generate a token for email confirmation
                 $email = (new Email())
                 ->from('anasbenbrahim491@gmail.com')
                 ->to($fournisseur->getEmail())
@@ -214,8 +239,10 @@ final class AdminController extends AbstractController
                 ->html($this->renderView(
                     'email/email.html.twig',
                     [
+                        'user' => $fournisseur,
                         'email' => $fournisseur->getEmail(),
                         'password' => $password, // <-- Utilisez $password ici
+                        'token' => $token,
                     ]
                 ));
 
@@ -229,6 +256,8 @@ final class AdminController extends AbstractController
             
 
         return $this->render('fournisseur/index.html.twig', [
+            'current_page' => $page,
+            'total_pages' => ceil($total/$limit),
             'fournisseurs' => $fournisseurs,
             'fournisseurFormType' => $fournisseurForm->createView(),
         ]);
@@ -326,15 +355,29 @@ final class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/publication', name: 'publication_index_admin')]
-    public function indexPublication(EntityManagerInterface $entityManager): Response
-    {
-        $publications = $entityManager->getRepository(Publication::class)->findAll();
+    
 
-        return $this->render('publication/indexadmin.html.twig', [
-            'publications' => $publications,
-        ]);
-    }
+
+    #[Route('/publication', name: 'publication_index_admin')]
+public function indexPublication(EntityManagerInterface $entityManager): Response
+{
+    $publications = $entityManager->getRepository(Publication::class)->findAll();
+
+    // Rendre le premier template
+    $template1 = $this->renderView('publication/indexadmin.html.twig', [
+        'publications' => $publications,
+    ]);
+
+    // Rendre le deuxième template
+    $template2 = $this->renderView('client/index.html.twig', [
+        'publications' => $publications,
+    ]);
+
+    // Combiner les deux templates dans une seule réponse
+    $combinedContent = $template1 . $template2;
+
+    return new Response($combinedContent);
+}
 
     
 
@@ -358,7 +401,7 @@ final class AdminController extends AbstractController
     {
         $reclamations = $entityManager->getRepository(Reclamation::class)->findAll();
         $publications = $entityManager->getRepository(Publication::class)->findAll();
-        return $this->render('reclamation/indexadmin.html.twig', [
+        return $this->render('reclamation/indexadmin.html.twig' , [
             'reclamations' => $reclamations,
             'publications' => $publications,
         ]);
@@ -550,7 +593,68 @@ final class AdminController extends AbstractController
 
     
    
+    #[Route('/client/{id}/ban', name: 'client_ban')]
+    #[Route('/fermier/{id}/ban', name: 'fermier_ban')]
+    #[Route('/fournisseur/{id}/ban', name: 'fournisseur_ban')]
+    public function banClient(Client $client, EntityManagerInterface $entityManager): Response
+    {
+        $client->setIsBanned(true);
+        $entityManager->flush();
 
+        $this->addFlash('success', 'Client banni avec succès.');
+        return $this->redirectToRoute('app_customer_index');
+    }
+
+    #[Route('/client/{id}/unban', name: 'client_unban')]
+    public function unbanClient(Client $client, EntityManagerInterface $entityManager): Response
+    {
+        $client->setIsBanned(false);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Client débanni avec succès.');
+        return $this->redirectToRoute('app_customer_index');
+    }
+
+    #[Route('/fermier/{id}/ban', name: 'fermier_ban')]
+    #[Route('/fournisseur/{id}/ban', name: 'fournisseur_ban')]
+    public function banFermier(Fermier $fermier, EntityManagerInterface $entityManager): Response
+    {
+        $fermier->setIsBanned(true);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Fermier banni avec succès.');
+        return $this->redirectToRoute('app_fermier_index');
+    }
+
+    #[Route('/fermier/{id}/unban', name: 'fermier_unban')]
+    public function unbanFermier(Fermier $fermier, EntityManagerInterface $entityManager): Response
+    {
+        $fermier->setIsBanned(false);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Fermier débanni avec succès.');
+        return $this->redirectToRoute('app_fermier_index');
+    }
+
+    #[Route('/fournisseur/{id}/ban', name: 'fournisseur_ban')]
+    public function banFournisseur(Fournisseur $fournisseur, EntityManagerInterface $entityManager): Response
+    {
+        $fournisseur->setIsBanned(true);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Fournisseur banni avec succès.');
+        return $this->redirectToRoute('app_fournisseur_index');
+    }
+
+    #[Route('/fournisseur/{id}/unban', name: 'fournisseur_unban')]
+    public function unbanFournisseur(Fournisseur $fournisseur, EntityManagerInterface $entityManager): Response
+    {
+        $fournisseur->setIsBanned(false);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Fournisseur débanni avec succès.');
+        return $this->redirectToRoute('app_fournisseur_index');
+    }
 
 
 

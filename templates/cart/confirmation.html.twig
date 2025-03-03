@@ -19,7 +19,7 @@
         </tr>
         <tr>
             <th>Total</th>
-            <td>{{ order.total }} €</td>
+            <td>{{ order.total }} TND</td>
         </tr>
     </table>
 
@@ -36,8 +36,9 @@
         <tbody>
             {% for item in order.orderItems %}
             <tr>
-                
-                <td>{{ item.quantite }}</td>
+                 <td>{{ item.produit.nomprod }}</td>
+                 <td>{{ item.quantite }}</td>
+                 <td>{{ item.produit.prix }} TND</td>
                 <td>{{ item.prix }} TND</td>
             </tr>
             {% endfor %}

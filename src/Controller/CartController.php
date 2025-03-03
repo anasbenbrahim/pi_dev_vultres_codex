@@ -184,7 +184,14 @@ class CartController extends AbstractController
                 $orderItem = new OrderItem();
                 $orderItem->setProduit($produit);
                 $orderItem->setQuantite($quantity);
-                $orderItem->setPrix($produit->getPrix() * $quantity);
+                $orderItem->setPrix($produit->getPrix() * $quantity); // Set price for order item
+                
+                // Calculate revenue by product
+                if (!isset($revenueByProduct[$produit->getId()])) {
+                    $revenueByProduct[$produit->getId()] = 0;
+                }
+                $revenueByProduct[$produit->getId()] += $produit->getPrix() * $quantity; // Aggregate revenue
+
                 $order->addOrderItem($orderItem);
                 $em->persist($orderItem);
                 $total += $produit->getPrix() * $quantity;
@@ -196,7 +203,11 @@ class CartController extends AbstractController
     
         $order->setTotal($total);
         $em->persist($order);
-        $em->flush();
+        $em->flush(); // Persist all changes
+
+        // Optionally, you can log or handle the revenueByProduct data as needed
+        // For example, you could save it to a database or process it further
+
     
         $session->remove('panier'); // Vider le panier après la commande
     

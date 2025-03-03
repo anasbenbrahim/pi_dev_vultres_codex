@@ -5,6 +5,9 @@ namespace App\Controller;
 
 use App\Repository\PublicationRepository;
 use App\Entity\Client;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Entity\Commentaire;
 use App\Entity\Event;
 use App\Entity\Publication;
@@ -24,21 +27,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Cloudinary\Cloudinary;
+use App\Repository\OfferRepository;
+use App\Entity\Offer;
 
 #[Route('/')]
 final class ClientController extends AbstractController
 {
     #[Route( name: 'app_client')]
-    public function index(): Response
+    public function index(EntityManagerInterface $entityManager): Response
     {
+        $publications = $entityManager->getRepository(Publication::class)->findAll();
         return $this->render('client/index.html.twig', [
             'controller_name' => 'ClientController',
+            'publications' => $publications,
         ]);
     }
-
 
     #[Route('/{id}/edit', name: 'app_profile_edit', methods: ['GET', 'POST'])]
     public function editClient(Request $request, Client $patient, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
@@ -52,11 +56,7 @@ final class ClientController extends AbstractController
         $formPassword->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
-
-           
             $entityManager->flush();
-
             return $this->redirectToRoute('app_client', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -64,9 +64,7 @@ final class ClientController extends AbstractController
             $newPassword = $formPassword->get('plainPassword')->getData();
             $hashedPassword = $passwordHasher->hashPassword($patient, $newPassword);
             $patient->setPassword($hashedPassword);
-
             $entityManager->flush();
-
             return $this->redirectToRoute('app_client', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -264,7 +262,6 @@ public function show(Publication $publication, Request $request, EntityManagerIn
     public function indexcommentaire(EntityManagerInterface $entityManager): Response
     {
         $commentaires = $entityManager->getRepository(Commentaire::class)->findAll();
-
         return $this->render('commentaire/index.html.twig', [
             'commentaires' => $commentaires,
         ]);
@@ -280,7 +277,6 @@ public function show(Publication $publication, Request $request, EntityManagerIn
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($commentaire);
             $entityManager->flush();
-
             return $this->redirectToRoute('commentaire_index');
         }
 
@@ -454,7 +450,6 @@ public function search(Request $request, PublicationRepository $publicationRepos
     {
         $entityManager->remove($reclamation);
         $entityManager->flush();
-
         return $this->redirectToRoute('reclamation_index');
     }
 
@@ -467,7 +462,6 @@ public function search(Request $request, PublicationRepository $publicationRepos
     #[Route('/event/detail/{id}','event_detail_client',methods: ['GET'])]
     public function detail(EntityManagerInterface $entityManager,$id): Response
     {
-        //$events=new events();
         $events = $entityManager->getRepository(Event::class)->find($id);
         return $this->render('event/detaille.html.twig',['event' => $events]);
     }

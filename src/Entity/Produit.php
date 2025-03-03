@@ -6,10 +6,14 @@ use App\Repository\ProduitRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\User;
+use App\Entity\OrderItem;
 use App\Entity\Category;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
 {
+   
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -53,7 +57,13 @@ class Produit
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'produits')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Category $category = null;
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'produit')]
+    private Collection $orderItems;
 
+    public function __construct()
+    {
+        $this->orderItems = new ArrayCollection();
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -140,7 +150,13 @@ class Produit
         $this->user = $user;
         return $this;
     }
-
+ /**
+     * @return Collection<int, OrderItem>
+     */
+    public function getOrderItems(): Collection
+    {
+        return $this->orderItems;
+    }
     public function getCategory(): ?Category
     {
         return $this->category;

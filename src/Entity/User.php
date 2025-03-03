@@ -11,13 +11,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[ORM\InheritanceType('JOINED')] // Stratégie d'héritage "JOINED"
-#[ORM\DiscriminatorColumn(name: 'discr', type: 'string')] // Colonne discriminatrice
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
 #[ORM\DiscriminatorMap([
     'user' => User::class,
     'fermier' => Fermier::class,
@@ -34,6 +33,7 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: "Email is required"), Assert\Email(message: "The email '{ @ }' is not a valid email")]
     #[Assert\NotBlank(message: "Email is required"), Assert\Email(message: "The email '{ @ }' is not a valid email")]
     private ?string $email = null;
 
@@ -63,6 +63,9 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'user')]
     private Collection $produits;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $confirmationToken = null;
 
     public function __construct()
     {
@@ -146,6 +149,18 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
+    }
+
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(?string $confirmationToken): static
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
     }
 
     public function getRoles(): array

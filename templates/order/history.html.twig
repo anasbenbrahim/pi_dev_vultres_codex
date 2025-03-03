@@ -17,13 +17,20 @@
                                 <a href="{{ path('app_order_details', {id: order.id}) }}" class="order-link">
                                     Commande #{{ order.id }} - {{ order.createdAt|date('d/m/Y H:i') }}
                                 </a>
+                            <td>
+                                <a href="{{ path('app_order_delete', {id: order.id}) }}" class="btn btn-danger">Delete</a>
                             </td>
+
                         </tr>
                     {% endfor %}
 
                 </tbody>
             </table>
+            <div class="mb-3">
+                <a href="{{ path('app_order_delete_all') }}" class="btn btn-danger">Delete All Orders</a>
+            </div>
         {% else %}
+
             <div class="alert alert-info">
                 Vous n'avez aucune commande pour le moment.
             </div>

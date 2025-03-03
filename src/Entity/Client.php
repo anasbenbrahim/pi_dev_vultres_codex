@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\User;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity]
 class Client extends User
@@ -81,6 +83,9 @@ class Client extends User
         return $this;
     }
 
+    #[ORM\Column(type: 'boolean')]
+    private $isBanned = false;
+    
     public function getAddress(): ?string
     {
         return $this->address;
@@ -118,4 +123,15 @@ class Client extends User
 
         return $this;
     }
+    public function getIsBanned(): bool
+    {
+        return $this->isBanned;
+    }
+
+    public function setIsBanned(bool $isBanned): self
+    {
+        $this->isBanned = $isBanned;
+        return $this;
+    }
+   
 }

@@ -17,7 +17,7 @@ class Demande
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le service est obligatoire.")]
-    #[Assert\Length(
+    #[Assert\Length(  
         max: 255,
         maxMessage: "Le nom du service ne doit pas dépasser {{ limit }} caractères."
     )]
