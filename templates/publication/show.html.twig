@@ -3,90 +3,176 @@
 {% block title %}Détails de la publication{% endblock %}
 
 {% block body %}
-    <div class="container card mt-3 mb-5 shadow">
-        <h1>Publication : {{ publication.titre }}</h1>
+    {% set isTopRated = publication.ratings | filter(r => r.rating > 3) | length >= 2 %}
+
+    <div class="container card mt-5 mb-5 shadow-lg p-4 rounded {{ isTopRated ? 'top-rated' : '' }}" style="max-width: 900px;">
+        {% if app.user == publication.client %}
+            <div class="dropdown position-absolute top-0 end-0 m-3">
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
+                    <li><a class="dropdown-item" href="{{ path('publication_edit', {'id': publication.id}) }}">Modifier</a></li>
+                    <li>
+                        <form method="post" action="{{ path('publication_delete', {'id': publication.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette publication ?');">
+                            <button type="submit" class="dropdown-item text-danger"><i class="fa fa-trash"></i> Supprimer</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+
+        <h1 class="text-center mb-4">{{ publication.titre }}</h1>
         <p><strong>Description :</strong> {{ publication.description }}</p>
         <p><strong>Date :</strong> {{ publication.date|date('d/m/Y H:i') }}</p>
 
         {% if publication.image %}
             <p><strong>Image :</strong></p>
-            <img src="{{ publication.image }}" alt="{{ publication.titre }}" class="img-fluid mb-3" style="border-radius: 10px; width: 500px;">
+            <img src="{{ publication.image }}" alt="{{ publication.titre }}" class="img-fluid mb-3 rounded" style="max-height: 400px; object-fit: cover;">
         {% else %}
             <p><strong>Image :</strong> Pas d'image</p>
         {% endif %}
 
-        <p><strong>Client :</strong>
-            {% if client %}
-                {{ client.Nom }}
+        <p><strong>Client :</strong> {{ publication.client ? publication.client.lastName : 'Client non défini' }}</p>
+
+        <h3>Note :</h3>
+        <div class="rating" data-id="{{ publication.id }}">
+            {% set userRating = publication.ratings | filter(r => r.client == app.user) | first %}
+            {% for i in 1..5 %}
+                <i class="fa-star fa {% if userRating and i <= userRating.rating %}fas{% else %}far{% endif %}" data-value="{{ i }}"></i>
+            {% endfor %}
+        </div>
+        <p id="rating-result" class="text-center">
+            {% if userRating %}
+                Note actuelle : {{ userRating.rating }}
             {% else %}
-                <span style="color: red;">Client non défini</span>
+                Pas encore notée
             {% endif %}
         </p>
 
-        {% if publication.id is defined %}
-            <a href="{{ path('publication_edit', {'id': publication.id}) }}" class="btn btn-warning" title="Modifier la publication">
-                <i class="fa fa-edit text-light"></i>
-            </a>
+        <!-- Notifications Dropdown -->
+        {% if app.user == publication.client %}
+            <div class="dropdown position-relative">
+                <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-bell"></i> Notifications
+                    <span id="notificationCount" class="badge bg-danger">{{ publication.notifications|length }}</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="notificationDropdown">
+                    {% for notification in publication.notifications %}
+                        <li class="dropdown-item p-2">
+                            <a href="{{ path('notification_read', {'id': notification.id}) }}">
+                                {% if notification.commentaire and notification.commentaire.client %}
+                                    <strong>{{ notification.commentaire.client.lastName }}</strong>: 
+                                {% endif %}
+                                {{ notification.message }}
+                                <small class="text-muted">{{ notification.date|date('H:i') }}</small>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="dropdown-item text-muted">Aucune nouvelle notification</li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
 
-        <form method="post" action="{{ path('publication_delete', {'id': publication.id}) }}" 
-              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette publication ?');" 
-              class="d-inline">
-            <button type="submit" class="btn btn-danger" title="Supprimer la publication">
-                <i class="fa fa-trash"></i>
-            </button>
-        </form>
+        <div class="commentaire-section mt-5">
+            <h3 class="text-center mb-4">Créer un commentaire</h3>
+            {{ form_start(commentaire_form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-        
+            <div class="form-group mb-3">
+                {{ form_label(commentaire_form.description) }}
+                {{ form_widget(commentaire_form.description, {'attr': {'class': 'form-control'}}) }}
+                <div class="text-danger">{{ form_errors(commentaire_form.description) }}</div>
+            </div>
 
-        <div class="commentaire-section mt-4">
-            
-            <h1>Créer un commentaire</h1>
+            <div class="form-group mb-3">
+                {{ form_label(commentaire_form.image) }}
+                {{ form_widget(commentaire_form.image, {'attr': {'class': 'form-control'}}) }}
+                <div class="error">{{ form_errors(commentaire_form.image) }}</div>
+            </div>
 
-        {{ form_start(commentaire_form, {'attr': {'novalidate': 'novalidate'}}) }}
+            <div class="text-center">
+                <button type="submit" class="btn btn-warning px-4">Créer</button>
+            </div>
 
-        <div class="form-group">
-            {{ form_label(commentaire_form.description) }}
-            {{ form_widget(commentaire_form.description, {'attr': {'class': 'form-control'}}) }}
-            <div class="text-danger">{{ form_errors(commentaire_form.description) }}</div>
-        </div>
+            {{ form_end(commentaire_form) }}
 
-        <div class="form-group">
-            {{ form_label(commentaire_form.image) }}
-            {{ form_widget(commentaire_form.image, {'attr': {'class': 'form-control'}}) }}
-            <div class="error">{{ form_errors(commentaire_form.image) }}</div>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Créer</button>
-       
-        {{ form_end(commentaire_form) }}
-
-            <h3>Commentaires :</h3>
-            {% for commentaire in commentaires %}
-                <div class="commentaire mb-3 p-3" style="border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;">
-                    <p><strong>Description :</strong> {{ commentaire.description }}</p>
-                    {% if commentaire.image %}
-                        <img src="{{ commentaire.image }}" alt="Image du commentaire" class="img-fluid mb-2" style="max-width: 100px; border-radius: 10px;">
-                    {% endif %}
-                    <div class="commentaire-actions mt-2">
-                        
-                        {% if commentaire.id is defined %}
-                            <a href="{{ path('commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-warning" title="Modifier le commentaire">
-                                <i class="fa fa-edit text-light"></i>
-                            </a>
+            <h3 class="text-center mt-5">Commentaires :</h3>
+            <button id="toggleCommentairesBtn" class="btn btn-wa mb-3">Afficher les commentaires</button>
+            <div id="commentairesList" class="commentaires-list" style="display: none;">
+                {% for commentaire in commentaires %}
+                    <div class="commentaire mb-3 p-3 rounded bg-light border">
+                        <p><strong>Description :</strong> {{ commentaire.description }}</p>
+                        {% if commentaire.image %}
+                            <img src="{{ commentaire.image }}" class="img-fluid mb-2 rounded" style="max-width: 100px;">
                         {% endif %}
-                        <form method="post" action="{{ path('commentaire_delete', {'id': commentaire.id}) }}" 
-                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');" 
-                              class="d-inline">
-                            <button type="submit" class="btn btn-danger" title="Supprimer le commentaire">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </form>
+                        <p><strong>Commenté par :</strong> {{ commentaire.client ? commentaire.client.lastName : 'Utilisateur inconnu' }}</p>
+
+                        <div class="d-flex justify-content-end">
+                            {% if app.user == commentaire.client %}
+                                <a href="{{ path('commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-warning btn-sm">
+                                    <i class="fa fa-edit text-light"></i>
+                                </a>
+                                <form method="post" action="{{ path('commentaire_delete', {'id': commentaire.id}) }}" onsubmit="return confirm('Êtes-vous sûr ?');">
+                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                                </form>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-            {% else %}
-                <p>Aucun commentaire pour cette publication.</p>
-            {% endfor %}
+                {% else %}
+                    <p>Aucun commentaire.</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
+
+    <style>
+        .top-rated { border: 3px solid gold; background-color: #fff3cd; }
+        
+        /* Notification Dropdown Styling */
+        #notificationDropdown {
+            display: flex;
+            align-items: center;
+        }
+
+        #notificationDropdown .badge {
+            margin-left: 10px;
+            font-size: 0.8rem;
+        }
+
+        .dropdown-menu {
+            max-height: 300px;
+            overflow-y: auto;
+            width: 300px;
+        }
+
+        .dropdown-item {
+            padding: 12px;
+        }
+    </style>
+
+    <script>
+        document.getElementById('toggleCommentairesBtn').addEventListener('click', function () {
+            const commentairesList = document.getElementById('commentairesList');
+            commentairesList.style.display = commentairesList.style.display === 'none' ? 'block' : 'none';
+            this.innerText = commentairesList.style.display === 'block' ? 'Masquer les commentaires' : 'Afficher les commentaires';
+        });
+
+        document.querySelectorAll('.rating .fa-star').forEach(star => {
+            star.addEventListener('click', function () {
+                const ratingValue = this.getAttribute('data-value');
+                const publicationId = this.closest('.rating').getAttribute('data-id');
+
+                fetch(`/publication/rate/${publicationId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                    body: JSON.stringify({ rating: ratingValue })
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
+                        document.getElementById('rating-result').innerText = `Note actuelle : ${data.averageRating}`;
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

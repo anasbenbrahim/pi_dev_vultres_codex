@@ -1,11 +1,9 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\CommentaireRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
 class Commentaire
@@ -17,7 +15,7 @@ class Commentaire
 
     #[Assert\NotBlank(message: "La description est obligatoire.")]
     #[Assert\Length(max: 255, maxMessage: "La description ne doit pas dépasser 255 caractères.")]
-    #[Assert\Length(min: 2, minMessage: "La description doit contenir au moins 2 caractères.",)]
+    #[Assert\Length(min: 2, minMessage: "La description doit contenir au moins 2 caractères.")]
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
@@ -26,6 +24,22 @@ class Commentaire
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
     private ?Publication $publication = null;
+
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'commentaires')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Client $client = null;
+    
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(Client $client): static
+    {
+        $this->client = $client;
+        return $this;
+    }
 
     public function getId(): ?int
     {

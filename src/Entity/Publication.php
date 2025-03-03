@@ -8,8 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Datecontrol;
-
 
 #[ORM\Entity(repositoryClass: PublicationRepository::class)]
 class Publication
@@ -20,15 +18,15 @@ class Publication
     private ?int $id = null;
 
     #[Assert\NotBlank(message: "Le titre est obligatoire.")]
-    #[Assert\Regex(pattern: "/^[a-zA-Z\s]+$/",message: "Le titre doit contenir uniquement des lettres et des espaces.")]
+    #[Assert\Regex(pattern: "/^[a-zA-Z\s]+$/", message: "Le titre doit contenir uniquement des lettres et des espaces.")]
     #[Assert\Length(max: 50, maxMessage: "Le titre ne doit pas dépasser 50 caractères.")]
-    #[Assert\Length(min: 2, minMessage: "Le titre doit contenir au moins 2 caractères.",)]
+    #[Assert\Length(min: 2, minMessage: "Le titre doit contenir au moins 2 caractères.")]
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
     #[Assert\NotBlank(message: "La description est obligatoire.")]
     #[Assert\Length(max: 255, maxMessage: "La description ne doit pas dépasser 255 caractères.")]
-    #[Assert\Length(min: 2, minMessage: "La description doit contenir au moins 2 caractères.",)]
+    #[Assert\Length(min: 2, minMessage: "La description doit contenir au moins 2 caractères.")]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
@@ -36,46 +34,45 @@ class Publication
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
-    #[Assert\NotBlank(message: "L'URL de l'image est obligatoire.")]
-    #[Assert\Url(message: "L'URL de l'image doit être valide.")]
+  
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\ManyToOne(inversedBy: 'publications')]
-    private ?Client $client = null;
+    // New imageChoice property
+    #[Assert\Choice(["upload", "url"], message: "Choisissez une méthode valide pour l'image.")]
+    private ?string $imageChoice = 'upload'; // Default choice
 
-    /**
-     * @var Collection<int, Commentaire>
-     */
+    #[ORM\ManyToOne(inversedBy: 'publications')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Client $client = null; // Owner of the publication
+    
+    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: "publication", cascade: ["remove"])]
+    private Collection $ratings;
+
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'publication', cascade: ['remove'])]
     private Collection $commentaires;
 
     #[ORM\OneToMany(targetEntity: Reclamation::class, mappedBy: 'publication', cascade: ['remove'])]
     private Collection $reclamations;
 
-    /**
-     * @var Collection<int, Notification>
-     */
-   
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'publication', cascade: ['remove'])]
+    private Collection $notifications;
 
     public function __construct()
     {
+        $this->ratings = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->reclamations = new ArrayCollection();
-        $this->date = new \DateTime();
+        $this->notifications = new ArrayCollection();
+        $this->date = new \DateTime(); // Default date to current time
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitre()
-    {
-        return $this->titre;
-    }
-
-    public function __toString(): string
+    public function getTitre(): ?string
     {
         return $this->titre;
     }
@@ -86,7 +83,7 @@ class Publication
         return $this;
     }
 
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -97,7 +94,7 @@ class Publication
         return $this;
     }
 
-    public function getDate()
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
@@ -108,7 +105,7 @@ class Publication
         return $this;
     }
 
-    public function getImage()
+    public function getImage(): ?string
     {
         return $this->image;
     }
@@ -119,7 +116,19 @@ class Publication
         return $this;
     }
 
-    public function getClient()
+    // New getter and setter for imageChoice
+    public function getImageChoice(): ?string
+    {
+        return $this->imageChoice;
+    }
+
+    public function setImageChoice(?string $imageChoice): static
+    {
+        $this->imageChoice = $imageChoice;
+        return $this;
+    }
+
+    public function getClient(): ?Client
     {
         return $this->client;
     }
@@ -130,28 +139,32 @@ class Publication
         return $this;
     }
 
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function setImageUrl(?string $imageUrl): static
+{
+    $this->image = $imageUrl; 
+    return $this;
+}
+
+    public function getAverageRating(): float
+    {
+        $ratings = $this->ratings; 
+    
+        if ($ratings->isEmpty()) {
+            return 0;
+        }
+    
+        $total = array_reduce($ratings->toArray(), fn($sum, $rating) => $sum + $rating->getRating(), 0);
+        return $total / count($ratings);
+    }
+
     public function getCommentaires(): Collection
     {
         return $this->commentaires;
-    }
-
-    public function addCommentaire(Commentaire $commentaire): static
-    {
-        if (!$this->commentaires->contains($commentaire)) {
-            $this->commentaires->add($commentaire);
-            $commentaire->setPublication($this);
-        }
-        return $this;
-    }
-
-    public function removeCommentaire(Commentaire $commentaire): static
-    {
-        if ($this->commentaires->removeElement($commentaire)) {
-            if ($commentaire->getPublication() === $this) {
-                $commentaire->setPublication(null);
-            }
-        }
-        return $this;
     }
 
     public function getReclamations(): Collection
@@ -159,24 +172,32 @@ class Publication
         return $this->reclamations;
     }
 
-    public function addReclamation(Reclamation $reclamation): static
+    public function __toString(): string
     {
-        if (!$this->reclamations->contains($reclamation)) {
-            $this->reclamations->add($reclamation);
-            $reclamation->setPublication($this);
+        return $this->titre;
+    }
+
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setPublication($this);
         }
         return $this;
     }
 
-    public function removeReclamation(Reclamation $reclamation): static
+    public function removeNotification(Notification $notification): static
     {
-        if ($this->reclamations->removeElement($reclamation)) {
-            if ($reclamation->getPublication() === $this) {
-                $reclamation->setPublication(null);
+        if ($this->notifications->removeElement($notification)) {
+            if ($notification->getPublication() === $this) {
+                $notification->setPublication(null);
             }
         }
         return $this;
     }
-
-   
 }

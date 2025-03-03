@@ -11,12 +11,20 @@ use Doctrine\ORM\Mapping as ORM;
 class Fournisseur extends User
 {
     #[ORM\Column(length: 255, nullable: true)]
-    
     private ?string $companyName = null;
-
     
+    #[ORM\Column(type: 'boolean')]
+    private $isBanned = false;
+    public function getIsBanned(): bool
+    {
+        return $this->isBanned;
+    }
 
-   
+    public function setIsBanned(bool $isBanned): self
+    {
+        $this->isBanned = $isBanned;
+        return $this;
+    }
 
     public function getCompanyName(): ?string
     {
@@ -29,10 +37,5 @@ class Fournisseur extends User
 
         return $this;
     }
-
    
-
-    
-
-    
 }

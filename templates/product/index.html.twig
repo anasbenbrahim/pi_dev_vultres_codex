@@ -1,55 +1,259 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Product List{% endblock %}
+{% block title %}Product List - Farmer Dashboard{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h1 class="mb-4">Product List</h1>
+<div class="container-fluid px-4 py-5">
+    <!-- Notifications Section -->
+    <div class="d-flex justify-content-end mb-4">
+        <button class="btn btn-light position-relative border" type="button" data-bs-toggle="offcanvas" data-bs-target="#notificationsOffcanvas">
+            <i class="bi bi-bell me-2"></i> Notifications
+            {% if notifications|length > 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ notifications|length }}
+                <span class="visually-hidden">unread notifications</span>
+            </span>
+            {% endif %}
+        </button>
+    </div>
 
-    <div class="row">
-        {% for produit in produits %}
-            <div class="col-lg-4 col-12 text-center mt-4">
-                <div class="box-column">
-                    <div class="box-header box-header-facebook">
-                         {% if produit.image %}
-                          <img src="{{ asset(produit.image) }}" alt="Product Image" width="100">
-                         {% endif %}
+    <!-- Notifications Offcanvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="notificationsOffcanvas">
+        <div class="offcanvas-header bg-light">
+            <h5 class="offcanvas-title">Recent Notifications</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <ul id="notificationsList" class="list-group list-group-flush">
+                {% for notification in notifications %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-small">{{ notification.message }}</div>
+                        <small class="text-muted">{{ notification.timeAgo }}</small>
                     </div>
-                    <div class="box-bottom">
-                        <div class="box-title facebook-title">
-                            {{ produit.nomprod }}
+                    <i class="bi bi-info-circle text-primary ms-2"></i>
+                </li>
+                {% else %}
+                <li class="list-group-item">
+                    <div class="text-center p-2">
+                        <i class="bi bi-check2-circle display-6 text-muted mb-3"></i>
+                        <p class="text-muted mb-0">No new notifications</p>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Product Management Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-2">Your Products</h1>
+            <p class="text-muted mb-0">Manage your agricultural products</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_product_new') }}" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-2"></i>Add Product
+            </a>
+            <a href="{{ path('app_category_index') }}" class="btn btn-outline-primary">
+                <i class="bi bi-tag me-2"></i>Categories
+            </a>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="row g-4">
+        {% for produit in produits %}
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 shadow-sm border-0 overflow-hidden">
+                <!-- Product Image -->
+                <div class="product-image position-relative" style="height: 200px; background-color: #f8f9fa;">
+                    {% if produit.image %}
+                    <img src="{{ asset(produit.image) }}" class="img-fluid h-100 w-100 object-fit-cover">
+                    {% else %}
+                    <div class="d-flex h-100 w-100 align-items-center justify-content-center text-muted">
+                        <i class="bi bi-image fs-1"></i>
+                    </div>
+                    {% endif %}
+                    <div class="position-absolute top-0 end-0 m-2">
+                        <span class="badge bg-{{ produit.status ? 'success' : 'danger' }}">
+                            {{ produit.status ? 'Available' : 'Sold Out' }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Product Details -->
+                <div class="card-body">
+                    <h5 class="card-title mb-3">{{ produit.nomprod }}</h5>
+                    <p class="card-text text-muted small mb-3">{{ produit.descr }}</p>
+                    
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <div class="bg-light p-2 rounded text-center">
+                                <small class="text-muted d-block">Price</small>
+                                <span class="fw-bold text-primary">{{ produit.prix|number_format(2, '.', ',') }} TND</span>
+                            </div>
                         </div>
-                        <div class="box-text">
-                            {{ produit.descr }}
+                        <div class="col-6">
+                            <div class="bg-light p-2 rounded text-center">
+                                <small class="text-muted d-block">Quantity</small>
+                                <span class="fw-bold text-primary">{{ produit.quantite }} Kg</span>
+                            </div>
                         </div>
-                        <div>
-                            Price: {{ produit.prix|number_format(2, '.', ',') }} TND
-                        </div>
-                        <div>
-                            Quantity: {{ produit.quantite }} Kg
-                        </div>
-                        <div>
-                            {% if produit.status %}
-                                <span class="text-success">Available</span>
-                            {% else %}
-                                <span class="text-danger">Not Available</span>
-                            {% endif %}
-                        </div>
-                       <a href="{{ path('app_product_show', {'id': produit.id}) }}" class="btn btn-info btn-sm mt-2">View</a> 
-                         <a href="{{ path('app_product_edit', {'id': produit.id}) }}" class="btn btn-warning btn-sm mt-2">Edit</a>
-                         <a href="{{ path('app_product_delete', {'id': produit.id}) }}" class="btn btn-danger btn-sm mt-2" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 d-flex justify-content-end">
+                        <a href="{{ path('app_product_show', {'id': produit.id}) }}" 
+                           class="btn btn-sm btn-outline-info"
+                           data-bs-toggle="tooltip" title="View Details">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a href="{{ path('app_product_edit', {'id': produit.id}) }}" 
+                           class="btn btn-sm btn-outline-warning"
+                           data-bs-toggle="tooltip" title="Edit Product">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form method="post" action="{{ path('app_product_delete', {'id': produit.id}) }}" 
+                              onsubmit="return confirm('Are you sure you want to delete this product?');">
+                            <button class="btn btn-sm btn-outline-danger"
+                                    data-bs-toggle="tooltip" title="Delete Product">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
+        </div>
         {% else %}
-            <div class="col-12 text-center">
-                <p>No products found.</p>
+        <div class="col-12">
+            <div class="text-center p-5 bg-light rounded-3">
+                <i class="bi bi-binoculars display-6 text-muted mb-3"></i>
+                <h3 class="h5 text-muted mb-3">No Products Found</h3>
+                <p class="text-muted">Start by adding your first product</p>
             </div>
+        </div>
         {% endfor %}
     </div>
 
-    <a href="{{ path('app_product_new') }}" class="btn btn-success mt-4">Add New Product</a>
+    <!-- Pagination -->
+    {% if total_pages > 1 %}
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {{ current_page == 1 ? 'disabled' : '' }}">
+                <a class="page-link" href="{{ path('app_product_index', {'page': current_page - 1}) }}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            {% for page in range(1, total_pages) %}
+            <li class="page-item {{ page == current_page ? 'active' : '' }}">
+                <a class="page-link" href="{{ path('app_product_index', {'page': page}) }}">{{ page }}</a>
+            </li>
+            {% endfor %}
+            <li class="page-item {{ current_page == total_pages ? 'disabled' : '' }}">
+                <a class="page-link" href="{{ path('app_product_index', {'page': current_page + 1}) }}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
 </div>
+{% endblock %}
+
+{% block javascripts_extra %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+    // Notification update function
+    function loadNotifications() {
+        $.ajax({
+            url: '{{ path("notifications_api") }}',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                const notificationsList = $('#notificationsList');
+                notificationsList.empty();
+
+                if (data.notifications && data.notifications.length > 0) {
+                    $('#notifBadge').text(data.notifications.length).removeClass('d-none');
+                    data.notifications.forEach(notification => {
+                        const listItem = `
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-small">${notification.text}</div>
+                                    <small class="text-muted">${formatTimeAgo(notification.timestamp)}</small>
+                                </div>
+                                <i class="bi bi-info-circle text-primary ms-2"></i>
+                            </li>`;
+                        notificationsList.append(listItem);
+                    });
+                } else {
+                    $('#notifBadge').addClass('d-none');
+                    notificationsList.append(`
+                        <li class="list-group-item">
+                            <div class="text-center p-2">
+                                <i class="bi bi-check2-circle display-6 text-muted mb-3"></i>
+                                <p class="text-muted mb-0">No new notifications</p>
+                            </div>
+                        </li>`);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading notifications:', error);
+            }
+        });
+    }
+
+    // Time formatting helper
+    function formatTimeAgo(timestamp) {
+        const now = new Date();
+        const date = new Date(timestamp);
+        const seconds = Math.floor((now - date) / 1000);
+        
+        const intervals = {
+            year: 31536000,
+            month: 2592000,
+            day: 86400,
+            hour: 3600,
+            minute: 60
+        };
+
+        for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+            const interval = Math.floor(seconds / secondsInUnit);
+            if (interval >= 1) {
+                return `${interval} ${unit}${interval === 1 ? '' : 's'} ago`;
+            }
+        }
+        return 'Just now';
+    }
+
+    // Update notifications every 2 minutes
+    setInterval(loadNotifications, 120000);
+});
+</script>
+<style>
+.product-image img {
+    transition: transform 0.3s ease;
+    object-fit: cover;
+}
+
+.card:hover .product-image img {
+    transform: scale(1.03);
+}
+
+.page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.bg-light {
+    background-color: #f8f9fa!important;
+}
+</style>
 {% endblock %}
 
 {% block footer %}{% endblock %}

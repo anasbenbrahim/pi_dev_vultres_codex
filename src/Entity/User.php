@@ -11,13 +11,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[ORM\InheritanceType('JOINED')] // Stratégie d'héritage "JOINED"
-#[ORM\DiscriminatorColumn(name: 'discr', type: 'string')] // Colonne discriminatrice
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
 #[ORM\DiscriminatorMap([
     'user' => User::class,
     'fermier' => Fermier::class,
@@ -34,6 +33,7 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: "Email is required"), Assert\Email(message: "The email '{ @ }' is not a valid email")]
     #[Assert\NotBlank(message: "Email is required"), Assert\Email(message: "The email '{ @ }' is not a valid email")]
     private ?string $email = null;
 
@@ -64,38 +64,13 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'user')]
     private Collection $produits;
 
-    /**
-     * @var Collection<int, Devis>
-     */
-    #[ORM\OneToMany(targetEntity: Devis::class, mappedBy: 'fermier', orphanRemoval: true)]
-    private Collection $devis;
-
-    /**
-     * @var Collection<int, ReponseDevis>
-     */
-    #[ORM\OneToMany(targetEntity: ReponseDevis::class, mappedBy: 'fournisseur')]
-    private Collection $reponseDevis;
-
-    /**
-     * @var Collection<int, Devis>
-     */
-    #[ORM\OneToMany(targetEntity: Devis::class, mappedBy: 'fournisseur')]
-    private Collection $devis_fournisseur;
-
-    /**
-     * @var Collection<int, ReponseDevis>
-     */
-    #[ORM\OneToMany(targetEntity: ReponseDevis::class, mappedBy: 'fermier')]
-    private Collection $fermier_reponsedevis;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $confirmationToken = null;
 
     public function __construct()
     {
         $this->equipements = new ArrayCollection();
         $this->produits = new ArrayCollection();
-        $this->devis = new ArrayCollection();
-        $this->reponseDevis = new ArrayCollection();
-        $this->devis_fournisseur = new ArrayCollection();
-        $this->fermier_reponsedevis = new ArrayCollection();
     }
 
     /**
@@ -176,6 +151,18 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(?string $confirmationToken): static
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -237,126 +224,6 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFirstName(?string $firstName): static
     {
         $this->firstName = $firstName;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Devis>
-     */
-    public function getDevis(): Collection
-    {
-        return $this->devis;
-    }
-
-    public function addDevi(Devis $devi): static
-    {
-        if (!$this->devis->contains($devi)) {
-            $this->devis->add($devi);
-            $devi->setFermier($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDevi(Devis $devi): static
-    {
-        if ($this->devis->removeElement($devi)) {
-            // set the owning side to null (unless already changed)
-            if ($devi->getFermier() === $this) {
-                $devi->setFermier(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ReponseDevis>
-     */
-    public function getReponseDevis(): Collection
-    {
-        return $this->reponseDevis;
-    }
-
-    public function addReponseDevi(ReponseDevis $reponseDevi): static
-    {
-        if (!$this->reponseDevis->contains($reponseDevi)) {
-            $this->reponseDevis->add($reponseDevi);
-            $reponseDevi->setFournisseur($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReponseDevi(ReponseDevis $reponseDevi): static
-    {
-        if ($this->reponseDevis->removeElement($reponseDevi)) {
-            // set the owning side to null (unless already changed)
-            if ($reponseDevi->getFournisseur() === $this) {
-                $reponseDevi->setFournisseur(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Devis>
-     */
-    public function getDevisFournisseur(): Collection
-    {
-        return $this->devis_fournisseur;
-    }
-
-    public function addDevisFournisseur(Devis $devisFournisseur): static
-    {
-        if (!$this->devis_fournisseur->contains($devisFournisseur)) {
-            $this->devis_fournisseur->add($devisFournisseur);
-            $devisFournisseur->setFournisseur($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDevisFournisseur(Devis $devisFournisseur): static
-    {
-        if ($this->devis_fournisseur->removeElement($devisFournisseur)) {
-            // set the owning side to null (unless already changed)
-            if ($devisFournisseur->getFournisseur() === $this) {
-                $devisFournisseur->setFournisseur(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ReponseDevis>
-     */
-    public function getFermierReponsedevis(): Collection
-    {
-        return $this->fermier_reponsedevis;
-    }
-
-    public function addFermierReponsedevi(ReponseDevis $fermierReponsedevi): static
-    {
-        if (!$this->fermier_reponsedevis->contains($fermierReponsedevi)) {
-            $this->fermier_reponsedevis->add($fermierReponsedevi);
-            $fermierReponsedevi->setFermier($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFermierReponsedevi(ReponseDevis $fermierReponsedevi): static
-    {
-        if ($this->fermier_reponsedevis->removeElement($fermierReponsedevi)) {
-            // set the owning side to null (unless already changed)
-            if ($fermierReponsedevi->getFermier() === $this) {
-                $fermierReponsedevi->setFermier(null);
-            }
-        }
 
         return $this;
     }

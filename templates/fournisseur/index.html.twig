@@ -4,6 +4,19 @@
 
 {% block body %}
 
+<style>
+    .pagination .btn {
+        transition: all 0.3s ease;
+    }
+    .pagination .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .pagination .btn.active {
+        font-weight: bold;
+    }
+</style>
+
     <div class="card">
         <h5 class="card-header">List fournisseurs</h5>
         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addfournisseurModal"><b> <i class="bx bx-add-to-queue me-1"></i> Add fournisseur </b></button>
@@ -74,9 +87,14 @@
                             <td>
                                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ fournisseur.id }}"><i class="bx bx-trash me-1"></i></button>
                                 <a class="btn btn-success" href="{{ path('fournisseur_edit', {'id': fournisseur.id}) }}"><i class="bx bx-edit me-1"></i></a>
+                                {% if fournisseur.isBanned %}
+                                    <a href="{{ path('fournisseur_unban', {'id': fournisseur.id}) }}" class="btn btn-secondary"><i class="bx bx-check-circle me-1"></i></a>
+                                {% else %}
+                                    <a href="{{ path('fournisseur_ban', {'id': fournisseur.id}) }}" class="btn btn-warning"><i class="bx bx-block me-1"></i></a>
+                                {% endif %}
                             </td>
+                           
                         </tr>
-
                         <!-- Modal de confirmation de suppression pour chaque fournisseur -->
                         <div class="modal fade" id="deleteModal{{ fournisseur.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ fournisseur.id }}" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
@@ -105,7 +123,31 @@
                     {% endfor %}
                 </tbody>
             </table>
+
+           
+             
         </div>
     </div>
+<div class="mt-4">
+    <div class="pagination d-flex justify-content-center align-items-center gap-2">
+        {% if current_page > 1 %}
+            <a href="{{ path('app_fournisseur_index', {'page': current_page - 1}) }}" class="btn btn-outline-secondary rounded-pill px-4">
+                <i class="bx bx-chevron-left"></i> Previous
+            </a>
+        {% endif %}
 
+        {% for page in range(1, total_pages) %}
+            <a href="{{ path('app_fournisseur_index', {'page': page}) }}" 
+               class="btn btn-outline-success rounded-pill {{ page == current_page ? 'active bg-success text-white' : '' }}">
+                {{ page }}
+            </a>
+        {% endfor %}
+
+        {% if current_page < total_pages %}
+            <a href="{{ path('app_fournisseur_index', {'page': current_page + 1}) }}" class="btn btn-outline-secondary rounded-pill px-4">
+                Next <i class="bx bx-chevron-right"></i>
+            </a>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

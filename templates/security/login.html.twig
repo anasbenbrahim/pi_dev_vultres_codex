@@ -62,7 +62,7 @@
         }
 
         #logo {
-            background: #ff8a00;
+            background: rgb(0, 109, 9);
             background-clip: text;
             -webkit-text-fill-color: transparent;
             font-size: 2.5rem;
@@ -73,9 +73,7 @@
             text-decoration: none;
         }
 
-        .btn-success {
-            background: #ff8a00;
-        }
+      
 
         .card {
             border: none;
@@ -147,13 +145,13 @@
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                             <div class="d-grid">
-                                <button class="btn btn-warning btn-lg text-light" type="submit">
+                                <button class="btn btn-success btn-lg text-light" type="submit">
                                     <b>Se connecter</b>
                                 </button>
                             </div>
 
                             <div class="text-center mt-3">
-                                <a href="{{ path('app_register') }}" class="mx-3">Unlock account?</a>
+                                <a href="{{ path('app_register') }}" class="mx-3">Register now?</a>
                                 <a href="{{ path('app_forgot_password_request') }}">Forgot password?</a>
                             </div>
                         </form>

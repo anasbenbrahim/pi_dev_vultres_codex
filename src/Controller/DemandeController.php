@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/demande')]
 final class DemandeController extends AbstractController
 {
-    #[Route(name: 'app_demande_index', methods: ['GET'])]
+    #[Route('/show',name: 'app_demande_index', methods: ['GET'])]
     public function index(DemandeRepository $demandeRepository): Response
     {
         return $this->render('demande/index.html.twig', [

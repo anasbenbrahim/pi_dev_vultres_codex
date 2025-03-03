@@ -102,8 +102,9 @@
             </ul>
             <p>Pour des raisons de sécurité, nous vous recommandons de changer votre mot de passe après votre première connexion.</p>
             <p>Cliquez sur le bouton ci-dessous pour accéder à votre compte :</p>
-            <a href="https://127.0.0.1:8000/login" class="button">Se connecter à AgriConnect</a>
+            <a href="{{ url('app_confirm_email', { token: token }) }}" class="button">Se connecter à AgriConnect</a>
             <p>Si vous avez des questions, n'hésitez pas à nous contacter à <a href="mailto:support@AgriConnect.com">support@AgriConnect.com</a>.</p>
+            
         </div>
 
         <!-- Pied de page -->

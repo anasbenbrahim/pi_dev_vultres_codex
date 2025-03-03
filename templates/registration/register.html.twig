@@ -4,6 +4,15 @@
 
 {% block body %}
 <style>
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+
     #contentRegister {
         width: 40%;
         margin: auto;
@@ -14,7 +23,7 @@
     }
 
     #logo {
-        background: #ff8a00;
+        background:rgb(0, 109, 9);
         background-clip: text;
         -webkit-text-fill-color: transparent;
         font-size: 2.5rem;
@@ -28,8 +37,8 @@
     }
 
     .nav-tabs .nav-link.active {
-        border-bottom: 3px solid #ffc107;
-        color: #ffc107;
+        border-bottom: 3px solid rgb(0, 109, 9);
+        color:rgb(0, 109, 9);
     }
 
     .form-control {
@@ -47,10 +56,6 @@
         transition: background-color 0.3s ease;
     }
 
-    .btn-warning:hover {
-        background-color: #e0a800;
-    }
-
     .text-danger {
         color: #dc3545;
         font-size: 0.9rem;
@@ -59,7 +64,7 @@
     .card-header {
         background-color: #fff;
         border-bottom: 1px solid #dee2e6;
-        text-align: center; /* Centrer le texte */
+        text-align: center;
     }
 
     .card-body {
@@ -67,12 +72,19 @@
     }
 </style>
 
-<div class=" mt-5 mb-5">
+<div class="mt-5 mb-5">
     <div class="card shadow" id="contentRegister">
         <!-- Card Header avec le titre "S'inscrire" -->
         <div class="card-header bg-light">
             <h1 id="logo"><b>S'inscrire</b></h1>
         </div>
+        
+        {# Display confirmation error messages #}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger mt-3 mx-3">
+                {{ message }}
+            </div>
+        {% endfor %}
 
         <!-- Navigation par onglets -->
         <div class="card-body">
@@ -136,7 +148,7 @@
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-warning btn-lg text-light">S'inscrire</button>
+                            <button type="submit" class="btn btn-success btn-lg text-light"><b>S'inscrire</b></button>
                         </div>
 
                         {{ form_end(fermierType) }}
@@ -189,7 +201,7 @@
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-warning btn-lg text-light">S'inscrire</button>
+                            <button type="submit" class="btn btn-success btn-lg text-light"><b>S'inscrire</b></button>
                         </div>
 
                         {{ form_end(fournissuerType) }}
@@ -242,7 +254,7 @@
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-warning btn-lg text-light">S'inscrire</button>
+                            <button type="submit" class="btn btn-success btn-lg text-light"><b>S'inscrire</b></button>
                         </div>
 
                         {{ form_end(clientFormType) }}

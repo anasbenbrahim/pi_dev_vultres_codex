@@ -4,6 +4,7 @@ parameters:
     photo_dir: "%kernel.project_dir%/public/uploads/images"
     open_ai_api_key: '%env(OPENAI_API_KEY)%'
 
+    cloudinary_url: "%env(CLOUDINARY_URL)%"
 
 services:
     _defaults:
@@ -20,3 +21,8 @@ services:
     App\EventListener\AccessDeniedListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    Cloudinary\Cloudinary:
+        arguments:
+            $config: "%cloudinary_url%"
+        public: true 

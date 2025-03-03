@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Order;
 use App\Repository\OrderRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,5 +41,28 @@ class OrderController extends AbstractController
         return $this->render('order/details.html.twig', [
             'order' => $order,
         ]);
+    }
+    #[Route('/delete/{id}', name: 'app_order_delete')]
+    public function delete(Order $order): Response
+    {
+        // Logic to delete a single order
+        $this->entityManager->remove($order);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('app_order_history');
+    }
+
+    #[Route('/delete/all', name: 'app_order_delete_all')]
+    public function deleteAll(OrderRepository $orderRepository): Response
+    {
+        // Logic to delete all orders
+        $orders = $orderRepository->findAll();
+
+        foreach ($orders as $order) {
+            $this->entityManager->remove($order);
+        }
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('app_order_history');
     }
 }

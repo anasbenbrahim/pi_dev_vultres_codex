@@ -9,7 +9,6 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class FermiersController extends AbstractController
 {
-
     
 
     #[Route('/fermiers', name: 'app_fermiers')]

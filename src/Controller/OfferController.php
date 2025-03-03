@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/offer')]
 final class OfferController extends AbstractController
 {
-    #[Route(name: 'app_offer_index', methods: ['GET'])]
+    #[Route('/show',name: 'app_offer_index', methods: ['GET'])]
     public function index(OfferRepository $offerRepository): Response
     {
         return $this->render('offer/index.html.twig', [
@@ -78,4 +78,12 @@ final class OfferController extends AbstractController
 
         return $this->redirectToRoute('app_offer_index', [], Response::HTTP_SEE_OTHER);
     }
+    #[Route('/show_front', name: 'app_offer_index', methods: ['GET'])]
+public function show_front(OfferRepository $offerRepository): Response
+{
+    return $this->render('offer/show_front.html.twig', [
+        'offers' => $offerRepository->findAll(),
+    ]);
+
+}
 }
