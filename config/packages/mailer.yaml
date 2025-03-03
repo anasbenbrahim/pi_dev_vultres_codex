@@ -1,3 +1,4 @@
+# config/packages/mailer.yaml
 framework:
     mailer:
-        dsn: '%env(MAILER_DSN)%'
+        dsn: 'postmark+api://%env(POSTMARK_API_TOKEN)%@default'

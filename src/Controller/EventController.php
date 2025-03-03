@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Entity\Reservation;
 use App\Form\EventFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,11 +21,14 @@ class EventController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
         $events = $entityManager->getRepository(Event::class)->findAll();
+        $reservations = $entityManager->getRepository(Reservation::class)->findAll();
 
         return $this->render('event/index.html.twig', [
             'events' => $events,
+            'reservations' => $reservations,
         ]);
     }
+
     #[Route('/test','test',methods: ['GET'])]
     public function test(EntityManagerInterface $entityManager): Response
     {
@@ -32,6 +36,12 @@ class EventController extends AbstractController
         return $this->render('event/showevent.html.twig',['events' => $events]);
     }
 
+    #[Route('/detail/{id}','event_detail',methods: ['GET'])]
+    public function detail(EntityManagerInterface $entityManager,$id): Response
+    {
+        $events = $entityManager->getRepository(Event::class)->find($id);
+        return $this->render('event/detaille.html.twig',['event' => $events]);
+    }
 
     // 🔹 Ajouter un événement avec gestion d'image
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
@@ -63,8 +73,14 @@ class EventController extends AbstractController
                 }
             }
 
+            // Set latitude and longitude (remove duplicate)
+
             $entityManager->persist($event);
             $entityManager->flush();
+            
+            // Set latitude and longitude
+            $event->setLatitude($form->get('latitude')->getData());
+            $event->setLongitude($form->get('longitude')->getData());
 
             $this->addFlash('success', 'Événement ajouté avec succès !');
 
@@ -134,5 +150,20 @@ class EventController extends AbstractController
         }
 
         return $this->redirectToRoute('app_event_index');
+    }
+
+    #[Route('/reserve', name: 'app_reservation', methods: ['POST'])]
+    public function reserve(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $username = $request->request->get('username');
+        $eventId = $request->request->get('event_id');
+
+        // Logic to save the reservation in the database
+        // Example: $reservation = new Reservation();
+        // Set properties and persist...
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_event_index'); // Redirect to the index page
     }
 }

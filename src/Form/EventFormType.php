@@ -20,7 +20,7 @@ class EventFormType extends AbstractType // ✅ Vérifie bien que c'est EventFor
             ->add('date')
             ->add('photo', FileType::class, [
                 'label' => 'photo du produit',
-                'mapped' => false, // ❗ Important: Not mapped to the entity (handle manually in controller)
+                'mapped' => true, // Change this to true
                 'required' => false,
             ])
             ->add('type', ChoiceType::class, [
@@ -32,7 +32,9 @@ class EventFormType extends AbstractType // ✅ Vérifie bien que c'est EventFor
                 'choice_label' => fn($choice) => $choice->value,
                 'expanded' => false,
                 'multiple' => false,
-            ]);
+            ])
+            ->add('latitude') // New field for latitude
+            ->add('longitude'); // New field for longitude
     }
 
     public function configureOptions(OptionsResolver $resolver): void

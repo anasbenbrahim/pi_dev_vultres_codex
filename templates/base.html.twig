@@ -43,11 +43,16 @@ lang="en"
     <script src="{{ asset('assets/js/config.js') }}"></script>
 
     
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
     
     {% endblock %}
 
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
     {% block importmap %}{{ importmap('app') }}{% endblock %}
  
     {% endblock %}

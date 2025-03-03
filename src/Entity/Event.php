@@ -7,6 +7,8 @@ use App\Repository\EventRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -17,6 +19,11 @@ class Event
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    private ?float $latitude = null;
+
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    private ?float $longitude = null;
+
     #[Assert\NotBlank(message: "Le nom de l'événement est obligatoire.")]
     #[Assert\Length(
         min: 3,
@@ -49,7 +56,22 @@ class Event
     #[ORM\Column(length: 255)]
     private ?string $photo = null;
 
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Reservation::class, cascade: ['persist', 'remove'])]
+    private Collection $reservations;
+
+    public function __construct()
+    {
+        $this->reservations = new ArrayCollection();
+    }
+
     public function getId(): ?int { return $this->id; }
+
+    public function getLatitude(): ?float { return $this->latitude; }
+    public function setLatitude(float $latitude): static { $this->latitude = $latitude; return $this; }
+
+    public function getLongitude(): ?float { return $this->longitude; }
+    public function setLongitude(float $longitude): static { $this->longitude = $longitude; return $this; }
+
     public function getNom(): ?string { return $this->nom; }
     public function setNom(string $nom): static { $this->nom = $nom; return $this; }
 
@@ -64,4 +86,12 @@ class Event
 
     public function getPhoto(): ?string { return $this->photo; }
     public function setPhoto(string $photo): static { $this->photo = $photo; return $this; }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
 }

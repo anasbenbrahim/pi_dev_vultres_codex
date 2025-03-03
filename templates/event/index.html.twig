@@ -116,7 +116,29 @@
                         </td>
                     </tr>
                 {% endfor %}
+                <h1>Events</h1>
+        <ul>
+            {% for event in events %}
+                <li>
+                    <a href="{{ path('event_detail', { 'id': event.id }) }}">{{ event.nom }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        
             </tbody>
         </table>
+        <h2>Reservations</h2>
+        <ul>
+            {% for reservation in reservations %}
+                <li>{{ reservation.username }} reserved for event {{ reservation.event.title }}</li>
+            {% endfor %}
+        </ul>
     </div>
 {% endblock %}
+
+
+
+
+
+   

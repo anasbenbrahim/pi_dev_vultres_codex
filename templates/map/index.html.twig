@@ -1,0 +1,34 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Map{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
+{% block body %}
+    <div id="map" style="height: 600px;"></div>
+    <script>
+        var map = L.map('map').setView([51.505, -0.09], 13); // Set initial view
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Loop through events and add markers, ensuring latitude and longitude are not null
+        {% for event in events %}
+            {% if event.latitude is not null and event.longitude is not null %}
+                var marker = L.marker([{{ event.latitude }}, {{ event.longitude }}]).addTo(map)
+                    .bindPopup('{{ event.nom }}<br>{{ event.descr }}')
+                    .openPopup();
+            {% endif %}
+        {% endfor %}
+    </script>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
