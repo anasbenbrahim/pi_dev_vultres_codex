@@ -43,16 +43,16 @@ final class DevisController extends AbstractController
                 return $this->redirectToRoute('show_equipement');
             }
         
-        return $this->render('devis/index.html.twig',['form' =>$form,"equipement"=>$equipement]);
+        return $this->render('/devis/index.html.twig',['form' =>$form,"equipement"=>$equipement]);
     }
-    #[Route('/equipement/devis','show_devis')]
+    #[Route('/equipement/show_devis','show_devis')]
     public function show_devis(DevisRepository $repo)
     {
         $user=$this->getUser();
         if($user instanceof User){
             $id=$user->getId();
             $list=$repo->findBy(["fournisseur"=>$id]);
-            return $this->render('equipements/devis.html.twig', [
+            return $this->render('/equipements/devis.html.twig', [
                 'list' => $list,
             ]);
         }

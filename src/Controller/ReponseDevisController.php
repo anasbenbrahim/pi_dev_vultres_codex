@@ -20,26 +20,34 @@ final class ReponseDevisController extends AbstractController
     public function Repense(Request $request,ManagerRegistry $doctrine,$id,DevisRepository $repo_devis,EquipementsRepository $repo_equipement,ReponseDevisType $form)
     {
         $reponse=new ReponseDevis();
-        
+        $em=$doctrine->getManager();
+
+
         $devis=$repo_devis->find($id);
+        
         $equipement_demandee=$devis->getEquipement();
         $id_equipement=$equipement_demandee->getId();
         $equipement=$repo_equipement->find($id_equipement);
+        
         $fermier=$devis->getFermier();
+        
         $reponse->setDevis($devis);
         $reponse->setFournisseur($devis->getFournisseur());
+        $reponse->setFermier($fermier);
+
         if($devis->getQuantite() > $equipement->getQuantite()){
             $reponse->setReponse("Nous n'avons pas la quantite demande dans le stock");
+            $reponse->setEtat(false);
+            $em->persist($reponse);
+            $em->flush();
             return $this->redirectToRoute('show_devis'); 
 
         }
         else{
-            $reponse->setFermier($fermier);
             $form=$this->createForm(ReponseDevisType::class,$reponse);
             $form->handleRequest($request);
             if($form->isSubmitted() && $form->isValid()){
                 $reponse=$form->getData();
-                $em=$doctrine->getManager();
                 $em->persist($reponse);
                 $em->flush();
                 return $this->redirectToRoute('show_devis'); 

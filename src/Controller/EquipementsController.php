@@ -13,6 +13,7 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Security;
 use App\Form\AddEquipementsType;
 use App\Form\ModifierEquipementType;
+use App\Repository\CategoryEquipementsRepository;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 use Symfony\Component\Serializer\SerializerInterface;
@@ -166,4 +167,35 @@ final class EquipementsController extends AbstractController
     ['groups' => 'equipements']);
     return new JsonResponse($jsonContent);
     }
+
+    #[route('/equipement/stat','stat_equipement')]
+    public function stats(EquipementsRepository $repoEquipement,CategoryEquipementsRepository $repoCategory){
+        $list=$repoEquipement->findAll();
+        $category_list=$repoCategory->findAll();
+        
+        $categorie_nom=[];
+        $count=[];
+
+        $quantite=[];
+        $equipement_nom=[];
+
+        foreach($category_list as $cate){
+            $categorie_nom[]=$cate->getType();
+            $count[]=count($cate->getEquipements());
+        }
+        
+        foreach($list as $equipement){
+            $quantite[]=$equipement->getQuantite();
+            $equipement_nom[]=$equipement->getNom();
+        }
+
+        return $this->render('/equipements/stats.html.twig',
+        ["quantite"=>json_encode($quantite),
+         "equipement"=>json_encode($equipement_nom),
+         "category"=>json_encode($categorie_nom), 
+         "count"=>json_encode($count)                              
+            ]);
+    }
+
 }
+

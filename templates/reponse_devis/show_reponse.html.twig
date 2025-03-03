@@ -1,71 +1,114 @@
 {% extends 'base.html.twig' %}
 {% block css %}
     <style>
+        .card {
+            width: 380px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+        }
 
-            .card {
-                width: 350px;
-                background: #fff;
-                border-radius: 15px;
-                box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-                overflow: hidden;
-                transition: transform 0.3s ease-in-out;
-            }
+        .card:hover {
+            transform: translateY(-5px);
+        }
 
-            .card:hover {
-                transform: translateY(-10px);
-            }
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
 
-            .card img {
-                width: 100%;
-                height: 200px;
-                object-fit: cover;
-            }
+        .card-content {
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+        }
 
-            .card-content {
-                padding: 20px;
-            }
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
 
-            .card-title {
-                font-size: 20px;
-                font-weight: bold;
-                margin-bottom: 10px;
-                color: #333;
-            }
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
-            .card-text {
-                font-size: 14px;
-                color: #666;
-                margin-bottom: 15px;
-            }
+        .badge-success {
+            background-color: #28a745;
+            color: white;
+        }
 
-            .card-button {
-                display: block;
-                text-align: center;
-                padding: 10px;
-                background: #007bff;
-                color: white;
-                text-decoration: none;
-                border-radius: 5px;
-                font-weight: bold;
-                transition: background 0.3s;
-            }
+        .badge-danger {
+            background-color: #dc3545;
+            color: white;
+        }
 
-            .card-button:hover {
-                background: #0056b3;
-            }
-        </style>
+        .card-text {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .card-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .card-button {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+            width: 80%;
+        }
+
+        .card-button:hover {
+            background: #0056b3;
+        }
+    </style>
 {% endblock %}
 {% block body %}
-    {% for devis in liste_devis %}
-        <div class="card">
-            <img src="{{asset('uploads/images/' ~ devis.equipement.image)}}" alt="Image">
-            <div class="card-content">
-                <h2 class="card-title">{{devis.equipement.nom}}</h2>
-                <p class="card-text">{{devis.proposition}}</p>
-                {#% if devis.etat %#}
-                    <a href="#" class="card-button">En savoir plus</a>
-                {#% endif %#}
+    <div class="d-flex flex-wrap justify-content-center gap-4">
+        {% for reponse in liste_reponse %}
+            <div class="card">
+                <img src="{{ asset('uploads/images/' ~ reponse.devis.equipement.image) }}" alt="Image équipement">
+                <div class="card-content">
+                    <span class="badge {% if reponse.etat %}badge-success{% else %}badge-danger{% endif %}">
+                        {{ reponse.etat ? 'Devis accepté' : 'Devis non accepté' }}
+                    </span>
+                    <h2 class="card-title">Réponse de {{ reponse.devis.fournisseur.firstname }} {{ reponse.devis.fournisseur.lastname }}</h2>
+                    <p class="card-price">Equipement demandé : {{ reponse.devis.equipement.nom }} pieces</p>
+                    <p class="card-price">Quantite demande : {{ reponse.devis.quantite }} pieces</p>
+                    <p class="card-price">Prix d'unite : {{ reponse.prix }} DT</p>
+                    <p class="card-price">Prix Totale : {{ reponse.prix * reponse.devis.quantite}} DT</p>
+
+                    <p class="card-text">Réponse du fermier : {{ reponse.reponse }}</p>
+                    {% if reponse.etat %}
+                        <a href="{{path('app_stripe',{'id':reponse.id})}}" class="card-button">Payer la commande</a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% endblock %}

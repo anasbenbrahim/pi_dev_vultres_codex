@@ -102,13 +102,13 @@
 
             if (searchValue.length > 0) {
                 $.ajax({
-                    url: "{{path('search_equipement')}}", // Assurez-vous que cette route est correcte
+                    url: "{{path('search_equipement')}}",
                     type: 'GET',
                     data: { 'searchValue': searchValue },
                     dataType: "json",
                     success: function (response) {
                         let tableBody = $("#searchtab");
-                        tableBody.empty(); // Vider le tableau avant d'ajouter de nouveaux résultats
+                        tableBody.empty(); 
 
                         if (response.length > 0) {
                             $.each(response, function (index, equipement) {

@@ -7,7 +7,6 @@
                     
                     <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto gap-2 mt-0 mb-md-0 mb-4">
                         <div class="dt-buttons btn-group flex-wrap gap-4 mt-2 mb-2">
-                            <a href="{{path('add_equipement_fournisseur')}}"><button class="btn btn-success" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEcommerceCustomerAdd"><span><span class="d-flex align-items-center gap-2"><i class="icon-base bx bx-plus icon-sm"></i> <span class="d-none d-sm-inline-block">Ajouter equipement</span></span></span></button></a>
                         </div>
                     </div>
                 </div>
@@ -29,9 +28,7 @@
                                     <th data-dt-column="2" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-ordering-desc" aria-sort="descending" aria-label="Customer: Activate to remove sorting" tabindex="0"><span class="dt-column-title" role="button">image</span><span class="dt-column-order"></span></th>
                                     <th data-dt-column="3" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-ordering-desc" aria-sort="descending" aria-label="Customer: Activate to remove sorting" tabindex="0"><span class="dt-column-title" role="button">Proposition</span><span class="dt-column-order"></span></th>
                                     <th class="text-nowrap dt-orderable-asc dt-orderable-desc dt-type-numeric" data-dt-column="6" rowspan="1" colspan="1" aria-label="Total Spent: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Quantite</span><span class="dt-column-order"></span></th>
-                                    <th class="text-nowrap dt-orderable-asc dt-orderable-desc dt-type-numeric" data-dt-column="6" rowspan="1" colspan="1" aria-label="Total Spent: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Consulter</span><span class="dt-column-order"></span></th>
                                     <th class="text-nowrap dt-orderable-asc dt-orderable-desc dt-type-numeric" data-dt-column="6" rowspan="1" colspan="1" aria-label="Total Spent: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Repondre</span><span class="dt-column-order"></span></th>
-
                                 </tr>
                             </thead>
                             <tbody>
@@ -53,8 +50,7 @@
                                     <td><img src="{{asset('uploads/images/' ~ devis.equipement.image)}}" style="height:70px; width:70px;"></td>
                                     <td><span class="text-heading">{{devis.proposition}}</span></td>
                                     <td class="dt-type-numeric"><span>{{devis.quantite}}</span></td>
-                                    <td class="dt-type-numeric"><a class="text-sucess" href="">Consulter</a></td>
-                                    <td class="dt-type-numeric"><a class="text-light" href="{{path('app_reponse_devis',{'id':devis.id})}}">Repondre</a></td>
+                                    <td class="dt-type-numeric"><a class="text-sucess" href="{{path('app_reponse_devis',{'id':devis.id})}}">Repondre</a></td>
                                 </tr>
                             {% endfor %}
                             </tbody>
