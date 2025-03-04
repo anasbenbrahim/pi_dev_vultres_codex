@@ -1,0 +1,137 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+
+
+
+{% block body %}
+
+<style>
+    /*------------ Login container ------------*/
+.box-area{
+  width: 1332px;
+  height: 595px;
+}
+/*------------ Right box ------------*/
+.right-box{
+  padding: 90px 50px 90px 50px;
+}
+/*------------ Custom Placeholder ------------*/
+::placeholder{
+  font-size: 16px;
+}
+.rounded-4{
+  border-radius: 20px;
+}
+.rounded-5{
+  border-radius: 30px;
+}
+/*------------ For small screens------------*/
+@media only screen and (max-width: 768px){
+   .box-area{
+      margin: 0 10px;
+   }
+   .left-box{
+      height: 100px;
+      overflow: hidden;
+   }
+   .right-box{
+      padding: 20px;
+   }
+}
+
+.input-group .btn {
+position: relative;
+z-index: 2;
+height: auto;}
+
+#left-content{
+background: #000000;
+background: url('/images/logo sans back.png');
+background-size: cover;
+background-repeat: no-repeat;
+
+}
+
+#logo{
+/*background: linear-gradient(to right, #014512,#00fe11,#014512); */
+background: #ff8a00;
+background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+a{
+text-decoration: none;
+}
+.btn-success{
+    background: #ff8a00;
+}
+</style>
+
+
+        
+        
+        <!-- Section droite : Formulaire d'inscription -->
+        <div class="col-md-6 right-box">
+            <div class="row align-items-center">
+                
+                <!-- Titre de la page -->
+                <div class="header-text mb-4 text-center">
+                    <h1 id="logo"><b>Login</b></h1>
+                </div>
+
+                <!-- Affichage des erreurs de formulaire -->
+               <form method="post">
+                    
+                    <!-- Affichage des erreurs -->
+                    {% if error is defined and error %}
+    <div class="alert alert-danger">
+        {{ error.messageKey|trans(error.messageData, 'security') }}
+    </div>
+{% endif %}
+
+                    
+                    {% if app.user %}
+                        <div class="mb-3">
+                            You are logged in as {{ app.user.userIdentifier }}, 
+                            <a href="{{ path('app_logout') }}">Logout</a>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Champ Email -->
+                    <div class="input-group mb-3">
+                        <input type="email" value="{{ last_username|default('') }}" name="email" id="inputEmail"
+       class="form-control form-control-lg bg-light fs-6"
+       placeholder="Email" autocomplete="email" required autofocus>
+                    </div>
+                    
+                    <!-- Champ Password -->
+                    <div class="input-group mb-3">
+                        <input type="password" name="password" id="inputPassword" 
+                               class="form-control form-control-lg bg-light fs-6" 
+                               placeholder="Mot de passe" autocomplete="current-password" required>
+                    </div>
+                    
+                    <!-- Jeton CSRF -->
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    
+                    <!-- Bouton de connexion -->
+                    <div class="input-group mb-3">
+                        <button class="btn btn-lg btn-warning w-100 fs-6 text-light" type="submit">
+                            <b>Se connecter</b>
+                        </button>
+                    </div>
+                    
+                    <!-- Liens de récupération -->
+                    <div class="text-center">
+                        <a href="{{ path('app_register') }}" class="mx-3">Unlock account?</a>
+                        <a href="{{ path('app_forgot_password_request') }}">Forgot password?</a>
+                    </div>
+                </form> 
+
+
+            </div> 
+        </div>
+
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Simple index{% endblock %}
+
+{% block body %}
+    <h1>Simple index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Discription</th>
+                <th>Date</th>
+                <th>Photo</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for simple in simples %}
+            <tr>
+                <td>{{ simple.id }}</td>
+                <td>{{ simple.nom }}</td>
+                <td>{{ simple.discription }}</td>
+                <td>{{ simple.date ? simple.date|date('Y-m-d') : '' }}</td>
+                
+                 <td>
+                 {% if simple.photo %}
+                <img src="{{ asset(simple.photo) }}" alt="Product Image" width="100">
+
+            {% endif %}</td>
+                <td>
+                    <a href="{{ path('app_simple_show', {'id': simple.id}) }}">show</a>
+                    <a href="{{ path('app_simple_edit', {'id': simple.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_simple_new') }}">Create new</a>
+{% endblock %}

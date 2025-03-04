@@ -1,0 +1,425 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CustomersController!{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- customers List Table -->
+    <div class="card">
+        <div class="card-datatable table-responsive">
+            <div id="DataTables_Table_0_wrapper" class="dt-container dt-bootstrap5 dt-empty-footer">
+                <div class="row m-3 my-0 justify-content-between">
+                    
+                    <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto gap-2 mt-0 mb-md-0 mb-4">
+                        <div class="dt-buttons btn-group flex-wrap gap-4 mt-2 mb-2">
+                            <button class="btn btn-success" tabindex="0" aria-controls="DataTables_Table_0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEcommerceCustomerAdd"><span><span class="d-flex align-items-center gap-2"><i class="icon-base bx bx-plus icon-sm"></i> <span class="d-none d-sm-inline-block">Add Customer</span></span></span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="justify-content-between dt-layout-table">
+                    <div class="d-md-flex justify-content-between align-items-center dt-layout-full table-responsive">
+                        <table class="datatables-customers table border-top dataTable dtr-column" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" style="width: 100%;">
+                            <colgroup>
+                                <col data-dt-column="1" style="width: 75.0625px;">
+                                <col data-dt-column="2" style="width: 396.547px;">
+                                <col data-dt-column="3" style="width: 220.609px;">
+                                <col data-dt-column="4" style="width: 328.516px;">
+                                <col data-dt-column="5" style="width: 149.578px;">
+                                <col data-dt-column="6" style="width: 217.688px;">
+                            </colgroup>
+                            <thead class="text-dark">
+                                <tr>
+                                    <th data-dt-column="0" class="control dt-orderable-none dtr-hidden" rowspan="1" colspan="1" aria-label="" style="display: none;"><span class="dt-column-title"></span><span class="dt-column-order"></span></th>
+                                    <th data-dt-column="1" rowspan="1" colspan="1" class="dt-select dt-orderable-none" aria-label=""><span class="dt-column-title"></span><span class="dt-column-order"></span><input class="form-check-input" type="checkbox" aria-label="Select all rows"></th>
+                                    <th data-dt-column="2" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-ordering-desc" aria-sort="descending" aria-label="Customer: Activate to remove sorting" tabindex="0"><span class="dt-column-title" role="button">Customer</span><span class="dt-column-order"></span></th>
+                                    <th class="text-nowrap dt-orderable-asc dt-orderable-desc" data-dt-column="3" rowspan="1" colspan="1" aria-label="Customer Id: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Customer Id</span><span class="dt-column-order"></span></th>
+                                    <th data-dt-column="4" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc" aria-label="Country: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Country</span><span class="dt-column-order"></span></th>
+                                    <th data-dt-column="5" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-type-numeric" aria-label="Order: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Order</span><span class="dt-column-order"></span></th>
+                                    <th class="text-nowrap dt-orderable-asc dt-orderable-desc dt-type-numeric" data-dt-column="6" rowspan="1" colspan="1" aria-label="Total Spent: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Total Spent</span><span class="dt-column-order"></span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="control dtr-hidden" tabindex="0" style="display: none;"></td>
+                                    <td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td>
+                                    <td class="sorting_1">
+                                        <div class="d-flex justify-content-start align-items-center customer-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-sm me-3">
+                                                    <img src="../../assets/img/avatars/17.png" alt="Avatar" class="rounded-circle">
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="app-ecommerce-customer-details-overview.html" class="text-heading"><span class="fw-medium">Zeke Arton</span></a>
+                                                <small>zarton8@weibo.com</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-heading">#895280</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-start align-items-center customer-country">
+                                            <div><i class="icon-base fis fi fi-ua rounded-circle me-2 icon-lg"></i></div>
+                                            <div><span>Ukraine</span></div>
+                                        </div>
+                                    </td>
+                                    <td class="dt-type-numeric"><span>539</span></td>
+                                    <td class="dt-type-numeric"><span class="fw-medium text-heading">$3430.05</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="control dtr-hidden" tabindex="0" style="display: none;"></td>
+                                    <td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td>
+                                    <td class="sorting_1">
+                                        <div class="d-flex justify-content-start align-items-center customer-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-sm me-3">
+                                                    <img src="../../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle">
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="app-ecommerce-customer-details-overview.html" class="text-heading"><span class="fw-medium">Zed Rawe</span></a>
+                                                <small>zrawe1t@va.gov</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-heading">#343593</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-start align-items-center customer-country">
+                                            <div><i class="icon-base fis fi fi-ly rounded-circle me-2 icon-lg"></i></div>
+                                            <div><span>Libya</span></div>
+                                        </div>
+                                    </td>
+                                    <td class="dt-type-numeric"><span>473</span></td>
+                                    <td class="dt-type-numeric"><span class="fw-medium text-heading">$5218.22</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="control dtr-hidden" tabindex="0" style="display: none;"></td>
+                                    <td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td>
+                                    <td class="sorting_1">
+                                        <div class="d-flex justify-content-start align-items-center customer-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-sm me-3"><span class="avatar-initial rounded-circle bg-label-warning">YL</span></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="app-ecommerce-customer-details-overview.html" class="text-heading"><span class="fw-medium">Yank Luddy</span></a>
+                                                <small>yluddy22@fema.gov</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-heading">#586615</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-start align-items-center customer-country">
+                                            <div><i class="icon-base fis fi fi-pt rounded-circle me-2 icon-lg"></i></div>
+                                            <div><span>Portugal</span></div>
+                                        </div>
+                                    </td>
+                                    <td class="dt-type-numeric"><span>462</span></td>
+                                    <td class="dt-type-numeric"><span class="fw-medium text-heading">$9157.04</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="control dtr-hidden" tabindex="0" style="display: none;"></td>
+                                    <td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td>
+                                    <td class="sorting_1">
+                                        <div class="d-flex justify-content-start align-items-center customer-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-sm me-3"><span class="avatar-initial rounded-circle bg-label-warning">VT</span></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="app-ecommerce-customer-details-overview.html" class="text-heading"><span class="fw-medium">Valenka Turbill</span></a>
+                                                <small>vturbill2h@nbcnews.com</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-heading">#179914</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-start align-items-center customer-country">
+                                            <div><i class="icon-base fis fi fi-tm rounded-circle me-2 icon-lg"></i></div>
+                                            <div><span>Turkmenistan</span></div>
+                                        </div>
+                                    </td>
+                                    <td class="dt-type-numeric"><span>550</span></td>
+                                    <td class="dt-type-numeric"><span class="fw-medium text-heading">$9083.15</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="control dtr-hidden" tabindex="0" style="display: none;"></td>
+                                    <td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td>
+                                    <td class="sorting_1">
+                                        <div class="d-flex justify-content-start align-items-center customer-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-sm me-3"><span class="avatar-initial rounded-circle bg-label-dark">TV</span></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="app-ecommerce-customer-details-overview.html" class="text-heading"><span class="fw-medium">Thomasine Vasentsov</span></a>
+                                                <small>tvasentsov1u@bloglovin.com</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-heading">#988015</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-start align-items-center customer-country">
+                                            <div><i class="icon-base fis fi fi-ar rounded-circle me-2 icon-lg"></i></div>
+                                            <div><span>Argentina</span></div>
+                                        </div>
+                                    </td>
+                                    <td class="dt-type-numeric"><span>752</span></td>
+                                    <td class="dt-type-numeric"><span class="fw-medium text-heading">$5984.53</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="control dtr-hidden" tabindex="0" style="display: none;"></td>
+                                    <td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td>
+                                    <td class="sorting_1">
+                                        <div class="d-flex justify-content-start align-items-center customer-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-sm me-3">
+                                                    <img src="../../assets/img/avatars/2.png" alt="Avatar" class="rounded-circle">
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="app-ecommerce-customer-details-overview.html" class="text-heading"><span class="fw-medium">Tome Joliffe</span></a>
+                                                <small>tjoliffe27@phoca.cz</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-heading">#356230</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-start align-items-center customer-country">
+                                            <div><i class="icon-base fis fi fi-mx rounded-circle me-2 icon-lg"></i></div>
+                                            <div><span>Mexico</span></div>
+                                        </div>
+                                    </td>
+                                    <td class="dt-type-numeric"><span>515</span></td>
+                                    <td class="dt-type-numeric"><span class="fw-medium text-heading">$8571.28</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="control dtr-hidden" tabindex="0" style="display: none;"></td>
+                                    <td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td>
+                                    <td class="sorting_1">
+                                        <div class="d-flex justify-content-start align-items-center customer-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-sm me-3"><span class="avatar-initial rounded-circle bg-label-danger">TD</span></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="app-ecommerce-customer-details-overview.html" class="text-heading"><span class="fw-medium">Taryn Ducker</span></a>
+                                                <small>tduckerr@tamu.edu</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-heading">#486325</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-start align-items-center customer-country">
+                                            <div><i class="icon-base fis fi fi-bt rounded-circle me-2 icon-lg"></i></div>
+                                            <div><span>Bhutan</span></div>
+                                        </div>
+                                    </td>
+                                    <td class="dt-type-numeric"><span>535</span></td>
+                                    <td class="dt-type-numeric"><span class="fw-medium text-heading">$3654.39</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="control dtr-hidden" tabindex="0" style="display: none;"></td>
+                                    <td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td>
+                                    <td class="sorting_1">
+                                        <div class="d-flex justify-content-start align-items-center customer-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-sm me-3"><span class="avatar-initial rounded-circle bg-label-info">TB</span></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="app-ecommerce-customer-details-overview.html" class="text-heading"><span class="fw-medium">Tobin Bassick</span></a>
+                                                <small>tbassick2e@quantcast.com</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-heading">#165827</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-start align-items-center customer-country">
+                                            <div><i class="icon-base fis fi fi-jo rounded-circle me-2 icon-lg"></i></div>
+                                            <div><span>Jordan</span></div>
+                                        </div>
+                                    </td>
+                                    <td class="dt-type-numeric"><span>527</span></td>
+                                    <td class="dt-type-numeric"><span class="fw-medium text-heading">$9289.92</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="control dtr-hidden" tabindex="0" style="display: none;"></td>
+                                    <td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td>
+                                    <td class="sorting_1">
+                                        <div class="d-flex justify-content-start align-items-center customer-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-sm me-3">
+                                                    <img src="../../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle">
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="app-ecommerce-customer-details-overview.html" class="text-heading"><span class="fw-medium">Tanner Irdale</span></a>
+                                                <small>tirdale1b@plala.or.jp</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-heading">#855725</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-start align-items-center customer-country">
+                                            <div><i class="icon-base fis fi fi-cn rounded-circle me-2 icon-lg"></i></div>
+                                            <div><span>China</span></div>
+                                        </div>
+                                    </td>
+                                    <td class="dt-type-numeric"><span>438</span></td>
+                                    <td class="dt-type-numeric"><span class="fw-medium text-heading">$8949.26</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="control dtr-hidden" tabindex="0" style="display: none;"></td>
+                                    <td class="dt-select"><input aria-label="Select row" class="form-check-input" type="checkbox"></td>
+                                    <td class="sorting_1">
+                                        <div class="d-flex justify-content-start align-items-center customer-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-sm me-3">
+                                                    <img src="../../assets/img/avatars/10.png" alt="Avatar" class="rounded-circle">
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="app-ecommerce-customer-details-overview.html" class="text-heading"><span class="fw-medium">Tadeo Blasio</span></a>
+                                                <small>tblasio1w@ustream.tv</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-heading">#208862</span></td>
+                                    <td>
+                                        <div class="d-flex justify-content-start align-items-center customer-country">
+                                            <div><i class="icon-base fis fi fi-cn rounded-circle me-2 icon-lg"></i></div>
+                                            <div><span>China</span></div>
+                                        </div>
+                                    </td>
+                                    <td class="dt-type-numeric"><span>751</span></td>
+                                    <td class="dt-type-numeric"><span class="fw-medium text-heading">$9042.56</span></td>
+                                </tr>
+                            </tbody>
+                            <tfoot></tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="row mx-3 justify-content-between">
+                    <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto mt-0">
+                        <div class="dt-info" aria-live="polite" id="DataTables_Table_0_info" role="status">Showing 1 to 10 of 100 entries</div>
+                    </div>
+                    <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto gap-2 mt-0 mb-md-0 mb-4">
+                        <div class="dt-paging">
+                            <nav aria-label="pagination">
+                                <ul class="pagination">
+                                    <li class="dt-paging-button page-item disabled"><button class="page-link previous" role="link" type="button" aria-controls="DataTables_Table_0" aria-disabled="true" aria-label="Previous" data-dt-idx="previous" tabindex="-1"><i class="icon-base bx bx-chevron-left scaleX-n1-rtl icon-18px"></i></button></li>
+                                    <li class="dt-paging-button page-item active"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" aria-current="page" data-dt-idx="0">1</button></li>
+                                    <li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="1">2</button></li>
+                                    <li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="2">3</button></li>
+                                    <li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="3">4</button></li>
+                                    <li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="4">5</button></li>
+                                    <li class="dt-paging-button page-item disabled"><button class="page-link ellipsis" role="link" type="button" aria-controls="DataTables_Table_0" aria-disabled="true" data-dt-idx="ellipsis" tabindex="-1">…</button></li>
+                                    <li class="dt-paging-button page-item"><button class="page-link" role="link" type="button" aria-controls="DataTables_Table_0" data-dt-idx="9">10</button></li>
+                                    <li class="dt-paging-button page-item"><button class="page-link next" role="link" type="button" aria-controls="DataTables_Table_0" aria-label="Next" data-dt-idx="next"><i class="icon-base bx bx-chevron-right scaleX-n1-rtl icon-18px"></i></button></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Offcanvas to add new customer -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEcommerceCustomerAdd" aria-labelledby="offcanvasEcommerceCustomerAddLabel">
+            <div class="offcanvas-header">
+                <h5 id="offcanvasEcommerceCustomerAddLabel" class="offcanvas-title">Add Customer</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body border-top mx-0 flex-grow-0">
+                <form class="ecommerce-customer-add pt-0 fv-plugins-bootstrap5 fv-plugins-framework" id="eCommerceCustomerAddForm" onsubmit="return false" novalidate="novalidate">
+                    <div class="ecommerce-customer-add-basic mb-4">
+                        <h6 class="mb-6">Basic Information</h6>
+                        <div class="mb-6 form-control-validation fv-plugins-icon-container">
+                            <label class="form-label" for="ecommerce-customer-add-name">Name*</label>
+                            <input type="text" class="form-control" id="ecommerce-customer-add-name" placeholder="John Doe" name="customerName" aria-label="John Doe">
+                            <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                        </div>
+                        <div class="mb-6 form-control-validation fv-plugins-icon-container">
+                            <label class="form-label" for="ecommerce-customer-add-email">Email*</label>
+                            <input type="text" id="ecommerce-customer-add-email" class="form-control" placeholder="john.doe@example.com" aria-label="john.doe@example.com" name="customerEmail">
+                            <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                        </div>
+                        <div>
+                            <label class="form-label" for="ecommerce-customer-add-contact">Mobile</label>
+                            <input type="text" id="ecommerce-customer-add-contact" class="form-control phone-mask" placeholder="+(123) 456-7890" aria-label="+(123) 456-7890" name="customerContact">
+                        </div>
+                    </div>
+
+                    <div class="ecommerce-customer-add-shiping mb-6 pt-4">
+                        <h6 class="mb-6">Shipping Information</h6>
+                        <div class="mb-6">
+                            <label class="form-label" for="ecommerce-customer-add-address">Address Line 1</label>
+                            <input type="text" id="ecommerce-customer-add-address" class="form-control" placeholder="45 Roker Terrace" aria-label="45 Roker Terrace" name="customerAddress1">
+                        </div>
+                        <div class="mb-6">
+                            <label class="form-label" for="ecommerce-customer-add-address-2">Address Line 2</label>
+                            <input type="text" id="ecommerce-customer-add-address-2" class="form-control" aria-label="address2" name="customerAddress2">
+                        </div>
+                        <div class="mb-6">
+                            <label class="form-label" for="ecommerce-customer-add-town">Town</label>
+                            <input type="text" id="ecommerce-customer-add-town" class="form-control" placeholder="New York" aria-label="New York" name="customerTown">
+                        </div>
+                        <div class="col-12 mb-6">
+                            <label class="form-label" for="ecommerce-customer-add-state">State / Province</label>
+                            <input type="text" id="ecommerce-customer-add-state" class="form-control" placeholder="Southern tip" aria-label="Southern tip" name="customerState">
+                        </div>
+                        <div class="col-12 mb-6">
+                            <label class="form-label" for="ecommerce-customer-add-post-code">Post Code</label>
+                            <input type="text" id="ecommerce-customer-add-post-code" class="form-control" placeholder="734990" aria-label="734990" name="pin" pattern="[0-9]{8}" maxlength="8">
+                        </div>
+                        <div>
+                            <label class="form-label" for="ecommerce-customer-add-country">Country</label>
+                            <div class="position-relative"><select id="ecommerce-customer-add-country" class="select2 form-select select2-hidden-accessible" data-select2-id="ecommerce-customer-add-country" tabindex="-1" aria-hidden="true">
+                                    <option value="" data-select2-id="2">Select</option>
+                                    <option value="Australia">Australia</option>
+                                    <option value="Bangladesh">Bangladesh</option>
+                                    <option value="Belarus">Belarus</option>
+                                    <option value="Brazil">Brazil</option>
+                                    <option value="Canada">Canada</option>
+                                    <option value="China">China</option>
+                                    <option value="France">France</option>
+                                    <option value="Germany">Germany</option>
+                                    <option value="India">India</option>
+                                    <option value="Indonesia">Indonesia</option>
+                                    <option value="Israel">Israel</option>
+                                    <option value="Italy">Italy</option>
+                                    <option value="Japan">Japan</option>
+                                    <option value="Korea">Korea, Republic of</option>
+                                    <option value="Mexico">Mexico</option>
+                                    <option value="Philippines">Philippines</option>
+                                    <option value="Russia">Russian Federation</option>
+                                    <option value="South Africa">South Africa</option>
+                                    <option value="Thailand">Thailand</option>
+                                    <option value="Turkey">Turkey</option>
+                                    <option value="Ukraine">Ukraine</option>
+                                    <option value="United Arab Emirates">United Arab Emirates</option>
+                                    <option value="United Kingdom">United Kingdom</option>
+                                    <option value="United States">United States</option>
+                                </select><span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="1" style="width: 337px;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-ecommerce-customer-add-country-container"><span class="select2-selection__rendered" id="select2-ecommerce-customer-add-country-container" role="textbox" aria-readonly="true"><span class="select2-selection__placeholder">United States </span></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span></div>
+                        </div>
+                    </div>
+
+                    <div class="d-sm-flex mb-6">
+                        <div class="me-auto mb-2 mb-md-0">
+                            <h6 class="mb-1">Use as a billing address?</h6>
+                            <small>If you need more info, please check budget.</small>
+                        </div>
+                        <div class="form-check form-switch my-auto me-n2">
+                            <input type="checkbox" class="form-check-input" checked="">
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary me-sm-3 data-submit">Add</button>
+                        <button type="reset" class="btn btn-label-danger" data-bs-dismiss="offcanvas">Discard</button>
+                    </div>
+                    <input type="hidden">
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

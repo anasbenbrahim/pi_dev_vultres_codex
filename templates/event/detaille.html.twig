@@ -1,0 +1,62 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %} Détails {% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="text-center mb-0">Détails de l'Événement</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Détails de l'événement -->
+                <div class="col-md-6">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Nom:</th>
+                                <td>{{ event.nom }}</td>
+                            </tr>
+                            <tr>
+                                <th>Date:</th>
+                                <td>{{ event.date|date('d/m/Y') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Description:</th>
+                                <td>{{ event.descr }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Image de l'événement -->
+                <div class="col-md-6 text-center">
+                    {% if event.photo %}
+                        <img src="{{ asset(event.photo) }}" alt="Photo de l'événement" width="300" class="img-fluid rounded">
+                    {% else %}
+                        <p>Aucune image disponible</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Bouton Réserver -->
+            <div class="text-center mt-4">
+                <form action="{{ path('app_qr_code') }}" method="post">
+                    <input type="hidden" name="event_id" value="{{ event.id }}">
+                    <input type="hidden" name="user_name" value="{{ app.user.firstName ~ ' ' ~ app.user.lastName }}">
+                    <button type="submit" class="btn btn-success btn-lg">Réserver</button>
+                </form>
+            </div>
+
+                    <button type="submit" class="btn btn-success btn-lg">
+                        Réserver
+                    </button>
+                </form>
+                <a href
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
