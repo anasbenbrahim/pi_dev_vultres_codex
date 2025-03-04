@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}fournisseur index{% endblock %}
+
+{% block body %}
+
+<style>
+    .pagination .btn {
+        transition: all 0.3s ease;
+    }
+    .pagination .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .pagination .btn.active {
+        font-weight: bold;
+    }
+</style>
+
+    <div class="card">
+        <h5 class="card-header">List fournisseurs</h5>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addfournisseurModal"><b> <i class="bx bx-add-to-queue me-1"></i> Add fournisseur </b></button>
+
+        <!-- Modal pour ajouter un fournisseur -->
+        <div class="modal fade" id="addfournisseurModal" tabindex="-1" aria-labelledby="addfournisseurModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addfournisseurModalLabel">Add Fournisseur</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ form_start(fournisseurFormType, {'attr': {'novalidate': 'novalidate'}}) }}
+                        <div class="input-group mb-3">
+                            {{ form_widget(fournisseurFormType.firstName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Prenom'} }) }}
+                            <div class="mt-1 text-danger">
+                            {{ form_errors(fournisseurFormType.firstName) }}
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            {{ form_widget(fournisseurFormType.lastName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Nom'} }) }}
+                            <div class="mt-1 text-danger">
+                            {{ form_errors(fournisseurFormType.lastName) }}
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            {{ form_widget(fournisseurFormType.companyName, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Entreprise'} }) }}
+                            <div class="mt-1 text-danger">
+                            {{ form_errors(fournisseurFormType.companyName) }}
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            {{ form_widget(fournisseurFormType.email, { 'attr': {'class': 'form-control form-control-lg bg-light fs-6', 'placeholder': 'Email'} }) }}
+                            <div class="mt-1 text-danger">
+                            {{ form_errors(fournisseurFormType.email) }}
+                            </div>
+                        </div>
+                       
+                        <button class="btn btn-lg btn-success w-100 fs-6 " type="submit">
+                            <b>Register</b>
+                        </button>
+                        {{ form_end(fournisseurFormType) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tableau des fournisseurs -->
+        <div class="table-responsive text-nowrap">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>FirstName</th>
+                        <th>LastName</th>
+                        <th>Company</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    {% for fournisseur in fournisseurs %}
+                        <tr>
+                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{ fournisseur.email }}</strong></td>
+                            <td>{{ fournisseur.firstName }}</td>
+                            <td>{{ fournisseur.lastName }}</td>
+                            <td>{{ fournisseur.companyName }}</td>
+                            <td>
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ fournisseur.id }}"><i class="bx bx-trash me-1"></i></button>
+                                <a class="btn btn-success" href="{{ path('fournisseur_edit', {'id': fournisseur.id}) }}"><i class="bx bx-edit me-1"></i></a>
+                                {% if fournisseur.isBanned %}
+                                    <a href="{{ path('fournisseur_unban', {'id': fournisseur.id}) }}" class="btn btn-secondary"><i class="bx bx-check-circle me-1"></i></a>
+                                {% else %}
+                                    <a href="{{ path('fournisseur_ban', {'id': fournisseur.id}) }}" class="btn btn-warning"><i class="bx bx-block me-1"></i></a>
+                                {% endif %}
+                            </td>
+                           
+                        </tr>
+                        <!-- Modal de confirmation de suppression pour chaque fournisseur -->
+                        <div class="modal fade" id="deleteModal{{ fournisseur.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ fournisseur.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel{{ fournisseur.id }}">Confirmation de suppression</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Êtes-vous sûr de vouloir supprimer ce fournisseur ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                        <form method="post" action="{{ path('app_fournisseur_delete', {'id': fournisseur.id}) }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ fournisseur.id) }}">
+                                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">Aucun fournisseur trouvé</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+           
+             
+        </div>
+    </div>
+<div class="mt-4">
+    <div class="pagination d-flex justify-content-center align-items-center gap-2">
+        {% if current_page > 1 %}
+            <a href="{{ path('app_fournisseur_index', {'page': current_page - 1}) }}" class="btn btn-outline-secondary rounded-pill px-4">
+                <i class="bx bx-chevron-left"></i> Previous
+            </a>
+        {% endif %}
+
+        {% for page in range(1, total_pages) %}
+            <a href="{{ path('app_fournisseur_index', {'page': page}) }}" 
+               class="btn btn-outline-success rounded-pill {{ page == current_page ? 'active bg-success text-white' : '' }}">
+                {{ page }}
+            </a>
+        {% endfor %}
+
+        {% if current_page < total_pages %}
+            <a href="{{ path('app_fournisseur_index', {'page': current_page + 1}) }}" class="btn btn-outline-secondary rounded-pill px-4">
+                Next <i class="bx bx-chevron-right"></i>
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

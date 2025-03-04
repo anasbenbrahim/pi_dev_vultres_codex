@@ -1,0 +1,105 @@
+{% extends 'baseclientp.html.twig' %}
+
+{% block dark_mode_toggle %}
+    <button id="darkModeToggle" class="btn btn-outline-light position-fixed top-0 end-0 mt-3 me-3 shadow-lg rounded-pill px-4 py-2" onclick="toggleDarkMode()">
+        <i class="fas fa-moon me-2"></i> Mode Sombre
+    </button>
+{% endblock %}
+
+{% block product_heading %}
+    <div class="text-center text-white py-5 banner-overlay">
+        <h1 class="display-3 fw-bold mb-3 animated fadeInDown">📢 Détails de l'Offre</h1>
+        <p class="lead opacity-75 animated fadeInUp">Découvrez les détails de cette offre</p>
+    </div>
+{% endblock %}
+
+{% block banner_image %}
+    <div class="market-banner position-relative d-flex align-items-center justify-content-center" style="background-image: url('{{ asset('img/offer-banner.jpg') }}');">
+        <div class="overlay position-absolute w-100 h-100 bg-dark opacity-50"></div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow rounded-lg">
+                    <div class="card-body p-4">
+                        <h3 class="card-title fw-bold text-dark mb-4">
+                            📌 {{ offer.nom }}
+                        </h3>
+
+                        <div class="mb-4">
+                            <h5 class="text-success">Domaine</h5>
+                            <p class="text-muted">{{ offer.domain }}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="text-success">Date de l'offre</h5>
+                            <p class="text-muted">{{ offer.dateOffer|date('d/m/Y') }}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="text-success">Description</h5>
+                            <p class="text-muted">{{ offer.description }}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="text-success">Nombre de places</h5>
+                            <p class="text-muted">{{ offer.nbPlaces }}</p>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <a href="{{ path('app_demande_add', {'offerId': offer.id}) }}" class="btn btn-success btn-lg">
+                                <i class="bi bi-check-circle me-2"></i> Postuler
+                            </a>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .market-banner {
+            width: 100%;
+            height: 450px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .banner-overlay {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 40px;
+            border-radius: 15px;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 15px;
+            background: #fff;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+    </style>
+{% endblock %}

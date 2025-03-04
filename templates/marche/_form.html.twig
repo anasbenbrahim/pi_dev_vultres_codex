@@ -1,0 +1,52 @@
+{{ form_start(form,{attr:{novalidate:'novalidate'}}) }}
+<!-- Display form errors -->
+{% if form_errors(form) %}
+	<div class="alert alert-danger">
+		{{ form_errors(form) }}
+	</div>
+{% endif %}
+
+{# <div class="mb-3">
+	{{ form_label(form.idUser) }}
+	{{ form_widget(form.idUser, {'attr': {'class': 'form-control ' ~ (form.idUser.vars.errors|length > 0 ? 'is-invalid' : '')}}) }}
+	{{ form_errors(form.idUser, {'attr': {'class': 'text-danger'}}) }}
+</div> #}
+
+{# <div class="mb-3">
+	{{ form_label(form.prodid) }}
+	{{ form_widget(form.prodid, {'attr': {'class': 'form-control ' ~ (form.prodid.vars.errors|length > 0 ? 'is-invalid' : '')}}) }}
+	{{ form_errors(form.prodid, {'attr': {'class': 'text-danger'}}) }}
+</div> #}
+
+<div class="mb-3">
+	{{ form_label(form.nomprod) }}
+	{{ form_widget(form.nomprod, {'attr': {'class': 'form-control ' ~ (form.nomprod.vars.errors|length > 0 ? 'is-invalid' : '')}}) }}
+	{{ form_errors(form.nomprod, {'attr': {'class': 'text-danger'}}) }}
+</div>
+
+<div class="mb-3">
+	{{ form_label(form.prix) }}
+	{{ form_widget(form.prix, {'attr': {'class': 'form-control ' ~ (form.prix.vars.errors|length > 0 ? 'is-invalid' : '')}}) }}
+	{{ form_errors(form.prix, {'attr': {'class': 'text-danger'}}) }}
+</div>
+
+<div class="mb-3">
+	{{ form_label(form.dateajout) }}
+	{{ form_widget(form.dateajout, {'attr': {'class': 'form-control ' ~ (form.dateajout.vars.errors|length > 0 ? 'is-invalid' : '')}}) }}
+	{{ form_errors(form.dateajout, {'attr': {'class': 'text-danger'}}) }}
+</div>
+
+
+<div class="mb-3">
+	{{ form_label(form.qte) }}
+	{{ form_widget(form.qte, {'attr': {'class': 'form-control ' ~ (form.qte.vars.errors|length > 0 ? 'is-invalid' : '')}}) }}
+	{{ form_errors(form.qte, {'attr': {'class': 'text-danger'}}) }}
+</div>
+{{ form_row(form.image, {'attr': {'class': 'form-control', 'placeholder': 'Image '}}) }}
+
+<div class="col-sm-10" style="display: flex; align-items: center; justify-content: center">
+	<button class="btn btn-success">{{ button_label|default('Save') }}</button>
+	{{ form_end(form) }}
+</div>
+
+{{ form_end(form) }}

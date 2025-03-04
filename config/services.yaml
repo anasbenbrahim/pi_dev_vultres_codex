@@ -1,0 +1,28 @@
+# config/services.yaml
+
+parameters:
+    photo_dir: "%kernel.project_dir%/public/uploads/images"
+    open_ai_api_key: '%env(OPENAI_API_KEY)%'
+
+    cloudinary_url: "%env(CLOUDINARY_URL)%"
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    App\EventListener\AccessDeniedListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    Cloudinary\Cloudinary:
+        arguments:
+            $config: "%cloudinary_url%"
+        public: true 

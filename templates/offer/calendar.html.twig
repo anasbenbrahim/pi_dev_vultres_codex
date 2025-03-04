@@ -1,0 +1,22 @@
+{% extends 'baseclientp.html.twig' %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Offers Calendar</h1>
+        <div id="calendar"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: {{ events|json_encode|raw }}, // Encode the events array as JSON
+            });
+            calendar.render();
+        });
+    </script>
+{% endblock %}

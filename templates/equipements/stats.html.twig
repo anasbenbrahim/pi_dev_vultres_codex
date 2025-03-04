@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+{% block title %}Statestiques fournisseur{% endblock %}
+
+{% block body %}
+<div>
+  <canvas id="myChart" width="400" height="300"></canvas>
+</div>
+<div>
+  <canvas id="chart2" ></canvas>
+</div>
+    {% block javascript %}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+        <script>
+            const ctx = document.getElementById('myChart');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                labels: {{equipement|raw}},
+                datasets: [{
+                    label: 'Quantite d\'equipements',
+                    data: {{quantite|raw}},
+                    backgroundColor:['red','orange','yellow','purple'],
+                    borderColor:['pink'],
+                    borderWidth: 2
+                }]
+                },
+                options: {
+                scales: {
+                    y: {
+                    beginAtZero: true
+                    }
+                }
+                }
+            });
+
+            const chart = document.getElementById('chart2');
+
+            new Chart(chart, {
+                type: 'pie',
+                data: {
+                labels: {{category|raw}},
+                datasets: [{
+                    label: 'Nombre d\'equipement par categories',
+                    data: {{count|raw}},
+                    backgroundColor:['red','orange','yellow','purple','white','pink'],
+                    borderColor:['white'],
+                    color:['grey'],
+                    borderWidth: 2
+                }]
+                },
+                options: {
+                scales: {
+                    y: {
+                    beginAtZero: true
+                    }
+                }
+                }
+            });
+        </script>
+    {% endblock %}
+
+{% endblock %}

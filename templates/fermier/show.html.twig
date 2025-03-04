@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fermier{% endblock %}
+
+{% block body %}
+    <h1>Fermier</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ fermier.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ fermier.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ fermier.roles ? fermier.roles|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ fermier.password }}</td>
+            </tr>
+            <tr>
+                <th>LastName</th>
+                <td>{{ fermier.lastName }}</td>
+            </tr>
+            <tr>
+                <th>FirstName</th>
+                <td>{{ fermier.firstName }}</td>
+            </tr>
+            <tr>
+                <th>FarmName</th>
+                <td>{{ fermier.farmName }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_fermier_index') }}">back to list</a>
+
+    <a href="{{ path('app_fermier_edit', {'id': fermier.id}) }}">edit</a>
+
+    {{ include('fermier/_delete_form.html.twig') }}
+{% endblock %}

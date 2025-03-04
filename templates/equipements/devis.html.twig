@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="card">
+        <div class="card-datatable table-responsive">
+            <div id="DataTables_Table_0_wrapper" class="dt-container dt-bootstrap5 dt-empty-footer">
+                <div class="row m-3 my-0 justify-content-between">
+                    
+                    <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto gap-2 mt-0 mb-md-0 mb-4">
+                        <div class="dt-buttons btn-group flex-wrap gap-4 mt-2 mb-2">
+                        </div>
+                    </div>
+                </div>
+                <div class="justify-content-between dt-layout-table">
+                    <div class="d-md-flex justify-content-between align-items-center dt-layout-full table-responsive">
+                        <table class="datatables-customers table border-top dataTable dtr-column" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" style="width: 100%;">
+                            <colgroup>
+                                <col data-dt-column="1" style="width: 75.0625px;">
+                                <col data-dt-column="2" style="width: 396.547px;">
+                                <col data-dt-column="3" style="width: 220.609px;">
+                                <col data-dt-column="4" style="width: 328.516px;">
+                                <col data-dt-column="5" style="width: 149.578px;">
+                                <col data-dt-column="6" style="width: 217.688px;">
+                            </colgroup>
+                            <thead class="text-dark">
+                                <tr>
+                                    <th data-dt-column="0" class="control dt-orderable-none dtr-hidden" rowspan="1" colspan="1" aria-label="" style="display: none;"><span class="dt-column-title"></span><span class="dt-column-order"></span></th>
+                                    <th data-dt-column="1" rowspan="1" colspan="1" class="dt-select dt-orderable-none" aria-label=""><span class="dt-column-title"></span><span class="dt-column-order"></span><input class="form-check-input" type="checkbox" aria-label="Select all rows"></th>
+                                    <th data-dt-column="2" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-ordering-desc" aria-sort="descending" aria-label="Customer: Activate to remove sorting" tabindex="0"><span class="dt-column-title" role="button">image</span><span class="dt-column-order"></span></th>
+                                    <th data-dt-column="3" rowspan="1" colspan="1" class="dt-orderable-asc dt-orderable-desc dt-ordering-desc" aria-sort="descending" aria-label="Customer: Activate to remove sorting" tabindex="0"><span class="dt-column-title" role="button">Proposition</span><span class="dt-column-order"></span></th>
+                                    <th class="text-nowrap dt-orderable-asc dt-orderable-desc dt-type-numeric" data-dt-column="6" rowspan="1" colspan="1" aria-label="Total Spent: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Quantite</span><span class="dt-column-order"></span></th>
+                                    <th class="text-nowrap dt-orderable-asc dt-orderable-desc dt-type-numeric" data-dt-column="6" rowspan="1" colspan="1" aria-label="Total Spent: Activate to sort" tabindex="0"><span class="dt-column-title" role="button">Repondre</span><span class="dt-column-order"></span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for devis in list %}
+                                <tr>
+                                    <td class="control dtr-hidden" tabindex="0" style="display: none;"></td>
+                                    <td class="sorting_1">
+                                        <div class="d-flex justify-content-start align-items-center customer-name">
+                                            <div class="avatar-wrapper">
+                                                <div class="avatar avatar-sm me-3">
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <a href="app-ecommerce-customer-details-overview.html" class="text-heading"><span class="fw-medium"></span></a>
+                                                <small></small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><img src="{{asset('uploads/images/' ~ devis.equipement.image)}}" style="height:70px; width:70px;"></td>
+                                    <td><span class="text-heading">{{devis.proposition}}</span></td>
+                                    <td class="dt-type-numeric"><span>{{devis.quantite}}</span></td>
+                                    <td class="dt-type-numeric"><a class="text-sucess" href="{{path('app_reponse_devis',{'id':devis.id})}}">Repondre</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+{% endblock %}

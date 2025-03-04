@@ -1,0 +1,136 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block dark_mode_toggle %}
+    <button id="darkModeToggle" class="btn btn-outline-light position-fixed top-0 end-0 mt-3 me-3 shadow-lg rounded-pill px-4 py-2" onclick="toggleDarkMode()">
+        <i class="fas fa-moon me-2"></i> Mode Sombre
+    </button>
+{% endblock %}
+
+{% block product_heading %}
+    <div class="text-center text-white py-5 banner-overlay">
+        <h1 class="display-3 fw-bold mb-3 animated fadeInDown">📢 Postuler à l'Offre : {{ offer.nom }}</h1>
+        <p class="lead opacity-75 animated fadeInUp">Remplissez les détails de votre demande</p>
+    </div>
+{% endblock %}
+
+{% block banner_image %}
+    <div class="market-banner position-relative d-flex align-items-center justify-content-center" style="background-image: url('{{ asset('img/offer-banner.jpg') }}');">
+        <div class="overlay position-absolute w-100 h-100 bg-dark opacity-50"></div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow rounded-lg">
+                    <div class="card-body p-4">
+                        {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+                            <div class="mb-3">
+                                {{ form_label(form.service, 'Service', {'class': 'form-label'}) }}
+                                {{ form_widget(form.service, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le service', 'required': 'required', 'minlength': '3', 'maxlength': '255'}}) }}
+                                <div class="invalid-feedback">Le service doit contenir entre 3 et 255 caractères.</div>
+                                {{ form_errors(form.service) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(form.date_demande, 'Date de demande', {'class': 'form-label'}) }}
+                                {{ form_widget(form.date_demande, {'attr': {'class': 'form-control', 'required': 'required'}}) }}
+                                <div class="invalid-feedback">Veuillez entrer une date valide.</div>
+                                {{ form_errors(form.date_demande) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(form.cvFile, 'CV (PDF file)', {'class': 'form-label'}) }}
+                                {{ form_widget(form.cvFile, {'attr': {'class': 'form-control', 'accept': 'application/pdf', 'required': 'required'}}) }}
+                                <div class="invalid-feedback">Veuillez télécharger un fichier PDF valide.</div>
+                                {{ form_errors(form.cvFile) }}
+                            </div>
+
+                            <!-- Add the phoneNumber field here -->
+                            <div class="mb-3">
+                                {{ form_label(form.phoneNumber, 'Numéro de téléphone', {'class': 'form-label'}) }}
+                                {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre numéro de téléphone', 'required': 'required', 'pattern': '^\+\d{1,3}\d{6,14}$'}}) }}
+
+                                <div class="invalid-feedback">Veuillez entrer un numéro de téléphone valide</div>
+                                {{ form_errors(form.phoneNumber) }}
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="bi bi-check-circle me-2"></i> Postuler
+                                </button>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .market-banner {
+            width: 100%;
+            height: 450px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .banner-overlay {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 40px;
+            border-radius: 15px;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 15px;
+            background: #fff;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Bootstrap form validation
+        (function () {
+            'use strict';
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var forms = document.querySelectorAll('.needs-validation');
+
+                Array.prototype.slice.call(forms).forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            });
+        })();
+    </script>
+{% endblock %}

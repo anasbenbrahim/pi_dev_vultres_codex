@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Fermier{% endblock %}
+
+{% block body %}
+    <div class="container" id="newfermier">
+        <h1 class="text-center my-5">Inscription Fermier</h1>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                {{ form_start(fermierType, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                <div class="mb-3">
+                    {{ form_label(fermierType.firstName, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(fermierType.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre prénom'}}) }}
+                    {{ form_errors(fermierType.firstName) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(fermierType.lastName, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(fermierType.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre nom'}}) }}
+                    {{ form_errors(fermierType.lastName) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(fermierType.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(fermierType.email, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre email'}}) }}
+                    {{ form_errors(fermierType.email) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(fermierType.plainPassword, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(fermierType.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre mot de passe'}}) }}
+                    {{ form_errors(fermierType.plainPassword) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(fermierType.farmName, 'Nom de la ferme', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(fermierType.farmName, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom de votre ferme'}}) }}
+                    {{ form_errors(fermierType.farmName) }}
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">S'inscrire</button>
+                </div>
+
+                {{ form_end(fermierType) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

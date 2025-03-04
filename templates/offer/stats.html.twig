@@ -1,0 +1,97 @@
+{# templates/offer/stats.html.twig #}
+{% extends 'baseclientp.html.twig' %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Statistics</h1>
+
+        <!-- Chart 1: Total Offers and Demandes -->
+        <div class="mb-5">
+            <h3>Total Offers vs Total Demandes</h3>
+            <canvas id="totalChart" width="400" height="200"></canvas>
+        </div>
+
+        <!-- Chart 2: Offers by Domain -->
+        <div class="mb-5">
+            <h3>Offers by Domain</h3>
+            <canvas id="domainChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Chart 1: Total Offers and Demandes
+            const totalCtx = document.getElementById('totalChart').getContext('2d');
+            new Chart(totalCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Offers', 'Demandes'],
+                    datasets: [{
+                        label: 'Total Count',
+                        data: [{{ totalOffers }}, {{ totalDemandes }}],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.5)', // Blue for Offers
+                            'rgba(255, 99, 132, 0.5)', // Red for Demandes
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 99, 132, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Offers by Domain
+            const domainCtx = document.getElementById('domainChart').getContext('2d');
+            new Chart(domainCtx, {
+                type: 'pie',
+                data: {
+                    labels: {{ domainLabels|json_encode|raw }}, // Domain names
+                    datasets: [{
+                        label: 'Offers by Domain',
+                        data: {{ domainData|json_encode|raw }}, // Counts
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(153, 102, 255, 0.5)',
+                            'rgba(255, 159, 64, 0.5)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Offers by Domain'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
