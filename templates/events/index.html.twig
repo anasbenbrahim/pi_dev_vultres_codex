@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+     <style>
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            margin: 100px;
+            border: 100px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+    </style>
+    <div class="container">
+         <a href="http://127.0.0.1:8000/simple" class="button">semple</a>
+         <a href="http://127.0.0.1:8000/fistival" class="button">festival</a>
+         <a href="http://127.0.0.1:8000/workshop" class="button">Woshop</a>
+    </div>
+    
+{% endblock %}

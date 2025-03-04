@@ -1,0 +1,5 @@
+# config/services.yaml
+services:
+    App\Service\PostmarkService:
+        arguments:
+            $postmarkApiToken: '%env(SMAILER_DSN)%'
